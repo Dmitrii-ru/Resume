@@ -1,0 +1,37 @@
+{% extends 'resume/base.html' %}
+{% load static %}
+{% block title %} Список проектов {{stack.name}} {% endblock %}
+
+{%block context%}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'resume/css/cardproject.css' %}">
+<div class="d-flex justify-content-center d-flex flex-wrap container decorat">
+    {% for stack in stacks %}
+        <a href="{{stack.get_absolute_url}}" class="button_user ">{{stack}}</a>
+    {%endfor%}
+
+
+</div>
+<h1 class="text-center mt-3 mb-3 ">Список проектов {{stack.name}}</h1>
+<div class="container body_list ">
+    <div class="row row justify-content-md-center ">
+        {%for project in projects%}
+        <div class="card col-3 m-2 list_prod box" style="width: 18rem;">
+            <img class="card-img-top img_card" src="{{project.image.url}}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{project.name}}</h5>
+                <p class="card-text">{{project.about}}</p>
+                {% if  project.link_site%}
+                    <a href="{{project.link_site}}" class="btn btn-secondary mt-1">Перейти на {{project.name}}</a>
+                {% endif %}
+                {% if  project.link_git%}
+                    <a href="{{project.link_git}}" class="btn btn-secondary mt-1">Перейти на GitHub</a>
+                {% endif %}
+                <a href="{% url 'resume_urls:proj_detail' stack_slug project.slug %}" class="btn btn-secondary mt-1">Описание проекта</a>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}

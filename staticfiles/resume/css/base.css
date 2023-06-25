@@ -1,0 +1,33 @@
+
+
+
+.centered {
+    width: 280px;
+    margin-top: auto;
+    background: #E7EAEF;
+    padding: 10px;
+    border: 2px solid #69da6d83;
+    border-radius: 2px;
+}
+
+.decorat a {
+  color: #000 !important;
+  text-decoration: none
+}
+
+.button_user {
+  border: 2px solid #b1e2a6;
+  background-color: #69da6d83; /* Green */
+  color: white;
+  padding: 7px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px;
+}
+
+.button_user:hover {
+  border: 2px solid #69da6d83;
+  background-color: white;
+}

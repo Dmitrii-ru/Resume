@@ -1,0 +1,81 @@
+{%extends 'quiz/base.html' %}
+
+{%block content%}
+
+<div class="container text-center">
+
+
+<form action="" class="d-flex justify-content-center" method="post" name="question">
+
+    <div class="card " style="width:70%;">
+
+
+       {% if messages %}
+          <div class="card-header error_mess " style=" background:#FD7B7C;">
+              <ul class="messages m-0 p-0 text-center">
+                  {% for message in messages %}
+                  <li {% if message.tags %} class="alert {{ message.tags }} p-1"{% endif %}>
+                      {{ message }}
+                  </li>
+                  {% endfor %}
+              </ul>
+          </div>
+       {% endif %}
+
+
+      <div class="card-header">
+          <span> Тема теста: {{quiz.title}}</span>
+          <p class="m-0">Количество вопросов: {{len_quiz}}</p>
+          <p class="m-0">Текущий номер вопроса: {{page_obj.number}}</p>
+      </div>
+      <div class="card-header">
+        {% for question in page_obj %}
+            {% csrf_token %}
+                {{question.title}}
+            {%endfor%}
+
+      </div>
+      <ul class="list-group list-group-flush">
+          {% for answer in answers %}
+                    {% if answer.user_answer %}
+                       <li class="list-group-item"> <input type="checkbox" id="{{answer.pk}}" name="answer" value="{{answer.pk}}" checked>
+                           <label class="m-2" for="{{answer.pk}}">{{answer.title}}</label>
+                       </li>
+                    {%else%}
+                        <li class="list-group-item">  <input type="checkbox"  id="{{answer.pk}}" name="answer" value="{{answer.pk}}" >
+                            <label class="m-2" for="{{answer.pk}}">{{answer.title}}</label>
+                        </li>
+                    {%endif%}
+          {%endfor%}
+          <li class="list-group-item">
+                    {% for contact in page_obj %}
+                        {# Each "contact" is a Contact model object. #}
+                        {{ contact.full_name|upper }}
+                    {% endfor %}
+               <div class="d-flex justify-content-center">
+                <div class="pagination m-0">
+                        <span class="step-links">
+                        {% if page_obj.has_previous %}
+
+                            <a href="?page={{ page_obj.previous_page_number }}">Предыдущий</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Вопрос {{ page_obj.number }} из {{ page_obj.paginator.num_pages }} доступных
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">Следующий</a>
+
+                        {% endif %}
+                        </span>
+                </div>
+          </li>
+      </ul>
+    </div>
+              <input class="btn btn-primary check-btn" type="submit" value="Ответить" id="check" onclick="displayRadioValue();"/>
+</form>
+
+
+</div>
+{%endblock%}

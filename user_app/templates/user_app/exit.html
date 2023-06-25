@@ -1,0 +1,10 @@
+{% extends 'user_app/base.html' %}
+{% block title %} Вы больше не авторизированны {% endblock %}
+{%block context%}
+
+
+<div class="reg">
+    <h1 class="mt-5">Вы вышли, но вы еще обязательно <a href="{% url 'user_urls:user' %}">войдете</a></h1>
+</div>
+
+{% endblock%}

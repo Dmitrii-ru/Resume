@@ -1,0 +1,112 @@
+{% load static %}
+<head>
+<!DOCTYPE html>
+<html>
+<head>
+
+<!--TITLE-->
+<title>Резюме</title>
+
+<!--ICON-->
+<link rel="shortcut icon" href="images/logo.png">
+
+<!--META TAGS-->
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="author" content="Mahesh">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="" />
+<meta property="og:site_name" content="LEVIOOSA RESUME" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!--GOOGLE FONTS-->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300&family=Ubuntu&display=swap" rel="stylesheet">
+
+<!--PLUGIN-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+
+<!--FONT AWESOME-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!--EXTERNAL CSS-->
+<link rel="stylesheet" href="{% static 'resume/css/resume.css' %}">
+</head>
+<body>
+    <div class="css_container">
+        <section class="section_left">
+            <center>
+                <h1 class="title">{{about_me.name}}</h1>
+            </center>
+            <hr></hr>
+            <h5 class="sub-title">Контактная информация</h5>
+            <ul>
+                <li><i class="fa fa-phone"></i> {{about_me.phone}} </li>
+                <li><i class="fa fa-envelope"></i> {{about_me.mail}}</li>
+                <li><i class="fa fa-map-marker"></i> {{about_me.city}}</li>
+            </ul>
+            <ul>
+                <h5 class="sub-title">Информация не относящаяся к IT</h5>
+                    <em>Опыт работы</em>
+                    <p><a href="{{about_me.link_HH}}">Ссылка на HH.ru </a></p>
+                    <em>Образование </em>
+                    <p>{{about_me.education_my}}</p>
+                     <a href="{% url 'resume_urls:send_email' %}" class="btn btn-primary">Отправить ссылку на резюме на почту</a>
+            </ul>
+
+        </section>
+
+
+    <section class="section_right">
+    <h1 class="title">О себе</h1>
+        {{about_me.text|safe}}
+
+        <h1 class="title">Проекты</h1>
+
+        <div class="d-flex flex-row">
+            {% for stack in stacks %}
+          <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>
+            {%endfor%}
+
+        </div>
+
+    <table>
+        <h1 class="title">IT курсы</h1>
+        {% for education in my_education %}
+        <tr>
+
+            <snan class="education" href="{{education.diploma}}">
+
+                <span class="me-3">
+                    Платформа: {{education.school}}
+                </span>
+                <span class="me-3">
+                    Курс: {{education.name}}
+                </span>
+                <span class="">
+                    {%if education.end%}
+                    Дата окончания: {{education.end}}
+                    {%else %}
+                    Дата окончания: В процессе прохождения
+                </span>
+
+                </snan>
+
+                {%endif%}
+
+
+        </tr>
+            <div class="progress_container">
+                <div class="progress_bar" style="width:{{education.percent}}%"></div>
+            </div>
+        {% endfor %}
+    </table>
+
+
+    </section>
+    </div>
+</body>

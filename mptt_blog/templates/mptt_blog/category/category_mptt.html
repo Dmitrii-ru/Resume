@@ -1,0 +1,257 @@
+{% extends "mptt_blog/base.html" %}
+{% load mptt_tags %}
+{% load static %}
+{% load rules %}
+{% block title %} {{category}} {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mptt_blog/css/mptt_blog.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+
+
+
+
+<div class="page-wrapper">
+  <div class="left-panel-wrapper">
+    <div class="left-panel">
+		<div class="sidebar">
+			<a class="border_but" href="{% url 'resume_urls:index' %}"><span class="border_but">Резюме</span><a>
+			<a href="{% url 'mptt_blog_urls:category-list' %}"><span >Главная страница</span><a>
+			{% for parent in parents %}
+				<a href="{{parent.get_absolute_url}}">{{parent.title}}</a>
+			{%endfor%}
+		</div>
+	</div>
+  </div>
+
+
+  <div class="content-wrapper">
+    <div class="content font_title_text">
+    	<div class=" text-center">
+			<h3>Навигация в {{category}}</h3>
+			{% if cats %}
+				<div class="d-flex flex-wrap justify-content-xl-center  nev_up">
+		    		{% for cat in cats %}
+        				<a class=" m-1" href="{{cat.get_absolute_url}}" style="">{{cat}}</a>
+    				{%endfor%}
+				</div>
+			{% else  %}
+				<h5> Пока тут нет тем
+					{%if user.is_authenticated%}
+						<a href="{% url 'mptt_blog_urls:category_create' category.url %}" > <h6>Добавить</h6></a>
+					{% endif %}
+				</h5>
+			{% endif %}
+
+
+			<div class="post_list mt-3">
+				<h3 class="">Статьи</h3>
+
+				{% if not  posts%}
+
+						<h5> Пока тут нет статей
+							{%if user.is_authenticated%}
+
+								<a href="{% url 'mptt_blog_urls:post_create' category.url  %}" > <h6>Добавить</h6></a>
+							{% endif %}
+						</h5>
+
+				{% else %}
+
+					<div class="d-flex flex-wrap justify-content-xl-center">
+
+        				{% for post in posts %}
+							<div class="card_paper_border" >
+        	    				<a class="card_paper_2 dec_a " style="text-decoration: none;" href="{% url 'mptt_blog_urls:post_detail' category.url post.pk %}">
+									<div class="card_paper_title">
+										<h3 class="font_title_text">{{post.title}}</h3>
+									</div>
+								</a>
+
+									<div class="support_peper_text">
+											<span class="font_s ">Автор: <span class="">{{post.author}}</span> </span>
+										<div>
+											<span class="font_s ">Likes <span class="like-count{{post.id}}">{{post.like_count}}</span> </span>
+										</div>
+
+										{%if user.is_authenticated%}
+											<div class="card_paper_support d-flex justify-content-center mt-1 row">
+												
+												<form action="{% url 'mptt_blog_urls:like' %}" method="POST" class="like-form col"  id="{{post.id}}">
+												 <button type="submit"  class="font_s like_btn_style like-btn{{post.id}}">
+													{% if post.is_like %}
+													 	{{like_text}}
+													{% else %}
+													 	{{UnLike_text}} 
+													{%endif%}
+													</button>
+
+												</form>
+												|
+												<form action="{% url 'mptt_blog_urls:favourites' %}" method="POST" class="favourites-form col" id="{{post.id}}">
+													<button type="submit"  class="font_s like_btn_style favourites-btn{{post.id}}">
+														{% if post.is_favour %}
+															{{fav_true_text}}
+														{% else %}
+															{{fav_false_text}}
+														{% endif %}
+													</button>
+												   </form>
+										</div>
+										{% endif %}
+									</div>
+
+							</div>
+        				{%endfor%}
+					</div>
+				{% endif %}
+
+				</div>
+				{% if page_obj %}
+					<div>
+						{% for contact in page_obj %}
+						{{ contact.full_name|upper }}<br>
+						{% endfor %}
+						<nav aria-label="Page navigation bootstrap">
+						    <ul class="pagination justify-content-center">
+						        {% if page_obj.has_previous %}
+						        <li class="page-item"><a class="page-link color_pag" href="?page=1">Первая страница</a></li>
+						        <li class="page-item"><a class="page-link color_pag" href="?page={{ page_obj.previous_page_number }}"><span
+						                aria-hidden="true">&laquo;</span></a></li>
+						        {% endif %}
+						        {% for num in page_obj.paginator.page_range %}
+						        {% if page_obj.number == num %}
+						        <li class="page-item " aria-current="page"><span class="page-link pag_active_page">{{ num }}</span>
+						        </li>
+						            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+						        <li class="page-item"><a class="page-link color_pag" href="?page={{ num }}">{{ num }}</a></li>
+						            {% endif %}
+						            {% endfor %}
+						            {% if page_obj.has_next %}
+						        <li class="page-item"><a class="page-link color_pag" href="?page={{ page_obj.next_page_number }}"><span
+						                aria-hidden="true">&raquo;</span></a></li>
+						        <li class="page-item"><a class="page-link color_pag" href="?page={{ page_obj.paginator.num_pages }}">Последня страница</a>
+						        </li>
+						        {% endif %}
+						    </ul>
+						</nav>
+
+					</div>
+				{% endif %}
+    	</div>
+    </div>
+  </div>
+
+  <div class="right-panel-wrapper">
+    <div class="right-panel">
+		<div class="sidebar">
+
+			{%if user.is_authenticated and user == category.author%}
+				<span >Инструменты</span>
+					<a href="{% url 'mptt_blog_urls:post_create' category.url  %}" class="" >Добавить статью</a>
+					<a href="{% url 'mptt_blog_urls:category_create' category.url %}" class="" >Добавить тему </a>
+					<a href="{% url 'mptt_blog_urls:category_update' category.pk %}" class="" >Обновить тему</a>
+					<a href="{% url 'mptt_blog_urls:category_delete' category.pk %}" class="" >Удалить тему</a>
+				<span >Авторизация</span>
+				<span >{{user.username}}</span>
+					<a href="{%url 'user_urls:profile'%}">Профиль</a>
+					<a href="{%url 'user_urls:exit'%}?next={{ request.path }}">Выйти</a>
+			{%elif user.is_authenticated and user != category.author%}
+				<span >Инструменты</span>
+					<a href="{% url 'mptt_blog_urls:post_create' category.url  %}" class="" >Добавить статью</a>
+					<a href="{% url 'mptt_blog_urls:category_create' category.url %}" class="" >Добавить тему </a>
+				<span >Авторизация</span>
+				<span >{{user.username}}</span>
+					<a href="{%url 'user_urls:profile'%}">Изменить профиль</a>
+					<a href="{%url 'user_urls:exit' %}?next={{ request.path }}">Выйти</a>
+			{% else %}
+				<span>Авторизация</span>
+					<a href="{% url 'user_urls:reg' %}?next={{ request.path }} ">Регистрация</a>
+					<a href="{% url 'user_urls:user' %}?next={{ request.path }} ">Войти</a>
+			{% endif %}
+			{%if user.is_authenticated%}
+			<span>Избранное</span>
+					<a href="{% url 'mptt_blog_urls:fav_show_all' %}">Посмотреть все избранные статьи</a>
+			{% endif %}
+
+
+		</div>
+	</div>
+  </div>
+</div>
+
+
+
+<script>
+
+  $('.like-form').submit(function (e) {
+    e.preventDefault();
+
+    var prodid = $(this).attr('id')
+	console.log(prodid)
+
+    $.ajax({
+      type: 'POST',
+      url: '{% url "mptt_blog_urls:like" %}',
+      data: {
+		postid: prodid,
+       	csrfmiddlewaretoken: "{{csrf_token}}",
+        action: 'post'
+      },
+      success: function (json) {
+
+		$(`.like-btn${prodid}`).text(json['like'])
+		$(`.like-count${prodid}`).text(json['result'])
+
+      },
+      error: function (xhr, errmsg, err) {
+
+      }
+    });
+  })
+
+
+  $('.favourites-form').submit(function (e) {
+    e.preventDefault();
+
+    var prodid = $(this).attr('id')
+	console.log(prodid)
+
+    $.ajax({
+      type: 'POST',
+      url: '{% url "mptt_blog_urls:favourites" %}',
+      data: {
+		postid: prodid,
+       	csrfmiddlewaretoken: "{{csrf_token}}",
+        action: 'post'
+      },
+      success: function (json) {
+		console.log(prodid)
+
+		$(`.favourites-btn${prodid}`).text(json['fav_btn_text'])
+
+
+      },
+      error: function (xhr, errmsg, err) {
+
+      }
+    });
+  })
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
