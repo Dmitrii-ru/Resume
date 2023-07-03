@@ -20,13 +20,8 @@ class UserSessionEmail:
             user_session_email = self.session[settings.USER_SESSION_EMAIL_ID] = {}
             self.user_session_email = user_session_email
             self.add()
-
         else:
-            print('old ses mail')
             self.user_session_email = user_session_email
-            print(self.user_session_email['email_count'])
-            self.add()
-
 
     def add(self):
         self.user_session_email['email_count'] = 2
@@ -53,7 +48,6 @@ class UserSessionEmail:
 
     def save(self):
         self.session.modified = True
-
 
 
 def get_today():
@@ -157,6 +151,9 @@ class UserSessionToDo:
     def clear(self):
         del self.session[settings.USER_SESSION_TODO_ID]
         self.save()
+
+
+"""-----|UserSessionApp|-----"""
 
 
 class UserSessionApp:
