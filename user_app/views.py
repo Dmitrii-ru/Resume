@@ -1,6 +1,6 @@
 import os
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from core import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm
@@ -47,14 +47,19 @@ def profile(request):
         UpdateImageForm = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
         UpdateUserForm = UserUpdateForm(request.POST, instance=request.user)
 
-        if UpdateImageForm.is_valid() and UpdateUserForm.is_valid():
+        user_profile = get_object_or_404(Profile, user=request.user)
+        # Берем старое имя
+        old_name = os.path.basename(user_profile.img.path)
+        # Спрашиваем явиться ли оно default для img
+        bool_default_img = old_name == user_profile._meta.get_field('img').default
 
-            old_img_path = Profile.objects.get(user=request.user).img.path
-            if request.FILES.get('img') and os.path.exists(old_img_path):
-                os.remove(old_img_path)
+        if UpdateImageForm.is_valid() and UpdateUserForm.is_valid():
 
             UpdateImageForm.save()
             UpdateUserForm.save()
+
+            if request.FILES.get('img') and os.path.exists(user_profile.img.path) and not bool_default_img:
+                os.remove(user_profile.img.path)
             return redirect('user_urls:profile')
 
     else:

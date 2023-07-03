@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-media/img
-media/user_images
+media/img/
+media/user_images/
 # C extensions
 *.so
 

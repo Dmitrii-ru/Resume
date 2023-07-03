@@ -59,7 +59,7 @@ class Projects(models.Model):
     prod_stack = models.ManyToManyField(Stack, verbose_name='Технологии проекта', related_name='ps')
     name = models.CharField('Название проекта', max_length=50)
     about = models.CharField('О проекте', max_length=200)
-    image = models.ImageField('Ава проекта', upload_to='img', null=True, blank=True, default='default.png')
+    image = models.ImageField('Ава проекта', upload_to='img', null=True, blank=True, default='default_project.png')
     status = models.CharField('Статус', choices=CHOICE_STATUS, default="True", max_length=5)
     link_git = models.CharField('Ссылка на GitHub', max_length=100, null=True, blank=True)
     link_site = models.CharField('Ссылка на WebSite', max_length=100, null=True, blank=True)
