@@ -7,8 +7,7 @@ from .tasks import send_email_task
 from user_app.user_session import UserSessionToDo, UserSessionEmail, get_today, get_date, navigate_month
 from .forms import AddTodo
 from .python_prog.calendar_session_todo import MyCalendar
-from django.db.models import Q
-from datetime import datetime, timedelta, date
+
 
 
 def index(request):

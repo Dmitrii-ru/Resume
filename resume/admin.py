@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from .forms import TestForm
 from mptt_blog import forms
@@ -7,6 +6,7 @@ from .models import *
 admin.site.register(MyEducation)
 admin.site.register(AboutMe)
 admin.site.register(EmailSend)
+
 
 @admin.register(Stack)
 class AdminSteck(admin.ModelAdmin):
@@ -17,8 +17,6 @@ class CardProjectInline(admin.StackedInline):
     model = CardProject
     extra = 3
     form = TestForm
-
-
 
 
 class AdminProjects(admin.ModelAdmin):
@@ -33,7 +31,6 @@ class AdminProjects(admin.ModelAdmin):
         ('Ссылки', {
             'fields': (('link_git', 'link_site'),)
         }),
-
 
     )
     inlines = (CardProjectInline,)

@@ -6,6 +6,7 @@ from django.contrib.sessions.backends.db import SessionStore
 import re
 from user_app.user_session import UserSessionToDo
 from .models import CardProject
+
 reg = r'^[a-zA-Z0-9]([A-Za-z0-9]+[._-])*[A-Za-z0-9_]+@[A-Za-z0-9-_]+(\.[A-Z|a-z]{2,})+$'
 
 
@@ -28,10 +29,10 @@ class EmailSendForm(forms.ModelForm):
 
 
 class AddTodo(forms.Form):
-    todo = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Новая задача'}), label='', required=False ,max_length=20)
+    todo = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Новая задача'}), label='', required=False,
+                           max_length=20)
     day_slug = forms.CharField(widget=forms.HiddenInput)
     sess = forms.CharField(widget=forms.HiddenInput)
-
 
     def clean(self):
 
@@ -55,4 +56,3 @@ class AddTodo(forms.Form):
 
 class TestForm(forms.ModelForm):
     model = CardProject
-
