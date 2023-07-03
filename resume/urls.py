@@ -13,7 +13,4 @@ urlpatterns = [
     path('todo_session/<slug_day>/remove/', views.TodoDelReplaceSessionView, name='todo_session_remove'),
     path('projects/<stack_slug>/', ProjectsView.as_view(), name='stack'),
     path('projects/<stack_slug>/<project_slug>/', ProjectsDetailView.as_view(), name='proj_detail'),
-
-    # path('todo_session/delete', views.ToDoSessionDeleteView, name='todo_delete'),
-    # path('todo_session/<page>', views.ToDoSessionView, name='todo_session_page'),
 ]

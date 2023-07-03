@@ -1,13 +1,9 @@
 from django.shortcuts import render
-
-from core import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from .user_session import UserSessionApp, UserSessionToDo, UserSessionEmail
-
 from mptt_blog.models import Category, Post, CommentsPost
 from quiz.models import Quiz, Question
 from django.contrib.auth.views import LogoutView
@@ -24,8 +20,6 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'{username} Успешно зарегистрирован')
             redirect_to = request.GET.get('next')
 
             if redirect_to:
@@ -48,7 +42,6 @@ def profile(request):
         if UpdateImageForm.is_valid() and UpdateUserForm.is_valid():
             UpdateImageForm.save()
             UpdateUserForm.save()
-            messages.success(request, f'Успешно обновлено.')
             return redirect('user_urls:profile')
 
     else:
@@ -69,7 +62,7 @@ from django.db.models import Count, Prefetch
 
 def quiz_completed_statistics(user):
     count_quiz = 0
-    percent =0
+    percent = 0
     quizs = Quiz.objects.filter(is_completed=user).prefetch_related(
         Prefetch('questions', to_attr='questions_qa'),
 
@@ -90,7 +83,6 @@ def quiz_completed_statistics(user):
 
 
 def person_area_view(request):
-
     data = {}
     ust = UserSessionToDo(request)
     todo_actual_session = ust.get_actual_todo()
@@ -114,7 +106,7 @@ def person_area_view(request):
     data['todo_actual_session'] = todo_actual_session['list_actual']
     data['count_todo'] = todo_actual_session['count_actual']
 
-    print('http://'+request.META['HTTP_HOST'])
+    print('http://' + request.META['HTTP_HOST'])
     return render(request, 'user_app/person_area.html', data)
 
 

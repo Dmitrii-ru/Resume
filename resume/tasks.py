@@ -5,24 +5,23 @@ from resume.python_prog.send_mail_prog import send_email_my
 from django.utils import timezone
 
 import django
+
 django.setup()
 
 from resume.models import EmailSend
-
 
 sender = EMAIL_HOST_USER
 password = EMAIL_HOST_PASSWORD
 
 
-
 @shared_task
-def send_email_task(massage=None, to_send=None, name=None, host=None, subject=None, session_id=None):
-
+def send_email_task(massage_num, to_send, name, subject):
     try:
-        send_email_my(massage, to_send, name, host, subject, session_id)
+        send_email_my(massage_num, to_send, name, subject)
         return 'Your massage was send successfully!'
     except Exception as error:
-        return f"{error} Check your password or login"
+        return f"{error} Error"
+
 
 @shared_task
 def check_email_old_task():
@@ -31,7 +30,7 @@ def check_email_old_task():
     old_mails = EmailSend.objects.filter(date__lt=three_days_ago)
     if old_mails:
         for obj in old_mails:
-            massage = f'{obj.name}, жду от Вас положительно ответа,мое резюме {"ТУТ ДОЛЖНА БЫТЬ ССЫЛКА НА САЙТ"}'
-            subject = 'Непомнине от соискателя'
-            send_email_task.delay(massage=massage, to_send=obj.email, subject=subject)
+            massage = 2
+            subject = 2
+            send_email_task.delay(name=obj.name, massage_num=massage, to_send=obj.email, subject=subject)
         old_mails.delete()

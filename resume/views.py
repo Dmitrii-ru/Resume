@@ -12,19 +12,6 @@ from datetime import datetime, timedelta, date
 
 
 def index(request):
-    from user_app.models import Profile
-    from django.contrib.auth.models import User
-    from django.utils import timezone
-
-    current_time = timezone.now()
-    # Определите интервал в 15 минут
-    interval = timezone.timedelta(minutes=15)
-
-    # Выполните запрос к базе данных
-    profiles = Profile.objects.filter(Q(create__lte=current_time - interval), ~Q(user__is_staff=True))
-    print(profiles)
-    print(User.objects.filter(profile__in=profiles))
-
     about_me = AboutMe.objects.all().first()
     my_education = MyEducation.objects.all()
     stacks = Stack.objects.all()
@@ -47,15 +34,15 @@ def send_email_view(request):
             if form.is_valid():
                 email = form.cleaned_data.get('email')
                 name = form.cleaned_data.get('name')
-
-                send_email_task.delay(name=name, to_send=email, session_id=request.session.session_key,
-                                    host=request.META["HTTP_HOST"])
+                send_email_task.delay(name=name,
+                                      to_send=email,
+                                      subject=1,
+                                      massage_num=1,
+                                      )
                 user_s.update()
-
                 return redirect('resume_urls:index')
         else:
             form = EmailSendForm()
-
         return render(request, 'resume/send_email.html',
                       {'form': form, 'stacks': stacks, 'count': count, 'letter': letter})
 
@@ -129,12 +116,10 @@ class ProjectsDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectsDetailView, self).get_context_data(**kwargs)
-        # project = get_object_or_404(Projects.objects.prefetch_related('prod_stack'), slug=self.kwargs['project_slug'])
         project = get_object_or_404(Projects, slug=self.kwargs['project_slug'])
         context['project'] = project
         context['cards'] = CardProject.objects.filter(project=project)
         return context
 
 
-def my_scheduled_job():
-    print('HIIIIIIIIIIIIIIIIIIIIIIII')
+
