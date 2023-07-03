@@ -1,8 +1,14 @@
+import os
+
 from django.shortcuts import render
+
+from core import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
+
+from .models import Profile
 from .user_session import UserSessionApp, UserSessionToDo, UserSessionEmail
 from mptt_blog.models import Category, Post, CommentsPost
 from quiz.models import Quiz, Question
@@ -36,10 +42,17 @@ def register(request):
 def profile(request):
     usa = UserSessionApp(request)
     create_previous_path(request.META.get('HTTP_REFERER', '/'), request.path, usa)
+
     if request.method == "POST":
         UpdateImageForm = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
         UpdateUserForm = UserUpdateForm(request.POST, instance=request.user)
+
         if UpdateImageForm.is_valid() and UpdateUserForm.is_valid():
+
+            old_img_path = Profile.objects.get(user=request.user).img.path
+            if request.FILES.get('img') and os.path.exists(old_img_path):
+                os.remove(old_img_path)
+
             UpdateImageForm.save()
             UpdateUserForm.save()
             return redirect('user_urls:profile')
@@ -52,6 +65,7 @@ def profile(request):
         'UpdateUserForm': UpdateUserForm,
         'title': "Ваш профиль",
         'previous_path': usa.get_profile_previous_path(),
+
     }
 
     return render(request, 'user_app/profile.html', data)

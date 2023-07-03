@@ -20,8 +20,9 @@ class Profile(models.Model):
 
             resize = (100, 100)
             image.thumbnail(resize)
-            print(image.height)
+
             image.save(self.img.path)
+
 
     class Meta:
         verbose_name = 'Профиль'
