@@ -84,7 +84,6 @@ def quiz_completed_statistics(user):
     percent = 0
     quizs = Quiz.objects.filter(is_completed=user).prefetch_related(
         Prefetch('questions', to_attr='questions_qa'),
-
         Prefetch('questions', queryset=Question.objects.filter(is_right_user_completed=user),
                  to_attr='is_right_user_completed')
     )
@@ -124,8 +123,6 @@ def person_area_view(request):
         data['count_comm'] = count_comm['count_comm']
     data['todo_actual_session'] = todo_actual_session['list_actual']
     data['count_todo'] = todo_actual_session['count_actual']
-
-    print('http://' + request.META['HTTP_HOST'])
     return render(request, 'user_app/person_area.html', data)
 
 

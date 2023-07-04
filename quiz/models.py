@@ -5,13 +5,17 @@ from django.urls import reverse
 
 class Quiz(models.Model):
     title = models.CharField('Тема опроса', max_length=30, blank=False, unique=True)
-    is_completed = models.ManyToManyField(User, related_name='quiz_completed',blank=True)
+    is_completed = models.ManyToManyField(User, related_name='quiz_completed', blank=True)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self, **kwargs):
         return reverse('quiz_urls:index_quiz')
+
+    class Meta:
+        verbose_name = "Квиз"
+        verbose_name_plural = "Квизы"
 
 
 class Question(models.Model):
