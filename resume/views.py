@@ -1,5 +1,7 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
+
+from .cache import get_cache
 from .models import AboutMe, MyEducation, Stack, Projects, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -7,14 +9,26 @@ from .tasks import send_email_task
 from user_app.user_session import UserSessionToDo, UserSessionEmail, get_today, get_date, navigate_month
 from .forms import AddTodo
 from .python_prog.calendar_session_todo import MyCalendar
+from django.core.cache import cache
 
+
+# def cache_index():
+#     print(cache)
+#     index_cache_list = cache.get('index_cache')
+#     if not index_cache_list:
+#         index_cache_list = {
+#             'about_me': AboutMe.objects.all().first(),
+#             'my_education': MyEducation.objects.all(),
+#             'stacks': Stack.objects.all(),
+#         }
+#         cache.set('index_cache', index_cache_list, 60*60)
+#     return index_cache_list
 
 
 def index(request):
-    about_me = AboutMe.objects.all().first()
-    my_education = MyEducation.objects.all()
-    stacks = Stack.objects.all()
-    context = {'about_me': about_me, 'my_education': my_education, 'stacks': stacks}
+    context = {'about_me': get_cache(model='AboutMe',name='about_me'), }
+    # 'my_education': get_cache('my_education'),
+    # 'stacks': get_cache('stacks')}
 
     return render(request, 'resume/resume.html', context=context)
 
@@ -54,8 +68,9 @@ class ProjectsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
-        stacks = Stack.objects.all()
+        stacks = get_cache('stacks')
         stack = stacks.get(slug=self.kwargs['stack_slug'])
+
         projects = Projects.objects.filter(prod_stack__slug=self.kwargs['stack_slug'])
         context['stack'] = stack
         context['projects'] = projects
@@ -119,6 +134,3 @@ class ProjectsDetailView(ListView):
         context['project'] = project
         context['cards'] = CardProject.objects.filter(project=project)
         return context
-
-
-

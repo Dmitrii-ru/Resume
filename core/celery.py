@@ -14,7 +14,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         59.0,
         user_app.tasks.user_delete.s(),
-        name='add every 2'
+        name='delete_user'
     ),
 
     sender.add_periodic_task(

@@ -13,7 +13,6 @@ from django.contrib.auth.models import User
 
 @shared_task
 def user_delete():
-    print('user_delete')
     current_time = timezone.now()
     interval = timezone.timedelta(minutes=15)
     profiles = Profile.objects.filter(Q(create__lte=current_time - interval), ~Q(user__is_staff=True))
