@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .cache import get_cache_resume
+from .cache import get_cache_resume, get_filter_cards
 from .models import AboutMe, MyEducation, Stack, Projects, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -132,9 +132,7 @@ class ProjectsDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectsDetailView, self).get_context_data(**kwargs)
-        prod_all = get_cache_resume('project_key', 'projects')
-        project = get_object_or_404(prod_all, slug=self.kwargs['project_slug'])
-        cards = get_cache_resume('project_key', 'cards')
+        project = get_object_or_404(get_cache_resume('project_key', 'projects_all'), slug=self.kwargs['project_slug'])
         context['project'] = project
-        context['cards'] = cards.filter(project=project)
+        context['cards'] = get_filter_cards('project_key', 'cards_all', project)
         return context
