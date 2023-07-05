@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .cache import get_cache
+from .cache import get_cache_resume
 from .models import AboutMe, MyEducation, Stack, Projects, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -26,7 +26,9 @@ from django.core.cache import cache
 
 
 def index(request):
-    context = {'about_me': get_cache(model='AboutMe',name='about_me'), }
+    context = {'about_me': get_cache_resume(model='index_key', name='about_me'),
+               'my_education': get_cache_resume(model='index_key', name='my_education'),
+               'stacks': get_cache_resume(model='index_key', name='stacks')}
     # 'my_education': get_cache('my_education'),
     # 'stacks': get_cache('stacks')}
 
@@ -68,7 +70,7 @@ class ProjectsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
-        stacks = get_cache('stacks')
+        stacks = get_cache_resume(model='index_key', name='stacks')
         stack = stacks.get(slug=self.kwargs['stack_slug'])
 
         projects = Projects.objects.filter(prod_stack__slug=self.kwargs['stack_slug'])
@@ -130,7 +132,9 @@ class ProjectsDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectsDetailView, self).get_context_data(**kwargs)
-        project = get_object_or_404(Projects, slug=self.kwargs['project_slug'])
+        prod_all = get_cache_resume('project_key', 'projects')
+        project = get_object_or_404(prod_all, slug=self.kwargs['project_slug'])
+        cards = get_cache_resume('project_key', 'cards')
         context['project'] = project
-        context['cards'] = CardProject.objects.filter(project=project)
+        context['cards'] = cards.filter(project=project)
         return context
