@@ -9,7 +9,7 @@ cache_dict = {
     'index_key': {
         'about_me': AboutMe.objects.all().first(),
         'my_education': MyEducation.objects.all(),
-        'stacks': Stack.objects.all(),
+        'stacks_all': Stack.objects.all(),
     },
     'project_key': {
         'projects_all': Projects.objects.all(),
@@ -19,7 +19,9 @@ cache_dict = {
 
 def update_model_cache(model, name):
     model_cache = cache.get_or_set(model, cache_dict[model], 5)
+
     if not model_cache.get(name):
+        print(name)
         model_cache.update({name: cache_dict[model][name]})
         cache.set(model, model_cache)
 
@@ -33,11 +35,26 @@ def get_filter_cards(model, name, project):
     update_model_cache(model, name)
     model_cache = cache.get(model)
     if not model_cache.get(project.id):
-        model_cache.update({project.id: list(cache.get(model)[name].filter(project=project).values_list('id', flat=True))})
+        model_cache.update(
+            {project.id: list(cache.get(model)[name].filter(project=project).values_list('id', flat=True))}
+        )
         cache.set(model, model_cache)
     card_ids = model_cache[project.id]
-    print(project.prod_stack.all())
     return [card for card in cache.get(model)[name] if card.id in card_ids]
+
+
+def get_filter_stacks(model, name, project):
+    update_model_cache(model, name)
+    model_cache = cache.get(model)
+    if not model_cache.get(project.id):
+        model_cache.update(
+            {project.id: list(project.prod_stack.all().values_list('id', flat=True))}
+        )
+        cache.set(model, model_cache)
+    stacks_ids = model_cache[project.id]
+    return [stack for stack in cache.get(model)[name] if stack.id in stacks_ids]
+
+
 
 
 # def get_filter_cards(model, name, project):

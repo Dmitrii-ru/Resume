@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .cache import get_cache_resume, get_filter_cards
+from .cache import get_cache_resume, get_filter_cards, get_filter_stacks
 from .models import AboutMe, MyEducation, Stack, Projects, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -28,7 +28,7 @@ from django.core.cache import cache
 def index(request):
     context = {'about_me': get_cache_resume(model='index_key', name='about_me'),
                'my_education': get_cache_resume(model='index_key', name='my_education'),
-               'stacks': get_cache_resume(model='index_key', name='stacks')}
+               'stacks': get_cache_resume(model='index_key', name='stacks_all')}
     # 'my_education': get_cache('my_education'),
     # 'stacks': get_cache('stacks')}
 
@@ -70,7 +70,7 @@ class ProjectsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
-        stacks = get_cache_resume(model='index_key', name='stacks')
+        stacks = get_cache_resume(model='index_key', name='stacks_all')
         stack = stacks.get(slug=self.kwargs['stack_slug'])
 
         projects = Projects.objects.filter(prod_stack__slug=self.kwargs['stack_slug'])
@@ -135,4 +135,5 @@ class ProjectsDetailView(ListView):
         project = get_object_or_404(get_cache_resume('project_key', 'projects_all'), slug=self.kwargs['project_slug'])
         context['project'] = project
         context['cards'] = get_filter_cards('project_key', 'cards_all', project)
+        context['stacks'] = get_filter_stacks('index_key', 'stacks_all', project)
         return context

@@ -47,6 +47,7 @@ class Stack(models.Model):
         return f'{self.name}'
 
     def get_absolute_url(self):
+        print(self)
         return reverse('resume_urls:stack', kwargs={'stack_slug': self.slug})
 
     class Meta:
