@@ -1,8 +1,9 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .cache import get_cache_resume, get_filter_cards, get_filter_stacks
-from .models import AboutMe, MyEducation, Stack, Projects, CardProject
+from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all
+# from .cache import get_cache_resume, get_filter_cards, get_filter_stacks
+from .models import AboutMe, MyEducation, Stack, Project, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
 from .tasks import send_email_task
@@ -26,12 +27,9 @@ from django.core.cache import cache
 
 
 def index(request):
-    context = {'about_me': get_cache_resume(model='index_key', name='about_me'),
-               'my_education': get_cache_resume(model='index_key', name='my_education'),
-               'stacks': get_cache_resume(model='index_key', name='stacks_all')}
-    # 'my_education': get_cache('my_education'),
-    # 'stacks': get_cache('stacks')}
-
+    context = {'about_me': get_model_all(AboutMe)[0],
+               'my_education': get_model_all(MyEducation),
+               'stacks': get_model_all(Stack)}
     return render(request, 'resume/resume.html', context=context)
 
 
@@ -66,17 +64,18 @@ def send_email_view(request):
 
 
 class ProjectsView(ListView):
-    model = Projects
+    model = Project
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
-        stacks = get_cache_resume(model='index_key', name='stacks_all')
-        stack = stacks.get(slug=self.kwargs['stack_slug'])
-
-        projects = Projects.objects.filter(prod_stack__slug=self.kwargs['stack_slug'])
+        stacks = get_model_all(Stack)
+        # print(Stack._meta.__dict__)
+        # print()
+        stack = get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])
+        projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
+        context['stacks'] = stacks
         context['stack'] = stack
         context['projects'] = projects
-        context['stacks'] = stacks
         context['stack_slug'] = self.kwargs['stack_slug']
         return context
 
@@ -127,13 +126,14 @@ def TodoDelReplaceSessionView(request, **kwargs):
     return redirect('resume_urls:todo_session_day', kwargs['slug_day'])
 
 
-class ProjectsDetailView(ListView):
+class ProjectDetailView(ListView):
     model = CardProject
 
     def get_context_data(self, **kwargs):
-        context = super(ProjectsDetailView, self).get_context_data(**kwargs)
-        project = get_object_or_404(get_cache_resume('project_key', 'projects_all'), slug=self.kwargs['project_slug'])
+        context = super(ProjectDetailView, self).get_context_data(**kwargs)
+        project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
+        # project = get_object_or_404(get_cache_resume('project_key', 'projects_all'), slug=self.kwargs['project_slug'])
         context['project'] = project
-        context['cards'] = get_filter_cards('project_key', 'cards_all', project)
-        context['stacks'] = get_filter_stacks('index_key', 'stacks_all', project)
+        context['cards'] = get_filter_model(CardProject, 'project', project)
+        context['stacks'] = get_mtm_all(Project, 'stacks', project)
         return context

@@ -14,7 +14,7 @@ class MyEducation(models.Model):
     name = models.CharField('Название курса', max_length=200)
     school = models.CharField('Школа', max_length=200)
     end = models.CharField('Дата окончания', max_length=20, null=True, blank=True)
-    diploma = models.CharField('Ссылка не диплом', max_length=200, null=True, blank=True)
+    diploma = models.CharField('Ссылка на диплом', max_length=200, null=True, blank=True)
     percent = models.IntegerField('Процент завершения курса')
 
     def __str__(self):
@@ -47,7 +47,7 @@ class Stack(models.Model):
         return f'{self.name}'
 
     def get_absolute_url(self):
-        print(self)
+
         return reverse('resume_urls:stack', kwargs={'stack_slug': self.slug})
 
     class Meta:
@@ -55,20 +55,17 @@ class Stack(models.Model):
         verbose_name_plural = "Стэки"
 
 
-class Projects(models.Model):
+class Project(models.Model):
     slug = models.SlugField('Слаг', null=False, db_index=True)
-    prod_stack = models.ManyToManyField(Stack, verbose_name='Технологии проекта', related_name='ps')
+    stacks = models.ManyToManyField(Stack, verbose_name='Технологии проекта', related_name='project_stacks')
     name = models.CharField('Название проекта', max_length=50)
     about = models.CharField('О проекте', max_length=200)
     image = models.ImageField('Ава проекта', upload_to='img', null=True, blank=True, default='default_project.png')
     status = models.CharField('Статус', choices=CHOICE_STATUS, default="True", max_length=5)
     link_git = models.CharField('Ссылка на GitHub', max_length=100, null=True, blank=True)
     link_site = models.CharField('Ссылка на WebSite', max_length=100, null=True, blank=True)
-    style_btn2 = models.CharField('Цвет обводки', max_length=100, null=True, blank=True, default='black')
 
-    # def save(self, *args, **kwargs):
-    #     self.slug = slugify(self.name)
-    #     super(Projects, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return f'{self.name}'
@@ -88,7 +85,7 @@ class EmailSend(models.Model):
 
 
 class CardProject(models.Model):
-    project = models.ForeignKey(Projects, verbose_name='Проект', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, verbose_name='Проект', on_delete=models.CASCADE)
     title = models.CharField('Тема', max_length=40)
     text = RichTextField('Текст', max_length=10000)
 

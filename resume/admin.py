@@ -19,14 +19,14 @@ class CardProjectInline(admin.StackedInline):
     form = TestForm
 
 
-class AdminProjects(admin.ModelAdmin):
-    filter_horizontal = ['prod_stack']
+class AdminProject(admin.ModelAdmin):
+    filter_horizontal = ['stacks']
     fieldsets = (
         ('О проекте', {
             'fields': ('name', 'about', 'image', 'status', 'slug')
         }),
         ('Технологии', {
-            'fields': ('prod_stack',)
+            'fields': ('stacks',)
         }),
         ('Ссылки', {
             'fields': (('link_git', 'link_site'),)
@@ -36,4 +36,4 @@ class AdminProjects(admin.ModelAdmin):
     inlines = (CardProjectInline,)
 
 
-admin.site.register(Projects, AdminProjects)
+admin.site.register(Project, AdminProject)
