@@ -10,20 +10,6 @@ from .forms import AddTodo
 from .python_prog.calendar_session_todo import MyCalendar
 
 
-
-# def cache_index():
-#     print(cache)
-#     index_cache_list = cache.get('index_cache')
-#     if not index_cache_list:
-#         index_cache_list = {
-#             'about_me': AboutMe.objects.all().first(),
-#             'my_education': MyEducation.objects.all(),
-#             'stacks': Stack.objects.all(),
-#         }
-#         cache.set('index_cache', index_cache_list, 60*60)
-#     return index_cache_list
-
-
 def index(request):
     context = {'about_me': get_model_all(AboutMe)[0],
                'my_education': get_model_all(MyEducation),
@@ -67,8 +53,6 @@ class ProjectsView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
         stacks = get_model_all(Stack)
-        # print(Stack._meta.__dict__)
-        # print()
         stack = get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])
         projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
         context['stacks'] = stacks
@@ -130,7 +114,6 @@ class ProjectDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
-        # project = get_object_or_404(get_cache_resume('project_key', 'projects_all'), slug=self.kwargs['project_slug'])
         context['project'] = project
         context['cards'] = get_filter_model(CardProject, 'project', project)
         context['stacks'] = get_mtm_all(Project, 'stacks', project)
