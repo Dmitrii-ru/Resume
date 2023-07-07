@@ -42,4 +42,4 @@ def delete_cache(model):
     keys = redis_client.keys('*')
     for key in keys:
         if model in key:
-            cache.delete(key.replace(':1:', ''))
+            redis_client.delete(key)
