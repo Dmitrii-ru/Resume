@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from pytils.translit import slugify
 from ckeditor.fields import RichTextField
+from .cache import delete_cache
 
 CHOICE_STATUS = [
     ('True', 'Завершен'),
@@ -24,6 +25,10 @@ class MyEducation(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = "Образование"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(self._meta.model_name)
+
 
 class AboutMe(models.Model):
     text = RichTextField('О себе', max_length=2000)
@@ -38,6 +43,9 @@ class AboutMe(models.Model):
         verbose_name = "О себе"
         verbose_name_plural = "О себе"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(self._meta.model_name)
 
 class Stack(models.Model):
     name = models.CharField('Название технологии', max_length=20)
@@ -47,12 +55,15 @@ class Stack(models.Model):
         return f'{self.name}'
 
     def get_absolute_url(self):
-
         return reverse('resume_urls:stack', kwargs={'stack_slug': self.slug})
 
     class Meta:
         verbose_name = "Стэк"
         verbose_name_plural = "Стэки"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(self._meta.model_name)
 
 
 class Project(models.Model):
@@ -65,14 +76,16 @@ class Project(models.Model):
     link_git = models.CharField('Ссылка на GitHub', max_length=100, null=True, blank=True)
     link_site = models.CharField('Ссылка на WebSite', max_length=100, null=True, blank=True)
 
-
-
     def __str__(self):
         return f'{self.name}'
 
     class Meta:
         verbose_name = "Проект"
         verbose_name_plural = "Проекты"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(self._meta.model_name)
 
 
 class EmailSend(models.Model):
@@ -96,7 +109,6 @@ class CardProject(models.Model):
         verbose_name = "Карточка"
         verbose_name_plural = "Карточки"
 
-
-
-
-
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(self._meta.model_name)

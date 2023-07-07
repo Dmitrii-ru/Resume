@@ -1,8 +1,6 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
-
 from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all
-# from .cache import get_cache_resume, get_filter_cards, get_filter_stacks
 from .models import AboutMe, MyEducation, Stack, Project, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -10,7 +8,7 @@ from .tasks import send_email_task
 from user_app.user_session import UserSessionToDo, UserSessionEmail, get_today, get_date, navigate_month
 from .forms import AddTodo
 from .python_prog.calendar_session_todo import MyCalendar
-from django.core.cache import cache
+
 
 
 # def cache_index():
