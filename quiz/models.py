@@ -5,7 +5,7 @@ from django.urls import reverse
 
 class Quiz(models.Model):
     title = models.CharField('Тема опроса', max_length=30, blank=False, unique=True)
-    is_completed = models.ManyToManyField(User, related_name='quiz_completed', blank=True)
+    is_completed = models.ManyToManyField(User, related_name='quiz_completed', blank=True,verbose_name='Прошли тест')
 
     def __str__(self):
         return self.title
@@ -14,8 +14,8 @@ class Quiz(models.Model):
         return reverse('quiz_urls:index_quiz')
 
     class Meta:
-        verbose_name = "Квиз"
-        verbose_name_plural = "Квизы"
+        verbose_name = "Тест"
+        verbose_name_plural = "Тесты"
 
 
 class Question(models.Model):
@@ -27,6 +27,9 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.parent_quiz} - {self.title}'
 
+    class Meta:
+        verbose_name = "Вопрос"
+        verbose_name_plural = "Вопросы "
 
 class Answer(models.Model):
     parent_question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
@@ -36,3 +39,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return f'{self.parent_question} - {self.title}'
+
+    class Meta:
+        verbose_name = "Ответ"
+        verbose_name_plural = "Ответы"

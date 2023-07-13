@@ -11,9 +11,11 @@ from django.forms import forms
 
 
 class QuestionModelFormSet(BaseInlineFormSet):
+
     class Meta:
         model = Question
         fields = "__all__"
+
 
 
     def clean(self):
@@ -98,9 +100,11 @@ class QuestionInline(NestedStackedInline):
 
 
 class QuizAdminForm(ModelForm):
+
     class Meta:
         model = Quiz
         fields = '__all__'
+
 
     def clean(self):
         cleaned_data = super().clean()
@@ -116,6 +120,7 @@ class QuizAdminForm(ModelForm):
 class QuizAdmin(NestedModelAdmin):
     inlines = [QuestionInline]
     form = QuizAdminForm
+    readonly_fields = ["is_completed"]
 
 
 admin.site.register(Quiz, QuizAdmin)
