@@ -6,11 +6,13 @@ from resume.models import EmailSettings
 
 
 def send_email_my(massage_num, to_send, name, subject):
+
     is_active_email = EmailSettings.objects.filter(is_active='True').first()
     sender = is_active_email.name_email
     password = is_active_email.password_email
     email_host = is_active_email.host_email
     post = is_active_email.port_email
+
     try:
         if ALLOWED_HOSTS:
             host = "http://" + ALLOWED_HOSTS[0]

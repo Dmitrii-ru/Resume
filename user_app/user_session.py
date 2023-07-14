@@ -22,6 +22,7 @@ class UserSessionEmail:
             self.add()
         else:
             self.user_session_email = user_session_email
+            self.add()
 
     def add(self):
         self.user_session_email['email_count'] = 2

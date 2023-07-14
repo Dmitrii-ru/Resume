@@ -5,15 +5,17 @@ from django.shortcuts import render, get_object_or_404
 from core import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 
+from django.contrib.auth.views import PasswordResetView
 from .models import Profile
 from .user_session import UserSessionApp, UserSessionToDo, UserSessionEmail
 from mptt_blog.models import Category, Post, CommentsPost
 from quiz.models import Quiz, Question
 from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
+from resume.models import EmailSettings
 
 
 def create_previous_path(req_meta_path, req_path, usa):
@@ -140,3 +142,12 @@ class CustomLogoutView(LogoutView):
             request.session['user_session_email'] = user_session_email
         request.session.save()
         return response
+
+
+class CustomPasswordResetView(PasswordResetView):
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except:
+            return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")

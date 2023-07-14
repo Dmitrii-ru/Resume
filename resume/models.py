@@ -138,3 +138,4 @@ class EmailSettings(models.Model):
 
     def __str__(self):
         return f'{self.host_email} - {self.name_email} - {self.port_email} - {self.is_active}'
+

@@ -1,9 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.views import PasswordResetView
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
-
+from user_app.views import CustomPasswordResetView
 from user_app.forms import EmailValidationPasswordResetView
 
 urlpatterns = [
@@ -16,8 +17,12 @@ urlpatterns = [
     path('quiz/', include('quiz.urls', namespace='quiz_urls')),
 
     path('_nested_admin/', include('nested_admin.urls')),
-    path('user/pass-reset/', authViews.PasswordResetView.as_view(template_name='user_app/pass-reset.html',
-         email_template_name="user_app/password_reset_form.html",form_class=EmailValidationPasswordResetView),
+    path('user/pass-reset/',
+         CustomPasswordResetView.as_view(
+             template_name='user_app/pass-reset.html',
+             email_template_name="user_app/password_reset_form.html",
+             form_class=EmailValidationPasswordResetView
+         ),
          name='pass-reset',
          ),
 
