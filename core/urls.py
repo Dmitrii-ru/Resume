@@ -34,12 +34,18 @@ urlpatterns = [
          ),
 
     path('user/password_reset_done/',
-         authViews.PasswordResetDoneView.as_view(template_name='user_app/password_reset_done.html'),
-         name='password_reset_done'),
+         authViews.PasswordResetDoneView.as_view(
+             template_name='user_app/password_reset_done.html'
+         ),
+         name='password_reset_done'
+         ),
 
     path('user/password_reset_complete/',
-         authViews.PasswordResetCompleteView.as_view(template_name='user_app/password_reset_complete.html'),
-         name='password_reset_complete'),
+         authViews.PasswordResetCompleteView.as_view(
+             template_name='user_app/password_reset_complete.html'
+         ),
+         name='password_reset_complete'
+         ),
 
 ]
 
