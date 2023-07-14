@@ -141,11 +141,11 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'testemailru014@gmail.com'
-EMAIL_HOST_PASSWORD = 'jiwmpeflbdfrqold'
-EMAIL_PORT = 587
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'testemailru014@gmail.com'
+# EMAIL_HOST_PASSWORD = 'jiwmpeflbdfrqold'
+# EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30

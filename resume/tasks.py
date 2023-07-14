@@ -1,17 +1,13 @@
 from datetime import timedelta
 from celery import shared_task
-from core.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 from resume.python_prog.send_mail_prog import send_email_my
 from django.utils import timezone
 
 import django
-
 django.setup()
-
 from resume.models import EmailSend
 
-sender = EMAIL_HOST_USER
-password = EMAIL_HOST_PASSWORD
+
 
 
 @shared_task
