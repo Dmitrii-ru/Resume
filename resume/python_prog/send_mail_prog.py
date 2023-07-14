@@ -1,15 +1,17 @@
 import smtplib
 from email.mime.text import MIMEText
-from core.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT, ALLOWED_HOSTS
+from core.settings import ALLOWED_HOSTS
 from resume.models import EmailSend
-
-sender = EMAIL_HOST_USER
-password = EMAIL_HOST_PASSWORD
+from resume.models import EmailSettings
 
 
 def send_email_my(massage_num, to_send, name, subject):
+    is_active_email = EmailSettings.objects.filter(is_active='True').first()
+    sender = is_active_email.name_email
+    password = is_active_email.password_email
+    email_host = is_active_email.host_email
+    post = is_active_email.port_email
     try:
-
         if ALLOWED_HOSTS:
             host = "http://" + ALLOWED_HOSTS[0]
         else:
@@ -25,7 +27,7 @@ def send_email_my(massage_num, to_send, name, subject):
             2: 'Непомнине от соискателя, данное сообщение сформировано автоматически'
         }
 
-        server = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
+        server = smtplib.SMTP(email_host, post)
 
         # Шифорванный обмен
         server.starttls()
@@ -43,6 +45,5 @@ def send_email_my(massage_num, to_send, name, subject):
         )
         print('send_email_my: GOOD')
         return 'Your massage was send successfully!'
-
     except Exception as error:
         return f"{error} "

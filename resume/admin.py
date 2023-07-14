@@ -37,3 +37,4 @@ class AdminProject(admin.ModelAdmin):
 
 
 admin.site.register(Project, AdminProject)
+admin.site.register(EmailSettings)

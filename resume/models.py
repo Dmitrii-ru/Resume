@@ -10,6 +10,11 @@ CHOICE_STATUS = [
     ('False', 'В работе')
 ]
 
+CHOICE_EMAIL = [
+    ('True', 'Использовать почту'),
+    ('False', 'Не использовать почту')
+]
+
 
 class MyEducation(models.Model):
     name = models.CharField('Название курса', max_length=200)
@@ -46,6 +51,7 @@ class AboutMe(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
+
 
 class Stack(models.Model):
     name = models.CharField('Название технологии', max_length=20)
@@ -112,3 +118,23 @@ class CardProject(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
+
+
+class EmailSettings(models.Model):
+    host_email = models.CharField('Хостинг, пример: smtp.gmail.com', max_length=100)
+    name_email = models.CharField('Имя почты, пример: testemailru014@gmail.com', max_length=100)
+    password_email = models.CharField('Пароль, пример: 1234dssads12', max_length=100)
+    port_email = models.IntegerField('Порт, пример: 587')
+    is_active = models.CharField('Статус почты', choices=CHOICE_EMAIL, default="False", max_length=5)
+
+    class Meta:
+        verbose_name = "Почта"
+        verbose_name_plural = "Почты"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.is_active == 'True':
+            EmailSettings.objects.exclude(id=self.pk).update(is_active='False')
+
+    def __str__(self):
+        return f'{self.host_email} - {self.name_email} - {self.port_email} - {self.is_active}'
