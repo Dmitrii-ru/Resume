@@ -56,7 +56,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
-
 USER_SESSION = 'user_session'
 USER_SESSION_EMAIL_ID = 'user_session_email'
 USER_SESSION_TODO_ID = 'user_session_todo'
