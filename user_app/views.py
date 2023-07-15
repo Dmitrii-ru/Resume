@@ -147,14 +147,11 @@ class CustomLogoutView(LogoutView):
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'user_app/pass-reset.html'
     email_template_name = "user_app/password_reset_form.html"
-
     form_class = CustomPasswordResetForm
 
-    # def form_valid(self, form):
-    #     try:
-    #
-    #         return super().form_valid(form)
-    #
-    #     except:
-    #         return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except:
+            return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")
 

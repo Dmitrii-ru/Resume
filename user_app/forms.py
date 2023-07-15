@@ -141,8 +141,6 @@ class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetFor
     email = forms.EmailField(required=False, widget=forms.TextInput(attrs={'class': 'form-control text-center',
                                                                            'placeholder': 'Введите почту'}))
 
-
-
     def render_email(self, email_template_name, context):
         email_body = render_to_string(email_template_name, context)
         return email_body

@@ -12,7 +12,7 @@ app.autodiscover_tasks()
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        283182.0,
+        59.0,
         user_app.tasks.user_delete.s(),
         name='delete_user'
     ),
