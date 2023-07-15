@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
 from user_app.views import CustomPasswordResetView
-from user_app.forms import EmailValidationPasswordResetView
+from user_app.forms import EmailValidationPasswordResetView, CustomPasswordResetForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,35 +15,27 @@ urlpatterns = [
     path('mptt_blog/', include('mptt_blog.urls', namespace='mptt_blog_urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('quiz/', include('quiz.urls', namespace='quiz_urls')),
-
     path('_nested_admin/', include('nested_admin.urls')),
-    path('user/pass-reset/',
-         CustomPasswordResetView.as_view(
-             template_name='user_app/pass-reset.html',
-             email_template_name="user_app/password_reset_form.html",
-             form_class=EmailValidationPasswordResetView
-         ),
-         name='pass-reset',
-         ),
+    path('user/pass-reset/', CustomPasswordResetView.as_view(), name='pass-reset', ),
 
     path('user/password_reset_confirm/<uidb64>/<token>/',
          authViews.PasswordResetConfirmView.as_view(
              template_name='user_app/password_reset_confirm.html'
-         ),
+                                                    ),
          name='password_reset_confirm'
          ),
 
     path('user/password_reset_done/',
          authViews.PasswordResetDoneView.as_view(
              template_name='user_app/password_reset_done.html'
-         ),
+                                                ),
          name='password_reset_done'
          ),
 
     path('user/password_reset_complete/',
          authViews.PasswordResetCompleteView.as_view(
              template_name='user_app/password_reset_complete.html'
-         ),
+                                                    ),
          name='password_reset_complete'
          ),
 

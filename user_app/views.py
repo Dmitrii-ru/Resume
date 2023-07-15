@@ -3,7 +3,7 @@ import os
 from django.shortcuts import render, get_object_or_404
 
 from core import settings
-from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileImageForm, CustomPasswordResetForm
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
@@ -145,9 +145,16 @@ class CustomLogoutView(LogoutView):
 
 
 class CustomPasswordResetView(PasswordResetView):
+    template_name = 'user_app/pass-reset.html'
+    email_template_name = "user_app/password_reset_form.html"
 
-    def form_valid(self, form):
-        try:
-            return super().form_valid(form)
-        except:
-            return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")
+    form_class = CustomPasswordResetForm
+
+    # def form_valid(self, form):
+    #     try:
+    #
+    #         return super().form_valid(form)
+    #
+    #     except:
+    #         return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")
+

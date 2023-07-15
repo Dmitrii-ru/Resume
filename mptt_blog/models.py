@@ -3,8 +3,7 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
 from pytils.translit import slugify
-from django.urls import reverse, reverse_lazy
-from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from ckeditor.fields import RichTextField
 

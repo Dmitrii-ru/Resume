@@ -1,10 +1,8 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.contrib import admin
-from django.http import HttpResponseRedirect
-
 from .models import Quiz, Question, Answer
-from django.forms import ModelForm, inlineformset_factory
+from django.forms import ModelForm
 from nested_admin import NestedStackedInline, NestedModelAdmin, NestedTabularInline
 from django.forms.models import BaseInlineFormSet
 from django.forms import forms
