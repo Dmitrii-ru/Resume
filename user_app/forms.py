@@ -2,12 +2,10 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
-
 from resume.models import EmailSettings
 from .models import Profile
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 from .tasks import password_reset_send_mail_task
 
@@ -101,45 +99,6 @@ class EmailValidationPasswordResetView:
         return email
 
 
-# class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetForm):
-#     email = forms.EmailField(required=False, widget=forms.TextInput(attrs={'class': 'form-control text-center',
-#                                                                            'placeholder': 'Введите почту'}))
-#
-#     def render_subject(self):
-#         return "Сброс пароля"
-#
-#     def render_email(self, email_template_name, context):
-#         email_body = render_to_string(email_template_name, context)
-#         return email_body
-#
-#     def send_mail(self, subject_template_name,
-#                   email_template_name, context,
-#                   from_email,
-#                   to_email,
-#                   html_email_template_name=None):
-#
-#         subject = self.render_subject()
-#         body = self.render_email(email_template_name, context)
-#         email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
-#
-#         if html_email_template_name is not None:
-#             html_email = self.render_html_email(html_email_template_name, context)
-#             email_message.attach_alternative(html_email, 'text/html')
-#
-#         email_settings_db = EmailSettings.objects.filter(is_active='True').first()
-#         if email_settings_db:
-#             email_message.connection = get_connection(
-#                 backend=settings.EMAIL_BACKEND,
-#                 host=email_settings_db.host_email,
-#                 port=email_settings_db.port_email,
-#                 username=email_settings_db.name_email,
-#                 password=email_settings_db.password_email,
-#                 use_tls=settings.EMAIL_USE_TLS,
-#             )
-#
-#         email_message.send()
-
-
 class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetForm):
     email = forms.EmailField(required=False, widget=forms.TextInput(attrs={'class': 'form-control text-center',
                                                                            'placeholder': 'Введите почту'}))
@@ -167,8 +126,7 @@ class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetFor
             settings_db['password'] = email_settings_db.password_email,
             settings_db['use_tls'] = settings.EMAIL_USE_TLS,
 
-            password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name, settings_db)
+            password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name,
+                                                settings_db)
         else:
             raise ValidationError("Отправка письма сейчас недоступна")
-
-
