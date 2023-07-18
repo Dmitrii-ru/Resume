@@ -154,4 +154,3 @@ class CustomPasswordResetView(PasswordResetView):
             return super().form_valid(form)
         except:
             return HttpResponse("Ошибка отправки электронной почты для восстановления пароля")
-

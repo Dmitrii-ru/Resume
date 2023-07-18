@@ -1,6 +1,9 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
+
+from resume.models import EmailSettings
 from .models import Profile
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
@@ -150,7 +153,20 @@ class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetFor
                   from_email,
                   to_email,
                   html_email_template_name=None):
-
         subject = "Сброс пароля"
         body = self.render_email(email_template_name, context)
-        password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name)
+
+        settings_db = {}
+        email_settings_db = EmailSettings.objects.filter(is_active='True').first()
+
+        if email_settings_db:
+            settings_db['backend'] = settings.EMAIL_BACKEND
+            settings_db['host'] = email_settings_db.host_email,
+            settings_db['port'] = email_settings_db.port_email,
+            settings_db['username'] = email_settings_db.name_email,
+            settings_db['password'] = email_settings_db.password_email,
+            settings_db['use_tls'] = settings.EMAIL_USE_TLS,
+
+            password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name, settings_db)
+        else:
+            raise ValidationError("Отправка письма сейчас недоступна")
