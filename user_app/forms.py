@@ -170,3 +170,5 @@ class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetFor
             password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name, settings_db)
         else:
             raise ValidationError("Отправка письма сейчас недоступна")
+
+
