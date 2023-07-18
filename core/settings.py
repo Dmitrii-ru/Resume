@@ -8,11 +8,6 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
-
-
-
-
-# SECRET_KEY = 'django-insecure-3%bg0jc7bmu#vh=b*(ofpa%25gjn+$o3@&&ke^t1wp-q6b9cla'
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -150,10 +145,6 @@ CKEDITOR_CONFIGS = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'testemailru014@gmail.com'
-# EMAIL_HOST_PASSWORD = 'jiwmpeflbdfrqold'
-# EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
