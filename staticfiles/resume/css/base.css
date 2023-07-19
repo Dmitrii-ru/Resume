@@ -1,8 +1,19 @@
 
+.text_foll{
+  font-family: 'Marck Script', cursive;
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  color:rgb(44, 42, 42);
 
+}
+
+.border_prod_list{
+  border-top: 3px solid rgb(44, 42, 42);
+}
 
 .centered {
-    width: 280px;
+    width: 300px;
     margin-top: auto;
     background: #E7EAEF;
     padding: 10px;
@@ -30,4 +41,7 @@
 .button_user:hover {
   border: 2px solid #69da6d83;
   background-color: white;
+}
+#id_email{
+    margin-top: 9px;
 }

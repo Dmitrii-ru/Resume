@@ -436,3 +436,6 @@ font-size: 12px;
     margin-top: 300px;
 }
 
+.border_but{
+    border-bottom: 2px solid wheat;
+}

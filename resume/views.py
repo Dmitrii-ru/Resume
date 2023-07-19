@@ -11,9 +11,13 @@ from .python_prog.calendar_session_todo import MyCalendar
 
 
 def index(request):
-    context = {'about_me': get_model_all(AboutMe)[0],
-               'my_education': get_model_all(MyEducation),
-               'stacks': get_model_all(Stack)}
+    context = {}
+    about_me = get_model_all(AboutMe)
+    if about_me:
+        context['about_me'] = about_me[0]
+    context['my_education'] = get_model_all(MyEducation)
+    context['stacks'] = get_model_all(Stack)
+
     return render(request, 'resume/resume.html', context=context)
 
 
