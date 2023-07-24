@@ -67,7 +67,6 @@ class ProjectsView(ListView):
 
 def TodoSessionView(request, **kwargs):
     ust = UserSessionToDo(request)
-
     form_add_todo = AddTodo()
     if request.method == "POST":
         post = request.POST.copy()

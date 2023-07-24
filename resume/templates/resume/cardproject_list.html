@@ -22,9 +22,11 @@
           <p class="card-text">Статус проекта: {{project.get_status_display}}</p>
 
           <p class="card-text decorat"> Технологии:
-            {% for st in stacks %}
-                <a class="button_user " href="{{st.get_absolute_url}}">{{st}}</a>
-            {% endfor %}
+
+              {% for st in stacks %}
+                  <a class="button_user " href="{{st.get_absolute_url}}">{{st}}</a>
+              {% endfor %}
+
           </p>
         </div>
       </div>
@@ -48,5 +50,5 @@
   </div>
 {% endfor %}
 </div>
-
+<center><p>dw</p></center>
 {%endblock%}

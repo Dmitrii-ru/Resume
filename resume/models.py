@@ -68,13 +68,12 @@ class Stack(models.Model):
         verbose_name_plural = "Стэки"
 
     def save(self, *args, **kwargs):
-
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
 
 
 class Project(models.Model):
-    slug = models.SlugField('Слаг', null=False, db_index=True)
+    slug = models.SlugField('Слаг', null=False, db_index=True, blank=True)
     stacks = models.ManyToManyField(Stack, verbose_name='Технологии проекта', related_name='project_stacks')
     name = models.CharField('Название проекта', max_length=50)
     about = models.CharField('О проекте', max_length=200)
@@ -91,6 +90,7 @@ class Project(models.Model):
         verbose_name_plural = "Проекты"
 
     def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
 
@@ -139,4 +139,3 @@ class EmailSettings(models.Model):
 
     def __str__(self):
         return f'{self.host_email} - {self.name_email} - {self.port_email} - {self.is_active}'
-
