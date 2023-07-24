@@ -26,7 +26,7 @@ def send_email_view(request):
     # Обновляю дату
     user_s.update_date_count()
     count = user_s.user_session_email['email_count']
-
+    print('sssssssssssssssss')
     if count != 0:
         letter = 'письмо' if count == 1 else 'письма'
         if request.method == 'POST':
