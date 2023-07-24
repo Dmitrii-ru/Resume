@@ -17,7 +17,6 @@ def index(request):
         context['about_me'] = about_me[0]
     context['my_education'] = get_model_all(MyEducation)
     context['stacks'] = get_model_all(Stack)
-
     return render(request, 'resume/resume.html', context=context)
 
 
@@ -35,6 +34,7 @@ def send_email_view(request):
             if form.is_valid():
                 email = form.cleaned_data.get('email')
                 name = form.cleaned_data.get('name')
+
                 send_email_task.delay(name=name,
                                       to_send=email,
                                       subject=1,
