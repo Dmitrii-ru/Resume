@@ -9,8 +9,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = True
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
-ALLOWED_HOSTS = ['localhost','31.129.100.177']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,10 +84,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'resumedb',
-        'USER': 'resumeuser',
-        'PASSWORD': 'resumeuserpassword',
-        'HOST': 'localhost',
+        'NAME': env('NAME_DB'),
+        'USER': env('USER_DB'),
+        'PASSWORD': env('PASSWORD_DB'),
+        'HOST': env('HOST_DB'),
         'PORT': '',
     }
 }
