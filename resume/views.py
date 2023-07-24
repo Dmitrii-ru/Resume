@@ -15,7 +15,7 @@ def index(request):
     about_me = get_model_all(AboutMe)
     if about_me:
         context['about_me'] = about_me[0]
-    context['my_education'] = get_model_all(MyEducation)
+    context['my_education'] = get_model_all(MyEducation).order_by('percent')
     context['stacks'] = get_model_all(Stack)
     return render(request, 'resume/resume.html', context=context)
 
