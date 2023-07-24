@@ -68,6 +68,7 @@ class Stack(models.Model):
         verbose_name_plural = "Стэки"
 
     def save(self, *args, **kwargs):
+
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
 
