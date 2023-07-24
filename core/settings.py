@@ -10,7 +10,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','31.129.100.177']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -83,10 +83,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'resumedb',
+        'USER': 'resumeuser',
+        'PASSWORD': 'resumeuserpassword',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -112,7 +117,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
