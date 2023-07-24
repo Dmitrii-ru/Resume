@@ -52,7 +52,7 @@
             <ul>
                 <h5 class="sub-title"></h5>
                     <em>Опыт работы</em>
-                    <p><a href="{{about_me.link_HH}}">Ссылка на HH.ru </a></p>
+                    <p><a href="{{about_me.link_HH}}"></a>Ссылка на HH.ru </p>
                     <em>Образование </em>
                     <p>{{about_me.education_my}}</p>
                      <a href="{% url 'resume_urls:send_email' %}" class="btn btn-primary">Отправить ссылку на резюме на почту</a>
@@ -85,7 +85,7 @@
                     Платформа: {{education.school}}
                 </span>
                 <span class="me-3">
-                    <a href="{{education.diploma}}">Курс: {{education.name}}</a>
+                    <a href="{{education.diploma}}" style="color:#88706B">Курс: {{education.name}}</a>
                 </span>
                 <span class="">
                     {%if education.end%}
