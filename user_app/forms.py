@@ -42,7 +42,12 @@ class UserRegisterForm(UserCreationForm):
         email = self.cleaned_data['email']
         if not re.match(email_val, email):
             raise ValidationError('Проверьте правильность ввода email')
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Пользователь с таким email уже существует.")
+
         return email
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

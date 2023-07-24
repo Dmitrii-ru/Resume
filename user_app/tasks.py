@@ -4,10 +4,8 @@ from django.db.models import Q
 from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives, get_connection
 
-import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-django.setup()
+
 
 
 @shared_task
