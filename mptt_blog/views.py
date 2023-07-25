@@ -28,8 +28,7 @@ def random_posts(posts):
 class CategoryListView(ListView):
     model = Category
     template_name = "mptt_blog/category/category_list.html"
-    queryset = Category.objects.filter(level=0)
-    context_object_name = 'cats'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,14 +38,13 @@ class CategoryListView(ListView):
             # Получаем id постов которые публичные или юзер автор
             r_posts = random_posts(
                 Post.objects.filter(Q(is_privat=False) | Q(author=self.request.user)).values_list('id', flat=True))
+
             post_qs = post_qs.filter(pk__in=r_posts).annotate(
                 is_favour=Exists(Post.objects.filter(pk=OuterRef('pk'), favourites=self.request.user)),
                 is_like=Exists(Post.objects.filter(pk=OuterRef('pk'), likes=self.request.user))
             )
         else:
             post_qs = random_posts(post_qs.filter(is_privat=False))
-
-
 
         context['posts'] = post_qs
         context['like_text'] = like_text
@@ -65,7 +63,6 @@ class CategoryMPTTView(ListView):
     paginate_by = 8
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         category = get_object_or_404(Category.objects.select_related('author'), url=self.kwargs['slug_cat'])
         cats = category.get_children()
@@ -79,6 +76,7 @@ class CategoryMPTTView(ListView):
         context['fav_false_text'] = fav_false_text
         context['fav_true_text'] = fav_true_text
         if self.request.user.is_authenticated:
+
             post_ids = {x.id: i for i, x in enumerate(context['page_obj'].object_list)}
 
             for post_id in self.request.user.favourite_posts.filter(id__in=list(post_ids.keys())).values_list('id', flat=True):
@@ -96,11 +94,7 @@ class CategoryMPTTView(ListView):
         if self.request.user.is_authenticated:
             post_qs = post_qs.filter(
                 Q(is_privat=False) | Q(author=self.request.user))
-            # for post in post_qs:
-            #     # if self.request.user in post.favourites.all():
-            #     #     post.is_favour = True
-            #     if self.request.user in post.likes.all():
-            #         post.is_like = True
+
         else:
             post_qs = post_qs.filter(is_privat=False)
         return post_qs
