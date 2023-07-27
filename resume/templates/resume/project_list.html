@@ -14,21 +14,24 @@
 </div>
 <h1 class="text-center mt-3 mb-3 ">Список проектов {{stack.name}}</h1>
 <div class="container body_list ">
-    <div class="row row justify-content-md-center ">
-        {%for project in projects%}
+    <div class="row justify-content-md-center">
+        {% for project in projects %}
         <div class="card col-3 m-2 list_prod box" style="width: 18rem;">
-            <img class="card-img-top img_card" src="{{project.image.url}}" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">{{project.name}}</h5>
-                <p class="card-text">{{project.about}}</p>
-                {% if  project.link_site%}
-                    <a href="{{project.link_site}}" class="btn btn-secondary mt-1">Перейти на {{project.name}}</a>
-                {% endif %}
-                {% if  project.link_git%}
-                    <a href="{{project.link_git}}" class="btn btn-secondary mt-1">Перейти на GitHub</a>
-                {% endif %}
-                <a href="{% url 'resume_urls:proj_detail' stack_slug project.slug %}" class="btn btn-secondary mt-1">Описание проекта</a>
-
+            <img class="card-img-top img_card" src="{{ project.image.url }}" alt="Card image cap">
+            <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h5 class="card-title">{{ project.name }}</h5>
+                    <p class="card-text">{{ project.about }}</p>
+                </div>
+                <div class="card_links">
+                    {% if project.link_site %}
+                        <a href="{{ project.link_site }}" class="btn btn-secondary mt-1">Перейти на {{ project.name }}</a>
+                    {% endif %}
+                    {% if project.link_git %}
+                        <a href="{{ project.link_git }}" class="btn btn-secondary mt-1">Перейти на GitHub</a>
+                    {% endif %}
+                    <a href="{% url 'resume_urls:proj_detail' stack_slug project.slug %}" class="btn btn-secondary mt-1">Описание проекта</a>
+                </div>
             </div>
         </div>
         {% endfor %}
