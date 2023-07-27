@@ -362,6 +362,11 @@ li {
 
 }
 
+.branch_div{
+      justify-content: center;
+      word-break: break-all;
+      align-items: center;
+}
 
 
 
@@ -408,7 +413,9 @@ font-size: 12px;
   }
 
 .support_peper_text{
+
   border-top: 1px solid rgb(83, 78, 78);
+  border-bottom: 1px solid rgb(83, 78, 78);
 
 
 }
@@ -438,4 +445,13 @@ font-size: 12px;
 
 .border_but{
     border-bottom: 2px solid wheat;
+}
+
+.liks {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #fff; /* Цвет фона, если нужно */
 }

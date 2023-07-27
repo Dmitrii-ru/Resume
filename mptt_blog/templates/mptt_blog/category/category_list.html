@@ -25,59 +25,63 @@
   <div class="content-wrapper">
     <div class="content">
     	<div class=" text-center">
-      		<h1 class="mt-3">Случайные статьи</h1>
-<div class="d-flex flex-wrap justify-content-xl-center ">
+      		<h1 class="mt-3 text-center">Случайные статьи</h1>
+				<div class="d-flex flex-wrap justify-content-xl-center ">
 
         				{% for post in posts %}
 							<div class="card_paper_border" >
+
         	    				<a class="card_paper_2 dec_a " style="text-decoration: none;" href="{{post.get_absolute_url}}">
-									<div class="card_paper_title">
-										<h3 class="font_title_text">{{post.title}}</h3>
+									<div class="card_paper_title" >
+										<h3 class="font_title_text " >{{post.title}}</h3>
 									</div>
 								</a>
 
-									<div class="support_peper_text">
+								<div class="support_peper_text  p-1">
 
-										<div class="text-center" >
-											<a   href="{{post.category.get_absolute_url}}" class="font_s card_paper_3 text-center ml-2" style="word-break: break-all ;"><span class=""> {{post.category}}</span> </a>
+									<div class="footer_support_peper_text">
+
+										<div style="">
+											<p class="font_s m-0">Автор: <span class="">{{post.author}}</span> </p>
+											<span class="font_s ">Likes <span class="like-count{{post.id}}">{{post.like_count}}</span> </span>
 										</div>
-										<div class="footer_support_peper_text">
-											<div style="">
-												<p class="font_s m-0">Автор: <span class="">{{post.author}}</span> </p>
-												<span class="font_s ">Likes <span class="like-count{{post.id}}">{{post.like_count}}</span> </span>
+
+										{%if user.is_authenticated%}
+											<div class="card_paper_support d-flex justify-content-center mb-0 row " >
+												<form action="{% url 'mptt_blog_urls:like' %}" method="POST" class="like-form col"  id="{{post.id}}">
+													<button type="submit"  class="font_s like_btn_style like-btn{{post.id}}">
+														{% if post.is_like %}
+															{{like_text}}
+														{% else %}
+															{{UnLike_text}}
+														{%endif%}
+													</button>
+												</form>
+												|
+												<form action="{% url 'mptt_blog_urls:favourites' %}" method="POST" class="favourites-form col" id="{{post.id}}">
+													<button type="submit"  class="font_s like_btn_style favourites-btn{{post.id}}">
+														{% if post.is_favour %}
+															{{fav_true_text}}
+														{% else %}
+															{{fav_false_text}}
+														{% endif %}
+													</button>
+												</form>
 											</div>
 
-											{%if user.is_authenticated%}
-												<div class="card_paper_support d-flex justify-content-center mb-0 row " >
-
-													<form action="{% url 'mptt_blog_urls:like' %}" method="POST" class="like-form col"  id="{{post.id}}">
-													 <button type="submit"  class="font_s like_btn_style like-btn{{post.id}}">
-														{% if post.is_like %}
-														 	{{like_text}}
-														{% else %}
-														 	{{UnLike_text}}
-														{%endif%}
-														</button>
-
-													</form>
-													|
-													<form action="{% url 'mptt_blog_urls:favourites' %}" method="POST" class="favourites-form col" id="{{post.id}}">
-														<button type="submit"  class="font_s like_btn_style favourites-btn{{post.id}}">
-															{% if post.is_favour %}
-																{{fav_true_text}}
-															{% else %}
-																{{fav_false_text}}
-															{% endif %}
-														</button>
-													   </form>
-												</div>
-											{% endif %}
+										{% endif %}
+									</div>
+								</div>
+									<div class="" style="">
+								    	<div class="text-center p-1 branch_div text-wrap">
+											{% for link in post.links %}
+												/<a style="word-wrap: break-word;" href="{{link.1}}" class="font_s card_paper_3 text-center ml-1 dec_a">{{link.0}}</a>
+											{% endfor%}
 										</div>
 									</div>
-
 							</div>
         				{%endfor%}
-					</div>
+				</div>
     	</div>
     </div>
   </div>

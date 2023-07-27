@@ -3,16 +3,17 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.views.generic.edit import FormMixin
+from mptt.querysets import TreeQuerySet
+
 from .models import Category, Post, CommentsPost
 from .forms import CategoryCreateForm, PostCreateForm, CategoryUpdateForm, PostUpdateForm, CommentsPostForm
 from django.urls import reverse
-from django.db.models import Q, OuterRef, Exists
+from django.db.models import Q, OuterRef, Exists, Subquery
 from rules.contrib.views import PermissionRequiredMixin
-
 
 import random
 
-like_text = 'Понравился'
+like_text = 'Понравилась'
 UnLike_text = 'Поставить Like'
 fav_false_text = 'Нет в избранных'
 fav_true_text = 'В избранных'
@@ -29,10 +30,8 @@ class CategoryListView(ListView):
     model = Category
     template_name = "mptt_blog/category/category_list.html"
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        r_posts = []
         post_qs = Post.objects.select_related('author').select_related('category').all().order_by('-created')
         if self.request.user.is_authenticated:
             # Получаем id постов которые публичные или юзер автор
@@ -41,10 +40,15 @@ class CategoryListView(ListView):
 
             post_qs = post_qs.filter(pk__in=r_posts).annotate(
                 is_favour=Exists(Post.objects.filter(pk=OuterRef('pk'), favourites=self.request.user)),
-                is_like=Exists(Post.objects.filter(pk=OuterRef('pk'), likes=self.request.user))
+                is_like=Exists(Post.objects.filter(pk=OuterRef('pk'), likes=self.request.user)),
             )
+
         else:
             post_qs = random_posts(post_qs.filter(is_privat=False))
+
+        for p in post_qs:
+            branch = p.category.get_ancestors(ascending=True, include_self=True)
+            p.links = [[p.title, p.url] for p in branch.reverse()]
 
         context['posts'] = post_qs
         context['like_text'] = like_text
@@ -79,10 +83,12 @@ class CategoryMPTTView(ListView):
 
             post_ids = {x.id: i for i, x in enumerate(context['page_obj'].object_list)}
 
-            for post_id in self.request.user.favourite_posts.filter(id__in=list(post_ids.keys())).values_list('id', flat=True):
+            for post_id in self.request.user.favourite_posts.filter(id__in=list(post_ids.keys())).values_list('id',
+                                                                                                              flat=True):
                 context['page_obj'].object_list[post_ids[post_id]].is_favour = True
 
-            for post_id in self.request.user.like_posts.filter(id__in=list(post_ids.keys())).values_list('id', flat=True):
+            for post_id in self.request.user.like_posts.filter(id__in=list(post_ids.keys())).values_list('id',
+                                                                                                         flat=True):
                 context['page_obj'].object_list[post_ids[post_id]].is_like = True
 
         return context
