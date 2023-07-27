@@ -353,12 +353,13 @@ li {
   color: black;
   justify-content: center;
   align-items: center;
-
   min-height: 260px;
-  word-break: break-all;
-
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
+  text-align:center;
   text-decoration: none;
-  max-width: 400px;
+  max-width: 600px;
   min-width: 280px;
 
 }
@@ -377,7 +378,7 @@ li {
       border: 1px solid rgb(83, 78, 78);
       border-radius: 2%;
       margin: 10px;
-      max-width: 400px;
+      max-width: 600px;
       min-width: 260px;
 }
 .card_paper_title{
