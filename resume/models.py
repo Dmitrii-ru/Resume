@@ -92,16 +92,12 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        if self.image:
-            self.crop_image()
+
+
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
 
-    def crop_image(self):
-        img = Image.open(self.image.path)
-        target_size = (270, 270)
-        img.thumbnail(target_size)
-        img.save(self.image.path)
+
 
 
 class EmailSend(models.Model):

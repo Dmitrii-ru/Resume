@@ -353,15 +353,22 @@ li {
   color: black;
   justify-content: center;
   align-items: center;
-  width: 260px;
   min-height: 260px;
-  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
+  text-align:center;
   text-decoration: none;
-  max-width: 280px;
+  max-width: 600px;
   min-width: 280px;
 
 }
 
+.branch_div{
+      justify-content: center;
+      word-break: break-all;
+      align-items: center;
+}
 
 
 
@@ -371,10 +378,12 @@ li {
       border: 1px solid rgb(83, 78, 78);
       border-radius: 2%;
       margin: 10px;
-      max-width: 280px;
+      max-width: 600px;
       min-width: 260px;
 }
-
+.card_paper_title{
+    white-space: normal;
+}
 
 
 
@@ -408,7 +417,9 @@ font-size: 12px;
   }
 
 .support_peper_text{
+
   border-top: 1px solid rgb(83, 78, 78);
+  border-bottom: 1px solid rgb(83, 78, 78);
 
 
 }
@@ -438,4 +449,13 @@ font-size: 12px;
 
 .border_but{
     border-bottom: 2px solid wheat;
+}
+
+.liks {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #fff; /* Цвет фона, если нужно */
 }
