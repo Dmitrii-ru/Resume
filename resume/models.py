@@ -29,7 +29,7 @@ class MyEducation(models.Model):
 
     class Meta:
         verbose_name = "Курс"
-        verbose_name_plural = "Образование"
+        verbose_name_plural = "Курсы"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
