@@ -33,7 +33,7 @@ def send_email_view(request):
             if form.is_valid():
                 email = form.cleaned_data.get('email')
                 name = form.cleaned_data.get('name')
-
+                print('www')
                 send_email_task.delay(name=name,
                                       to_send=email,
                                       subject=1,

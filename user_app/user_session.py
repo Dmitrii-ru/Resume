@@ -24,6 +24,7 @@ class UserSessionEmail:
             self.user_session_email = user_session_email
 
 
+
     def add(self):
         self.user_session_email['email_count'] = 2
         self.user_session_email['date'] = str(datetime.now().date())

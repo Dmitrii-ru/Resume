@@ -12,7 +12,6 @@ def send_email_my(massage_num, to_send, name, subject):
         password = is_active_email.password_email
         email_host = is_active_email.host_email
         post = is_active_email.port_email
-
         try:
             if ALLOWED_HOSTS:
                 host = "http://" + ALLOWED_HOSTS[1]
@@ -45,9 +44,8 @@ def send_email_my(massage_num, to_send, name, subject):
                 email=to_send,
                 defaults={'name': name}
             )
-            print('send_email_my: GOOD')
             return 'Your massage was send successfully!'
         except Exception as error:
             return f"{error} "
     else:
-        return ValueError('Отправка письма не доступна ')
+        return ValueError('Отправка письма не доступна')
