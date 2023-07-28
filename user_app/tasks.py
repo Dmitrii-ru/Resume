@@ -12,9 +12,8 @@ from django.core.mail import EmailMultiAlternatives, get_connection
 def user_delete():
     from user_app.models import Profile
     from django.contrib.auth.models import User
-    print('user_delete_task')
     current_time = timezone.now()
-    interval = timezone.timedelta(minutes=15)
+    interval = timezone.timedelta(minutes=30)
     profiles = Profile.objects.filter(Q(create__lte=current_time - interval), ~Q(user__is_staff=True))
     User.objects.filter(profile__in=profiles).delete()
 
