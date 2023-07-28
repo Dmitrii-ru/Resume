@@ -94,15 +94,15 @@ class Project(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
-        if self.img:
+        if self.image:
             print('w')
-            image = Image.open(self.img.path)
+            image = Image.open(self.image.path)
             print('w1')
             if image.height > 270 or image.width > 270:
                 resize = (270, 270)
                 image.thumbnail(resize)
                 print('w2')
-                image.save(self.img.path)
+                image.save(self.image.path)
 
 
 class EmailSend(models.Model):
