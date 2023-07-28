@@ -14,23 +14,28 @@
         {% block title %} Мое резюме {% endblock %}
   </title>
 </head>
-<body class="text_foll">
-<header class="m-1 mb-3">
-<div class="d-flex justify-content-center decorat">
-  {%if not user.is_authenticated%}
-    <a class="button_user" href="{% url 'user_urls:reg' %}?next={{ request.path }} ">Регистрация</a>
-    <a  class="button_user" href="{% url 'user_urls:user' %}?next={{ request.path }} ">Войти</a>
-  {%else%}
-    <a class="button_user" href="{%url 'user_urls:profile'%}">Изменить профиль</a>
-    <a class="button_user" href="{%url 'user_urls:exit' %}?next={{ request.path }}">Выйти</a>
-  {%endif%}
-    <a href="{%url 'resume_urls:index'%}" class="button_user">Резюме</a>
-</div>
-</header>
+  <body class="text_foll">
+      <header class="m-1 mb-3">
+        <div class="d-flex justify-content-center decorat">
 
-{%block context%}
+          {%if not user.is_authenticated%}
+            <a class="button_user" href="{% url 'user_urls:reg' %}?next={{ request.path }} ">Регистрация</a>
+            <a  class="button_user" href="{% url 'user_urls:user' %}?next={{ request.path }} ">Войти</a>
+          {%else%}
+            <a class="button_user" href="{%url 'user_urls:profile'%}">Изменить профиль</a>
+            <a class="button_user" href="{%url 'user_urls:exit' %}?next={{ request.path }}">Выйти</a>
+          {%endif%}
+            <a href="{%url 'resume_urls:index'%}" class="button_user">Резюме</a>
+        </div>
+      </header>
 
-{%endblock%}
+      <main>
+        {%block context%}
 
-</body>
+        {%endblock%}
+      </main>
+      <footer>
+          <p>©Все правы</p>
+      </footer>
+  </body>
 </html>

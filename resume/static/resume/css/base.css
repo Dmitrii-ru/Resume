@@ -40,10 +40,33 @@
 
 .button_user:hover {
   border: 2px solid #69da6d83;
-  background-color: white;
+
 }
 #id_email{
     margin-top: 9px;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header {
+
+    padding: 10px;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    padding: 10px;
+    text-align: center;
 }
 
 
