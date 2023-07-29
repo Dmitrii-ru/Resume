@@ -3,7 +3,7 @@ from celery import Celery
 import user_app.tasks
 import resume.tasks
 from celery.schedules import crontab
-
+broker_connection_retry_on_startup = True
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 app = Celery('core',broker='redis://localhost:6379/0')
 app.config_from_object('django.conf:settings', namespace='CELERY')
