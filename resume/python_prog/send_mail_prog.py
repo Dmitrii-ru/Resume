@@ -14,7 +14,7 @@ def send_email_my(massage_num, to_send, name, subject):
         post = is_active_email.port_email
         try:
             if ALLOWED_HOSTS:
-                host = "http://" + ALLOWED_HOSTS[1]
+                host = "http://" + ALLOWED_HOSTS[0]
 
             else:
                 host = 'http://127.0.0.1:8000/'
