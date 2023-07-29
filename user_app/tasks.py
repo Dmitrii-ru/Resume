@@ -38,6 +38,6 @@ def password_reset_send_mail_task(subject, body, from_email, to_email, html_emai
         import traceback
         traceback.print_exc()
     else:
-        user = Profile.objects.get(user__email=to_email)
+        user = Profile.objects.get(Q(user__email=to_email),~Q(user__is_staff=True))
         user.reset_password = True
         user.save()
