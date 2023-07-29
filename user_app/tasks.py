@@ -5,15 +5,12 @@ from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives, get_connection
 
 
-
-
-
 @shared_task
 def user_delete():
     from user_app.models import Profile
     from django.contrib.auth.models import User
     current_time = timezone.now()
-    interval = timezone.timedelta(minutes=1)
+    interval = timezone.timedelta(minutes=15)
     profiles = Profile.objects.filter(Q(create__lte=current_time - interval), ~Q(user__is_staff=True))
     User.objects.filter(profile__in=profiles).delete()
 
@@ -22,7 +19,7 @@ def user_delete():
 def password_reset_send_mail_task(subject, body, from_email, to_email, html_email_template_name, settings_db,
                                   html_email=None, ):
     email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
-
+    from user_app.models import Profile
     if html_email:
         email_message.attach_alternative(html_email, 'text/html')
 
@@ -36,6 +33,11 @@ def password_reset_send_mail_task(subject, body, from_email, to_email, html_emai
             use_tls=settings_db['use_tls']
         )
         email_message.send()
+
     except Exception as e:
         import traceback
         traceback.print_exc()
+    else:
+        user = Profile.objects.get(user__email=to_email)
+        user.reset_password = True
+        user.save()

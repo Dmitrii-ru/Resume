@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     img = models.ImageField('Фото пользователя', default='default_user.png', upload_to='user_images')
     create = models.DateTimeField(auto_now_add=True)
-
+    reset_password = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Профайл пользователя {self.user.username}"

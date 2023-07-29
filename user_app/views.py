@@ -145,6 +145,7 @@ class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
 
     def form_valid(self, form):
+
         try:
             return super().form_valid(form)
         except:

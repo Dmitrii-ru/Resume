@@ -48,7 +48,6 @@ class UserRegisterForm(UserCreationForm):
 
         return email
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         del self.fields['password2']
@@ -97,10 +96,14 @@ class EmailValidationPasswordResetView:
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        user = Profile.objects.filter(user__email=email)
+        print(user)
         if not re.match(email_val, email):
             raise ValidationError('Введите верный email')
-        elif not User.objects.filter(email=email).exists():
+        elif not user.exists():
             raise ValidationError("Пользователя с такой почтой не существует")
+        elif user.first().reset_password:
+            raise ValidationError("Вы уже восстанавливали пароль")
         return email
 
 
