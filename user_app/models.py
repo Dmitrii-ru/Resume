@@ -9,6 +9,7 @@ class Profile(models.Model):
     img = models.ImageField('Фото пользователя', default='default_user.png', upload_to='user_images')
     create = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return f"Профайл пользователя {self.user.username}"
 
