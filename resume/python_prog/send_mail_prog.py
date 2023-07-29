@@ -12,6 +12,7 @@ def send_email_my(massage_num, to_send, name, subject):
         password = is_active_email.password_email
         email_host = is_active_email.host_email
         post = is_active_email.port_email
+        print('sens_mail')
         try:
             if ALLOWED_HOSTS:
                 host = "http://" + ALLOWED_HOSTS[1]
