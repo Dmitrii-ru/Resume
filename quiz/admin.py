@@ -14,8 +14,6 @@ class QuestionModelFormSet(BaseInlineFormSet):
         model = Question
         fields = "__all__"
 
-
-
     def clean(self):
         list_title = []
 

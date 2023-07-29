@@ -22,6 +22,7 @@ class UserSessionEmail:
             self.add()
         else:
             self.user_session_email = user_session_email
+            self.add()
 
 
 

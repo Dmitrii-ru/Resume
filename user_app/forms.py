@@ -125,11 +125,11 @@ class CustomPasswordResetForm(EmailValidationPasswordResetView, PasswordResetFor
 
         if email_settings_db:
             settings_db['backend'] = settings.EMAIL_BACKEND
-            settings_db['host'] = email_settings_db.host_email,
-            settings_db['port'] = email_settings_db.port_email,
-            settings_db['username'] = email_settings_db.name_email,
-            settings_db['password'] = email_settings_db.password_email,
-            settings_db['use_tls'] = settings.EMAIL_USE_TLS,
+            settings_db['host'] = email_settings_db.host_email
+            settings_db['port'] = email_settings_db.port_email
+            settings_db['username'] = email_settings_db.name_email
+            settings_db['password'] = email_settings_db.password_email
+            settings_db['use_tls'] = settings.EMAIL_USE_TLS
 
             password_reset_send_mail_task.delay(subject, body, from_email, to_email, html_email_template_name,
                                                 settings_db)
