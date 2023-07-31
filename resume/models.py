@@ -182,9 +182,9 @@ class Feedback(models.Model):
         return f'{self.title}  - {self.date}'
 
 
-# def get_aggregate_feedback():
-#     return len(Feedback.objects.all())
-#
-#
-#
-# Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
+def get_aggregate_feedback():
+    return len(Feedback.objects.all())
+
+
+
+Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
