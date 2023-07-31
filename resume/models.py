@@ -174,7 +174,7 @@ UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
 
 
 class Feedback(models.Model):
-    title = models.CharField('Заголовок ', max_length=33)
+    title = models.CharField('Заголовок ', max_length=33 ,blank=True)
     text = RichTextField('Текст')
     date = models.DateField(auto_now_add=True)
 

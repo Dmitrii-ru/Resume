@@ -57,20 +57,11 @@ class AddTodo(forms.Form):
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        fields = ('title', 'text')
+        fields = ('text',)
 
-
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Заголовок', 'class': 'fb_title'}), label='',
-                            required=False,
-                            max_length=33)
     text = forms.CharField(widget=CKEditorWidget(attrs={'placeholder': 'Текст'}), label='', required=False,
                            max_length=2000)
 
-    def clean_title(self):
-        title = self.cleaned_data['title']
-        if not title:
-            raise ValidationError('Напишите заголовок')
-        return title
 
     def clean_text(self):
         text = self.cleaned_data['text']
