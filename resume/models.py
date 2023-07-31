@@ -169,7 +169,7 @@ def get_aggregate_uniqueIP():
 
 
 # Устанавливаем значение verbose_name_plural после определения функции
-UniqueIP._meta.verbose_name_plural = f"Посешение сайти {get_aggregate_uniqueIP()}"
+UniqueIP._meta.verbose_name_plural = f"Посещение сайта {get_aggregate_uniqueIP()}"
 
 
 class Feedback(models.Model):
