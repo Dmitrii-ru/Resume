@@ -165,11 +165,12 @@ class UniqueIP(models.Model):
 
 
 def get_aggregate_uniqueIP():
-    return UniqueIP.objects.all().aggregate(Sum('count_visit'))['count_visit__sum']
+    u = UniqueIP.objects.all().aggregate(Sum('count_visit'))
+    return f"Активность на сейте - {u['count_visit__sum']}. Количество уникальных посетителй - {len(u)}."
 
 
-# Устанавливаем значение verbose_name_plural после определения функции
-UniqueIP._meta.verbose_name_plural = f"Посещение сайта {get_aggregate_uniqueIP()}"
+
+UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
 
 
 class Feedback(models.Model):
@@ -178,3 +179,11 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+def get_aggregate_feedback():
+    return len(Feedback.objects.all())
+
+
+
+Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
