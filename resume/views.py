@@ -30,7 +30,13 @@ def index(request):
 
 
 def feedback(request):
-    form = FeedbackForm()
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('resume_urls:index')
+    else:
+        form = FeedbackForm()
     context = {'form': form}
     return render(request, 'resume/feedback.html', context=context)
 

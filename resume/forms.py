@@ -6,7 +6,6 @@ from validate_email import validate_email
 from django.contrib.sessions.backends.db import SessionStore
 import re
 from user_app.user_session import UserSessionToDo
-from .models import CardProject
 
 reg = r'^[a-zA-Z0-9]([A-Za-z0-9]+[._-])*[A-Za-z0-9_]+@[A-Za-z0-9-_]+(\.[A-Z|a-z]{2,})+$'
 
@@ -55,14 +54,28 @@ class AddTodo(forms.Form):
         return todo
 
 
-
-
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        fields = ('title', 'content')
+        fields = ('title', 'text')
 
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Заголовок'}), label='', required=False,
+
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Заголовок', 'class': 'fb_title'}), label='',
+                            required=False,
                             max_length=33)
-    content = forms.CharField(widget=CKEditorWidget(attrs={'placeholder': 'Текст'}), label='', required=False,
-                              max_length=2000)
+    text = forms.CharField(widget=CKEditorWidget(attrs={'placeholder': 'Текст'}), label='', required=False,
+                           max_length=2000)
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if not title:
+            raise ValidationError('Напишите заголовок')
+        return title
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if not text:
+            raise ValidationError('Напишите заголовок')
+        if len(text) < 10:
+            raise ValidationError('Вы очень скромный , хотя бы 10 символов')
+        return text

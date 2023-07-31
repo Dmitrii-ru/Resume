@@ -21,6 +21,15 @@
     border-radius: 2px;
 }
 
+.centered2 {
+    width: 800px;
+    margin-top: auto;
+    background: #E7EAEF;
+    padding: 10px;
+    border: 2px solid #69da6d83;
+    border-radius: 2px;
+}
+
 .decorat a {
   color: #000 !important;
   text-decoration: none

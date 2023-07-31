@@ -175,3 +175,6 @@ UniqueIP._meta.verbose_name_plural = f"Посещение сайта {get_aggreg
 class Feedback(models.Model):
     title = models.CharField('Заголовок ', max_length=33)
     text = RichTextField('Текст')
+
+    def __str__(self):
+        return f'{self.title}'

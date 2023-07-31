@@ -21,6 +21,16 @@
     border-radius: 2px;
 }
 
+.centered2 {
+    width: 1000px;
+    margin-top: auto;
+    background: #E7EAEF;
+    padding: 10px;
+    border: 2px solid #69da6d83;
+    border-radius: 2px;
+
+}
+
 .decorat a {
   color: #000 !important;
   text-decoration: none
@@ -67,5 +77,8 @@ footer {
     padding: 10px;
     text-align: center;
 }
-
+.fb_title{
+    width: 100%;
+    text-align: center;
+}
 
