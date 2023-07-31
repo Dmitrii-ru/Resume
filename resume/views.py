@@ -1,6 +1,6 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
-from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all
+from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all, count_send_email
 from .models import AboutMe, MyEducation, Stack, Project, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm
@@ -8,6 +8,15 @@ from .tasks import send_email_task
 from user_app.user_session import UserSessionToDo, UserSessionEmail, get_today, get_date, navigate_month
 from .forms import AddTodo
 from .python_prog.calendar_session_todo import MyCalendar
+
+
+def get_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def index(request):
@@ -21,12 +30,16 @@ def index(request):
 
 
 def send_email_view(request):
+    ip = get_ip(request)
     stacks = Stack.objects.all()
     user_s = UserSessionEmail(request)
     # Обновляю дату
     user_s.update_date_count()
-    count = user_s.user_session_email['email_count']
-    if count != 0:
+    # count = user_s.user_session_email['email_count']
+    count = count_send_email(ip)
+    count_bool = count < 2
+    if count_bool:
+
         letter = 'письмо' if count == 1 else 'письма'
         if request.method == 'POST':
             form = EmailSendForm(request.POST)
@@ -38,12 +51,12 @@ def send_email_view(request):
                                       subject=1,
                                       massage_num=1,
                                       )
-                user_s.update()
+                user_s.update(ip)
                 return redirect('resume_urls:index')
         else:
             form = EmailSendForm()
         return render(request, 'resume/send_email.html',
-                      {'form': form, 'stacks': stacks, 'count': count, 'letter': letter})
+                      {'form': form, 'stacks': stacks, 'count': abs(count-2), 'count_bool': count_bool, 'letter': letter})
 
     else:
         return render(request, 'resume/send_email.html', {'stacks': stacks})

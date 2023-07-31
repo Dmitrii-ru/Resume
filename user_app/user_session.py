@@ -4,6 +4,7 @@ from core import settings
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 import uuid
+from resume.cache import update_cache_ip
 
 
 class UserSessionEmail:
@@ -22,8 +23,6 @@ class UserSessionEmail:
             self.add()
         else:
             self.user_session_email = user_session_email
-            self.add()
-
 
 
     def add(self):
@@ -31,7 +30,8 @@ class UserSessionEmail:
         self.user_session_email['date'] = str(datetime.now().date())
         self.save()
 
-    def update(self):
+    def update(self, ip):
+        update_cache_ip(ip)
         self.user_session_email['email_count'] -= 1
         self.save()
 

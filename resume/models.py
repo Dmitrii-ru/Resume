@@ -141,7 +141,6 @@ class EmailSettings(models.Model):
         verbose_name = "Почта"
         verbose_name_plural = "Почты"
 
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.is_active == 'True':
@@ -154,11 +153,11 @@ class EmailSettings(models.Model):
 class UniqueIP(models.Model):
     ip_address = models.GenericIPAddressField(unique=True)
     date = models.DateField(auto_now_add=True)
+    count_visit = models.BigIntegerField(default=0)
 
     class Meta:
         verbose_name = "Посетитель"
         verbose_name_plural = "Посетители"
-
 
     def __str__(self):
         return f'{self.ip_address} - {self.date}'

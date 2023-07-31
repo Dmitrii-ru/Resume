@@ -43,3 +43,22 @@ def delete_cache(model):
     for key in keys:
         if model in key:
             redis_client.delete(key)
+
+
+def count_send_email(ip):
+    if not ip:
+        return 3
+    ip_data = cache.get('ip_data', {})
+    client = ip_data.get(ip, 0)
+    return client
+
+
+def update_cache_ip(ip):
+    if ip:
+        ip_data = cache.get('ip_data', {})
+        ip_data[ip] = ip_data.get(ip, 0) + 1
+        cache.set('ip_data', ip_data)
+
+
+def del_ip_all():
+    cache.delete('ip_data')

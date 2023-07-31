@@ -1,6 +1,8 @@
 from datetime import timedelta
 from celery import shared_task
 from django.utils import timezone
+from resume.cache import del_ip_all
+
 
 @shared_task
 def send_email_task(massage_num, to_send, name, subject):
@@ -23,3 +25,8 @@ def check_email_old_task():
             subject = 2
             send_email_task.delay(name=obj.name, massage_num=massage, to_send=obj.email, subject=subject)
         old_mails.delete()
+
+
+@shared_task
+def del_ip_all_task():
+    del_ip_all()

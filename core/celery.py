@@ -3,6 +3,7 @@ from celery import Celery
 import user_app.tasks
 import resume.tasks
 from celery.schedules import crontab
+
 broker_connection_retry_on_startup = True
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 app = Celery('core',broker='redis://localhost:6379/0')
@@ -22,4 +23,11 @@ def setup_periodic_tasks(sender, **kwargs):
         resume.tasks.check_email_old_task.s(),
         name='check_old_emails'
     )
+
+    sender.add_periodic_task(
+        crontab(hour=0, minute=1),
+        resume.tasks.del_ip_all_task.s(),
+        name='del_ip_all'
+    )
+
 
