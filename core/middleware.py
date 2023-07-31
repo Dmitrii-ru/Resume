@@ -3,6 +3,8 @@ from core.settings import ALLOWED_HOSTS
 
 from resume.models import UniqueIP
 
+list_exclude = ['188.233.76.49', ALLOWED_HOSTS[1]]
+
 
 class UniqueIpMiddleware:
     def __init__(self, get_response):
@@ -10,7 +12,7 @@ class UniqueIpMiddleware:
 
     def __call__(self, request):
         get_ip = self.get_client_ip(request)
-        if get_ip != ALLOWED_HOSTS[1]:
+        if get_ip not in list_exclude:
             ip = UniqueIP.objects.filter(ip_address=self.get_client_ip(request))
             if ip.exists():
                 obj = ip.first()
