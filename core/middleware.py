@@ -12,13 +12,15 @@ class UniqueIpMiddleware:
 
     def __call__(self, request):
         get_ip = self.get_client_ip(request)
+        print(get_ip)
+
         if get_ip not in list_exclude:
             ip = UniqueIP.objects.filter(ip_address=self.get_client_ip(request))
             if ip.exists():
                 obj = ip.first()
                 obj.count_visit += 1
             else:
-                obj = UniqueIP.objects.create(ip_address=ip, count_visit=1)
+                obj = UniqueIP.objects.create(ip_address=get_ip, count_visit=1)
             obj.save()
         return self.get_response(request)
 
