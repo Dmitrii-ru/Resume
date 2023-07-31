@@ -161,7 +161,7 @@ class UniqueIP(models.Model):
         verbose_name_plural = f"Посетители "
 
     def __str__(self):
-        return f'{self.ip_address} - {self.date} Визиты - {self.count_visit}'
+        return f'{self.ip_address} //  {self.date} //  Визиты - {self.count_visit}'
 
 
 def get_aggregate_uniqueIP():
