@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -139,6 +141,7 @@ class EmailSettings(models.Model):
         verbose_name = "Почта"
         verbose_name_plural = "Почты"
 
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.is_active == 'True':
@@ -146,3 +149,16 @@ class EmailSettings(models.Model):
 
     def __str__(self):
         return f'{self.host_email} - {self.name_email} - {self.port_email} - {self.is_active}'
+
+
+class UniqueIP(models.Model):
+    ip_address = models.GenericIPAddressField(unique=True)
+    date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Посетитель"
+        verbose_name_plural = "Посетители"
+
+
+    def __str__(self):
+        return f'{self.ip_address} - {self.date}'

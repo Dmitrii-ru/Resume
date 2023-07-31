@@ -6,6 +6,7 @@ from .models import *
 admin.site.register(MyEducation)
 admin.site.register(AboutMe)
 admin.site.register(EmailSend)
+admin.site.register(UniqueIP)
 
 
 @admin.register(Stack)
