@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.urls import reverse
 from django.utils.text import slugify
 from pytils.translit import slugify
@@ -165,8 +165,8 @@ class UniqueIP(models.Model):
 
 
 def get_aggregate_uniqueIP():
-    u = UniqueIP.objects.all().aggregate(Sum('count_visit'))
-    return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{len(u)}."
+    u = UniqueIP.objects.all().aggregate(Sum('count_visit'),Count('id') )
+    return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{u['id__count']}."
 
 
 

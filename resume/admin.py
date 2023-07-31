@@ -6,7 +6,7 @@ from .models import *
 admin.site.register(MyEducation)
 admin.site.register(AboutMe)
 admin.site.register(EmailSend)
-admin.site.register(Feedback)
+
 
 @admin.register(UniqueIP)
 class AdminUniqueIP(admin.ModelAdmin):
@@ -23,6 +23,18 @@ class AdminUniqueIP(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
+@admin.register(Feedback)
+class AdminFeedback(admin.ModelAdmin):
+
+    ordering = ['-date']
+    list_display = ('date' , 'text')
+    list_per_page = 50
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 
