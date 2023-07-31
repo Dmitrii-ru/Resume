@@ -166,7 +166,7 @@ class UniqueIP(models.Model):
 
 def get_aggregate_uniqueIP():
     u = UniqueIP.objects.all().aggregate(Sum('count_visit'))
-    return f"Активность на сейте - {u['count_visit__sum']}. Количество уникальных посетителй - {len(u)}."
+    return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{len(u)}."
 
 
 
@@ -176,14 +176,15 @@ UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
 class Feedback(models.Model):
     title = models.CharField('Заголовок ', max_length=33)
     text = RichTextField('Текст')
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.title}  - {self.date}'
 
 
-def get_aggregate_feedback():
-    return len(Feedback.objects.all())
-
-
-
-Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
+# def get_aggregate_feedback():
+#     return len(Feedback.objects.all())
+#
+#
+#
+# Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"

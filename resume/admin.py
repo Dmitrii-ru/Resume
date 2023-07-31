@@ -14,11 +14,6 @@ class AdminUniqueIP(admin.ModelAdmin):
     ordering = ['-count_visit']
     list_display = ('ip_address', 'count_visit', 'date')
     list_per_page = 50
-
-
-
-
-
     def has_add_permission(self, request):
         return False
 
@@ -27,6 +22,8 @@ class AdminUniqueIP(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
 
 
 
