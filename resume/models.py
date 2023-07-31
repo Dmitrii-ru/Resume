@@ -8,6 +8,8 @@ from ckeditor.fields import RichTextField
 from .cache import delete_cache
 from PIL import Image
 
+
+
 CHOICE_STATUS = [
     ('True', 'Завершен'),
     ('False', 'В работе')
@@ -160,4 +162,9 @@ class UniqueIP(models.Model):
         verbose_name_plural = "Посетители"
 
     def __str__(self):
-        return f'{self.ip_address} - {self.date}'
+        return f'{self.ip_address} - {self.date} Визиты - {self.count_visit}'
+
+
+class Feedback(models.Model):
+    title = models.CharField('Заголовок ', max_length=33)
+    text = RichTextField('Текст')

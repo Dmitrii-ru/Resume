@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all, count_send_email
 from .models import AboutMe, MyEducation, Stack, Project, CardProject
 from django.views.generic import ListView
-from .forms import EmailSendForm
+from .forms import EmailSendForm, FeedbackForm
 from .tasks import send_email_task
 from user_app.user_session import UserSessionToDo, UserSessionEmail, get_today, get_date, navigate_month
 from .forms import AddTodo
@@ -27,6 +27,12 @@ def index(request):
     context['my_education'] = get_model_all(MyEducation).order_by('-percent')
     context['stacks'] = get_model_all(Stack)
     return render(request, 'resume/resume.html', context=context)
+
+
+def feedback(request):
+    form = FeedbackForm()
+    context = {'form': form}
+    return render(request, 'resume/feedback.html', context=context)
 
 
 def send_email_view(request):
@@ -56,7 +62,8 @@ def send_email_view(request):
         else:
             form = EmailSendForm()
         return render(request, 'resume/send_email.html',
-                      {'form': form, 'stacks': stacks, 'count': abs(count-2), 'count_bool': count_bool, 'letter': letter})
+                      {'form': form, 'stacks': stacks, 'count': abs(count - 2), 'count_bool': count_bool,
+                       'letter': letter})
 
     else:
         return render(request, 'resume/send_email.html', {'stacks': stacks})

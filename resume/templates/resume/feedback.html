@@ -1,0 +1,24 @@
+{% extends 'resume/base.html' %}
+{% load static %}
+
+{% block title %} Обратная связь {% endblock %}
+
+
+
+
+{%block context%}
+    <center><h5> Буду рад конструктивной критики, а так же поглощению на собеседование</h5></center>
+    <div class="d-flex justify-content-center mt-3">
+        <div class ='centered '>
+
+        <form  method="post" class="">
+                        {% csrf_token %}
+                        {{form.as_p}}
+        <input type="submit" value="Отправить" class = 'btn btn-outline-secondary mt-2'>
+        </form>
+        </div>
+
+    </div>
+
+
+{%endblock%}

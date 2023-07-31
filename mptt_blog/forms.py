@@ -100,9 +100,6 @@ class PostFormAdmin(PostValidationMixin, forms.ModelForm):
         fields = '__all__'
 
 
-
-
-
 class PostCreateForm(PostValidationMixin, forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Новая статья'}), label='', required=False,
                             max_length=90)
@@ -149,3 +146,10 @@ class CommentsPostForm(forms.ModelForm):
         if len(text) < 1:
             raise ValidationError(f'Минимум 1 символ')
         return text
+
+
+class FeedbackForm(forms.ModelForm):
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Заголовок'}), label='', required=False,
+                            max_length=33)
+    content = forms.CharField(widget=CKEditorWidget(attrs={'placeholder': 'Текст'}), label='', required=False,
+                              max_length=2000)

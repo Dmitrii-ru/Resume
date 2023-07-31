@@ -1,5 +1,6 @@
+from ckeditor.widgets import CKEditorWidget
 from django import forms
-from .models import EmailSend
+from .models import EmailSend, Feedback
 from django.core.exceptions import ValidationError
 from validate_email import validate_email
 from django.contrib.sessions.backends.db import SessionStore
@@ -26,7 +27,6 @@ class EmailSendForm(forms.ModelForm):
         if len(name) < 2 or any(map(str.isdigit, name)):
             raise ValidationError('Где вы видели такой имя')
         return name.title()
-
 
 
 class AddTodo(forms.Form):
@@ -57,3 +57,14 @@ class AddTodo(forms.Form):
 
 class TestForm(forms.ModelForm):
     model = CardProject
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ('title', 'content')
+
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Заголовок'}), label='', required=False,
+                            max_length=33)
+    content = forms.CharField(widget=CKEditorWidget(attrs={'placeholder': 'Текст'}), label='', required=False,
+                              max_length=2000)
