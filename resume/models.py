@@ -1,14 +1,13 @@
 from datetime import datetime
 
 from django.db import models
+from django.db.models import Sum
 from django.urls import reverse
 from django.utils.text import slugify
 from pytils.translit import slugify
 from ckeditor.fields import RichTextField
 from .cache import delete_cache
 from PIL import Image
-
-
 
 CHOICE_STATUS = [
     ('True', 'Завершен'),
@@ -159,10 +158,18 @@ class UniqueIP(models.Model):
 
     class Meta:
         verbose_name = "Посетитель"
-        verbose_name_plural = "Посетители"
+        verbose_name_plural = f"Посетители "
 
     def __str__(self):
         return f'{self.ip_address} - {self.date} Визиты - {self.count_visit}'
+
+
+def get_aggregate_uniqueIP():
+    return UniqueIP.objects.all().aggregate(Sum('count_visit'))['count_visit__sum']
+
+
+# Устанавливаем значение verbose_name_plural после определения функции
+UniqueIP._meta.verbose_name_plural = f"Посешение сайти {get_aggregate_uniqueIP()}"
 
 
 class Feedback(models.Model):

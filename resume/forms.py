@@ -1,6 +1,6 @@
 from ckeditor.widgets import CKEditorWidget
 from django import forms
-from .models import EmailSend, Feedback
+from .models import EmailSend, Feedback, UniqueIP
 from django.core.exceptions import ValidationError
 from validate_email import validate_email
 from django.contrib.sessions.backends.db import SessionStore
@@ -55,8 +55,6 @@ class AddTodo(forms.Form):
         return todo
 
 
-class TestForm(forms.ModelForm):
-    model = CardProject
 
 
 class FeedbackForm(forms.ModelForm):
