@@ -3,8 +3,7 @@ from core.settings import ALLOWED_HOSTS
 from resume.models import UniqueIP
 
 # list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
-list_exclude= []
-
+list_exclude = []
 
 
 class UniqueIpMiddleware:
