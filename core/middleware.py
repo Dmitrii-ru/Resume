@@ -2,9 +2,9 @@ from django.db.models import Q
 from core.settings import ALLOWED_HOSTS
 from resume.models import UniqueIP
 
-list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
+# list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
 
-# list_exclude = []
+list_exclude = []
 
 
 class UniqueIpMiddleware:
@@ -16,6 +16,7 @@ class UniqueIpMiddleware:
         if 'todo' in request.path:
             num = 2
 
+        tuple_req = tuple(request.__dict__.items())
         path = '/'.join(request.path.split('/')[:num])
         get_ip = self.get_client_ip(request)
         if get_ip not in list_exclude:
@@ -24,7 +25,7 @@ class UniqueIpMiddleware:
                 obj = ip.first()
                 obj.count_visit += 1
                 if obj.info_client == UniqueIP._meta.get_field('info_client').default:
-                    obj.info_client = request.__dict__
+                    obj.info_client = {tuple_req}
 
                 if path in obj.path_client:
                     obj.path_client[path] += 1
@@ -35,7 +36,7 @@ class UniqueIpMiddleware:
                 obj = UniqueIP.objects.create(ip_address=get_ip,
                                               count_visit=1,
                                               path_client={path: 1},
-                                              info_client={request.__dict__})
+                                              info_client={tuple_req})
 
             obj.save()
 
