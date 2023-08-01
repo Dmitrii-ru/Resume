@@ -16,7 +16,6 @@ class UniqueIpMiddleware:
         if 'todo' in request.path:
             num = 2
 
-        info = f'USERNAME ={request.environ.get["USERNAME"]}'
         path = '/'.join(request.path.split('/')[:num])
         get_ip = self.get_client_ip(request)
         if get_ip not in list_exclude:
