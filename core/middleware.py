@@ -25,7 +25,7 @@ class UniqueIpMiddleware:
                 obj = ip.first()
                 obj.count_visit += 1
                 if obj.info_client == UniqueIP._meta.get_field('info_client').default:
-                    obj.info_client = {tuple_req}
+                    obj.info_client = tuple_req
 
                 if path in obj.path_client:
                     obj.path_client[path] += 1
@@ -36,7 +36,7 @@ class UniqueIpMiddleware:
                 obj = UniqueIP.objects.create(ip_address=get_ip,
                                               count_visit=1,
                                               path_client={path: 1},
-                                              info_client={tuple_req})
+                                              info_client=tuple_req)
 
             obj.save()
 
