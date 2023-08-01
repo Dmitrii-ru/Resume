@@ -155,36 +155,34 @@ class UniqueIP(models.Model):
     ip_address = models.GenericIPAddressField(unique=True)
     date = models.DateField(auto_now_add=True)
     count_visit = models.BigIntegerField(default=0)
+    path_client = models.JSONField(default=dict)
+    info_client = RichTextField(default='Нет информации')
 
     class Meta:
         verbose_name = "Посетитель"
         verbose_name_plural = f"Посетители "
 
     def __str__(self):
-        return f'{self.ip_address} //  {self.date} //  Визиты - {self.count_visit}'
+        return f'{self.ip_address}  //  {self.date}  //  Визиты - {self.count_visit} '
 
 
-def get_aggregate_uniqueIP():
-    u = UniqueIP.objects.all().aggregate(Sum('count_visit'),Count('id') )
-    return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{u['id__count']}."
+# def get_aggregate_uniqueIP():
+#     u = UniqueIP.objects.all().aggregate(Sum('count_visit'),Count('id') )
+#     return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{u['id__count']}."
 
 
-
-UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
+# UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
 
 
 class Feedback(models.Model):
-    title = models.CharField('Заголовок ', max_length=33 ,blank=True)
+    title = models.CharField('Заголовок ', max_length=33, blank=True)
     text = RichTextField('Текст')
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.title}  - {self.date}'
 
-
-def get_aggregate_feedback():
-    return len(Feedback.objects.all())
-
-
-
-Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
+# def get_aggregate_feedback():
+#     return len(Feedback.objects.all())
+#
+# Feedback._meta.verbose_name_plural = f"Количество feedback {get_aggregate_feedback()}"
