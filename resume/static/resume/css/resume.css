@@ -110,75 +110,72 @@ margin: 5px;
 
 /*CONTAINER*/
 .css_container{
-width:100%;
-position:relative;
+  width: 100%;
+  display: flex; /* Используем flexbox для расположения элементов внутри контейнера */
 }
 
 .css_container .section_left{
-width:25%;
-height:100%;
-padding:20px;
-background: #1b2631 ;
-color:#fff;
+  width: 25%;
+  padding: 20px;
+  background: #1b2631;
+  color: #fff;
+  display: flex; /* Используем flexbox для расположения дочерних элементов внутри .section_left */
+  flex-direction: column; /* Элементы располагаются вертикально */
+  align-items: center; /* Выравниваем элементы по центру по горизонтали */
 }
 
 .css_container .section_left img{
-width:80px;
-height:80px;
-border-radius:50%;
-margin:auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: auto;
 }
 
 .css_container .progress_container{
-width:100%;
-height:10px;
-border-radius:20px;
-background:#1e1e1e;
-margin: 5px;
+  width: 100%;
+  height: 10px;
+  border-radius: 20px;
+  background: #1e1e1e;
+  margin: 5px;
 }
 
 .css_container .progress_container .progress_bar{
-background:#3399ff;
-border-radius:20px;
-height:10px;
+  background: #3399ff;
+  border-radius: 20px;
+  height: 10px;
 }
 
 .css_container .section_right{
-padding:30px;
-width:75%;
-float:right;
-position:absolute;
-top:0;
-right:0;
+  padding: 30px;
+  width: 75%;
 }
 
 .css_container .section_right table{
-width:100%;
+  width: 100%;
 }
 
 .css_container .section_right table td{
-padding:10px;
+  padding: 10px;
 }
 
 .css_container .section_right table td:nth-child(1){
-width:20%;
-font-weight:bold;
+  width: 20%;
+  font-weight: bold;
 }
 
+@media (max-width: 920px){
+  .css_container{
+    flex-direction: column; /* На маленьких экранах элементы станут вертикальными */
+  }
 
+  .css_container .section_left{
+    width: 100%;
+  }
 
-
-
-@media (max-width:920px){
-.css_container .section_left{
-width:100%;
-display:block;
-}
-.css_container .section_right{
-width:100%;
-position:static;
-display:block;
-}
+  .css_container .section_right{
+    width: 100%;
+    position: static;
+  }
 }
 
 
