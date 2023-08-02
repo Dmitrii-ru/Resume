@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'user_app.apps.UserappConfig',
     'mptt_blog',
     'quiz',
+    'resume_api',
 ]
 
 INSTALLED_APPS += [
@@ -36,6 +37,7 @@ INSTALLED_APPS += [
     'django_crontab',
     'nested_admin',
     'django_celery_results',
+    'rest_framework',
 ]
 
 INTERNAL_IPS = [

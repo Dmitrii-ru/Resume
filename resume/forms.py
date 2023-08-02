@@ -24,7 +24,7 @@ class EmailSendForm(forms.ModelForm):
     def clean_name(self):
         name = self.cleaned_data['name']
         if len(name) < 2 or any(map(str.isdigit, name)):
-            raise ValidationError('Где вы видели такой имя')
+            raise ValidationError('Где вы видели такое имя')
         return name.title()
 
 
