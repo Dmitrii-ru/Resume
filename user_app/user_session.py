@@ -66,6 +66,11 @@ def get_date(req_day):
         return get_today()
 
 
+def get_date_format(req_day):
+    year, month, day = (int(x) for x in req_day.split('-'))
+    return date(year, month, day)
+
+
 def navigate_month(day, prev=None):
     m = 1
     if prev:

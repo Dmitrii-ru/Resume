@@ -6,7 +6,7 @@ from resume.forms import reg
 from resume.models import AboutMe, MyEducation, Stack, Feedback, EmailSend, Project
 import re
 
-from user_app.user_session import UserSessionToDo
+from user_app.user_session import UserSessionToDo, get_date_format
 
 
 class AboutMeSerializer(serializers.ModelSerializer):
@@ -62,8 +62,6 @@ class EmailSendSerializer(serializers.ModelSerializer):
         return value.title()
 
 
-
-
 class AddTodoSerializer(serializers.Serializer):
     todo = serializers.CharField(max_length=20)
     day_slug = serializers.CharField()
@@ -71,21 +69,26 @@ class AddTodoSerializer(serializers.Serializer):
 
     def validate(self, values):
         ust = UserSessionToDo(SessionStore(values['sess']), sess=True)
-        day = ust.todo_days[values['day_slug']]
+        try:
+            get_date_format(values['day_slug']).isoformat()
+        except:
+            raise serializers.ValidationError('Format YYYY-MM-DD')
+
+        day = ust.todo_days.get(values['day_slug'], ust.new_obj(values['day_slug']))
+        print(day.items())
         todo = values['todo']
-        print(todo, 'www')
-        print(ust)
+
+        try:
+            if todo in day['actual'] or todo in day['close']:
+                raise serializers.ValidationError(f"Already is tasks fot today")
+        except:
+            raise serializers.ValidationError(f"Many keys {todo}")
+
         if len(todo) < 2:
             raise serializers.ValidationError('The "todo" field must have a length greater than 2.')
         elif len(todo) > 20:
             raise serializers.ValidationError('The "togo" no more than 20 characters')
-        try:
-            print('try')
-            print(day)
-            if todo in day['actual'] or todo in day['close']:
-                print('ss')
-                raise serializers.ValidationError(f"Already is tasks fot today")
-        except:
-            raise serializers.ValidationError(f"Many keys {todo}")
+        print(day)
+        print(ust.todo_days)
 
         return values

@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -27,15 +28,26 @@ def resume_api(request):
     return Response(context, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(method='post', request_body=FeedbackSerializer)
 @api_view(['POST'])
 def feedback_api(request):
+    """
+    Create a new feedback.
+
+    Create a new feedback object by providing the text in the request body.
+
+    ---
+    request_serializer: FeedbackSerializer
+    response_serializer: FeedbackSerializer
+    """
     serializer = FeedbackSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
-    return Response(serializer.data, status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(method='post', request_body=EmailSendSerializer)
 @api_view(['POST', 'GET'])
 def send_email_api(request):
     ip = get_ip(request)
@@ -82,7 +94,7 @@ class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
                 'stack': StackSerializer(get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])).data}
         return Response(data)
 
-
+@swagger_auto_schema(method='post', request_body=AddTodoSerializer)
 @api_view(['POST', 'GET'])
 def TodoSessionViewAPI(request, **kwargs):
     ust = UserSessionToDo(request)
@@ -91,20 +103,24 @@ def TodoSessionViewAPI(request, **kwargs):
     if request.method == "POST":
         request_data = request.data
         post = request.POST.copy()
-        post['day_slug'] = request_data['add']
+
+        post['day_slug'] = request_data['day_slug']
         post['todo'] = request_data['todo']
         post['sess'] = request.session.session_key
+
         form_add_todo = AddTodoSerializer(data=post)
 
         if form_add_todo.is_valid():
-            ust.add_todo(request_data['todo'], request_data['add'])
+
+            print(ust.todo_days)
+            ust.add_todo(post['todo'], post['day_slug'])
             return Response({'success': True,
                              'message': f'Successfully create {request_data}.'}, status=status.HTTP_201_CREATED)
         else:
             return Response(form_add_todo.errors, status=status.HTTP_400_BAD_REQUEST)
 
     today = get_today().isoformat()
-    # Если нет дня то берем день сегодня
+    # Если нет дня, то берем день сегодня
     day = ust.get_obj(kwargs.get('slug_day', today))
     # Берем текущий месяц и год
     day_datetime = get_date(day['slug'])

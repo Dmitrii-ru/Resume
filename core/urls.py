@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
 from user_app.views import CustomPasswordResetView
 from user_app.forms import EmailValidationPasswordResetView, CustomPasswordResetForm
+from .yasg import urlpatterns as yasg_patt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,6 +43,8 @@ urlpatterns = [
          ),
 
 ]
+
+urlpatterns += yasg_patt
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
