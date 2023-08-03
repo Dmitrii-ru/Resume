@@ -118,7 +118,6 @@ class UserSessionToDo:
         self.save()
 
     def replace_del(self, slug, post, rep=False):
-        post = post.split(',')
         old_flag = post[1]
         todo = post[0]
         flags = ['actual', 'close']

@@ -7,6 +7,9 @@ from django_redis import get_redis_connection
 def get_model_all(model):
     return cache.get_or_set(f'{model._meta.model_name}_all', model.objects.all(), 30)
 
+def get_model_all_order(model,order):
+    return cache.get_or_set(f'{model._meta.model_name}_all_order{order}', model.objects.all().order_by(order), 30)
+
 
 def get_single_model_obj(model, field, value):
     cache_key = cache.get_or_set(f'{model._meta.model_name}_get_{field}', {}, 30)

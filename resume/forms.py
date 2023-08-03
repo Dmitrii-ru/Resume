@@ -44,7 +44,7 @@ class AddTodo(forms.Form):
                 f"Вы нечего не ввели")
         elif len(todo) > 20:
             raise ValidationError(
-                "Не больше 35 символов")
+                "Не больше 20 символов")
         elif todo in day['actual']:
             raise ValidationError(
                 f"Уже есть в Задачах на сегодня")

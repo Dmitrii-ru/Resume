@@ -1,6 +1,7 @@
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, get_object_or_404
-from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all, count_send_email
+from .cache import get_model_all, get_single_model_obj, get_filter_model, get_mtm_all, count_send_email, \
+    get_model_all_order
 from .models import AboutMe, MyEducation, Stack, Project, CardProject
 from django.views.generic import ListView
 from .forms import EmailSendForm, FeedbackForm
@@ -24,7 +25,7 @@ def index(request):
     about_me = get_model_all(AboutMe)
     if about_me:
         context['about_me'] = about_me[0]
-    context['my_education'] = get_model_all(MyEducation).order_by('-percent')
+    context['my_education'] = get_model_all_order(MyEducation, '-percent')
     context['stacks'] = get_model_all(Stack)
     return render(request, 'resume/resume.html', context=context)
 
@@ -80,12 +81,9 @@ class ProjectsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProjectsView, self).get_context_data(**kwargs)
-        stacks = get_model_all(Stack)
-        stack = get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])
-        projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
-        context['stacks'] = stacks
-        context['stack'] = stack
-        context['projects'] = projects
+        context['stacks'] = get_model_all(Stack)
+        context['stack'] = get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])
+        context['projects'] = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
         context['stack_slug'] = self.kwargs['stack_slug']
         return context
 
@@ -94,6 +92,8 @@ def TodoSessionView(request, **kwargs):
     ust = UserSessionToDo(request)
     form_add_todo = AddTodo()
     if request.method == "POST":
+        print(request.POST)
+        print(request.session.session_key)
         post = request.POST.copy()
         post['day_slug'] = request.POST['add']
         post['sess'] = request.session.session_key
@@ -127,11 +127,12 @@ def TodoSessionView(request, **kwargs):
 def TodoDelReplaceSessionView(request, **kwargs):
     ust = UserSessionToDo(request)
     post_date = request.POST
+    print(post_date)
     if request.method == 'POST':
         if request.POST.get('replace'):
-            ust.replace_del(kwargs['slug_day'], post_date['replace'], rep=True)
+            ust.replace_del(kwargs['slug_day'], post_date['replace'].split(','), rep=True)
         elif request.POST.get('del'):
-            ust.replace_del(kwargs['slug_day'], post_date['del'])
+            ust.replace_del(kwargs['slug_day'], post_date['del'].split(','))
     return redirect('resume_urls:todo_session_day', kwargs['slug_day'])
 
 

@@ -1,8 +1,13 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from django.contrib.sessions.backends.db import SessionStore
+from rest_framework.response import Response
 
 from resume.forms import reg
-from resume.models import AboutMe, MyEducation, Stack, Feedback, EmailSend
+from resume.models import AboutMe, MyEducation, Stack, Feedback, EmailSend, Project
 import re
+
+from user_app.user_session import UserSessionToDo
+
 
 class AboutMeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +24,12 @@ class MyEducationSerializer(serializers.ModelSerializer):
 class StackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stack
+        fields = '__all__'
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
         fields = '__all__'
 
 
@@ -40,12 +51,64 @@ class EmailSendSerializer(serializers.ModelSerializer):
         model = EmailSend
         fields = ('name', 'email',)
 
-    def validate_email(self,value):
+    def validate_email(self, value):
         if not re.match(reg, value):
             raise serializers.ValidationError('Email is not correct')
         return value
 
-    def validate_name(self,value):
+    def validate_name(self, value):
         if len(value) < 2 or any(map(str.isdigit, value)):
             raise serializers.ValidationError('Short name')
         return value.title()
+
+
+# class AddTodo(forms.Form):
+#     todo = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Новая задача'}), label='', required=False,
+#                            max_length=20)
+#     day_slug = forms.CharField(widget=forms.HiddenInput)
+#     sess = forms.CharField(widget=forms.HiddenInput)
+#
+#     def clean(self):
+#
+#         ust = UserSessionToDo(SessionStore(self.cleaned_data['sess']), sess=True)
+#         day = ust.todo_days[self.cleaned_data['day_slug']]
+#         todo = self.cleaned_data['todo']
+#         if not todo:
+#             raise ValidationError(
+#                 f"Вы нечего не ввели")
+#         elif len(todo) > 20:
+#             raise ValidationError(
+#                 "Не больше 35 символов")
+#         elif todo in day['actual']:
+#             raise ValidationError(
+#                 f"Уже есть в Задачах на сегодня")
+#         elif todo in day['close']:
+#             raise ValidationError(
+#                 f"Уже есть в Завершенных задачах")
+#         return todo
+
+class AddTodoSerializer(serializers.Serializer):
+    todo = serializers.CharField(max_length=20)
+    day_slug = serializers.CharField()
+    sess = serializers.CharField()
+
+    def validate(self, values):
+        ust = UserSessionToDo(SessionStore(values['sess']), sess=True)
+        day = ust.todo_days[values['day_slug']]
+        todo = values['todo']
+        print(todo, 'www')
+        print(ust)
+        if len(todo) < 2:
+            raise serializers.ValidationError('The "todo" field must have a length greater than 2.')
+        elif len(todo) > 20:
+            raise serializers.ValidationError('The "togo" no more than 20 characters')
+        try:
+            print('try')
+            print(day)
+            if todo in day['actual'] or todo in day['close']:
+                print('ss')
+                raise serializers.ValidationError(f"Already is tasks fot today")
+        except:
+            raise serializers.ValidationError(f"Many keys {todo}")
+
+        return values
