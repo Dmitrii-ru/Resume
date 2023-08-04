@@ -111,7 +111,7 @@ def TodoSessionViewAPI(request, **kwargs):
         form_add_todo = AddTodoSerializer(data=post)
 
         if form_add_todo.is_valid():
-
+            ust = UserSessionToDo(request)
             print(ust.todo_days)
             ust.add_todo(post['todo'], post['day_slug'])
             return Response({'success': True,

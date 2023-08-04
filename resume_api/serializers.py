@@ -75,7 +75,9 @@ class AddTodoSerializer(serializers.Serializer):
             raise serializers.ValidationError('Format YYYY-MM-DD')
 
         day = ust.todo_days.get(values['day_slug'], ust.new_obj(values['day_slug']))
-        print(day.items())
+        print(day)
+        print(ust.todo_days)
+
         todo = values['todo']
 
         try:
@@ -88,7 +90,5 @@ class AddTodoSerializer(serializers.Serializer):
             raise serializers.ValidationError('The "todo" field must have a length greater than 2.')
         elif len(todo) > 20:
             raise serializers.ValidationError('The "togo" no more than 20 characters')
-        print(day)
         print(ust.todo_days)
-
         return values
