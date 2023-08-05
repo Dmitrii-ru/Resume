@@ -141,7 +141,8 @@ class ProjectDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
-        project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
+        projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
+        project = get_object_or_404(projects, slug=self.kwargs['project_slug'])
         context['project'] = project
         context['cards'] = get_filter_model(CardProject, 'project', project)
         context['stacks'] = get_mtm_all(Project, 'stacks', project)

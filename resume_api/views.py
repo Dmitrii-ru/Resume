@@ -1,5 +1,7 @@
 from datetime import date
 
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.contrib.sessions.backends.cache import SessionStore
 from django.shortcuts import redirect
 from drf_yasg import openapi
@@ -100,33 +102,6 @@ def send_email_api(request):
              'success': False,
              'message': 'Email limit exceeded.'},
             status=status.HTTP_429_TOO_MANY_REQUESTS)
-
-
-class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
-    serializer_class = ProductSerializer
-    @swagger_auto_schema(
-        operation_summary="Get projects",
-        operation_description="We receive projects using slug technology.",
-        manual_parameters=[
-            openapi.Parameter(
-                name="stack_slug",
-                in_=openapi.IN_PATH,
-                type=openapi.TYPE_STRING,
-                description=f"Slug of the stack, you can use this data: "
-                            f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
-                required=True,
-            )
-        ],
-    )
-    def list(self, request, *args, **kwargs):
-        data = {'projects': self.get_serializer(get_filter_model(
-            Project,
-            'stacks__slug',
-            self.kwargs['stack_slug']), many=True).data,
-
-                'stacks': StackSerializer(get_model_all(Stack), many=True).data,
-                'stack': StackSerializer(get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])).data}
-        return Response(data)
 
 
 def get_date_format(day):
@@ -238,6 +213,34 @@ def TodoPatchSessionViewAPI(request, **kwargs):
     return Response(data, status=status.HTTP_200_OK)
 
 
+class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
+    serializer_class = ProductSerializer
+
+    @swagger_auto_schema(
+        operation_summary="Get projects",
+        operation_description="We receive projects using slug technology.",
+        manual_parameters=[
+            openapi.Parameter(
+                name="stack_slug",
+                in_=openapi.IN_PATH,
+                type=openapi.TYPE_STRING,
+                description=f"Slug of the stack, you can use this data: "
+                            f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
+                required=True,
+            )
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        data = {'projects': self.get_serializer(get_filter_model(
+            Project,
+            'stacks__slug',
+            self.kwargs['stack_slug']), many=True).data,
+
+                'stacks': StackSerializer(get_model_all(Stack), many=True).data,
+                'stack': StackSerializer(get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])).data}
+        return Response(data)
+
+
 class ProjectDetailAPIReadOnly(ReadOnlyModelViewSet):
     serializer_class = CardProjectSerializer
 
@@ -247,21 +250,27 @@ class ProjectDetailAPIReadOnly(ReadOnlyModelViewSet):
                 'stack_slug',
                 openapi.IN_PATH,
                 type=openapi.TYPE_STRING,
-                description=f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
+                description=f"Selector {list(get_model_all(Stack).values_list('slug', flat=True))}",
                 required=True,
             ),
             openapi.Parameter(
                 'project_slug',
                 openapi.IN_PATH,
                 type=openapi.TYPE_STRING,
-                description=f"{list(get_model_all(Project).values_list('slug', flat=True))}",
+                description=f"Selector {list(get_model_all(Project).values_list('slug', flat=True))}",
                 required=True,
             ),
         ]
     )
     def list(self, request, *args, **kwargs):
         data = {}
-        project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
+        projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
+
+        try:
+            project = get_object_or_404(projects, slug=self.kwargs['project_slug'])
+        except Http404:
+            return HttpResponse(f'Project with slug "{self.kwargs["project_slug"]}" '
+                                f'not found in technology with slug "{self.kwargs["stack_slug"]}"', status=404)
         data['project'] = ProductSerializer(project).data
         data['cards'] = self.get_serializer(get_filter_model(CardProject, 'project', project), many=True).data
         data['stacks'] = StackSerializer(get_mtm_all(Project, 'stacks', project), many=True).data
