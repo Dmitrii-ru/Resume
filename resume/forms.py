@@ -28,6 +28,8 @@ class EmailSendForm(forms.ModelForm):
         return name.title()
 
 
+
+
 class AddTodo(forms.Form):
     todo = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Новая задача'}), label='', required=False,
                            max_length=20)

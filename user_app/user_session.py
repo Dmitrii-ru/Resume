@@ -24,7 +24,6 @@ class UserSessionEmail:
         else:
             self.user_session_email = user_session_email
 
-
     def add(self):
         self.user_session_email['email_count'] = 2
         self.user_session_email['date'] = str(datetime.now().date())
@@ -86,22 +85,24 @@ def navigate_month(day, prev=None):
 class UserSessionToDo:
     locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
 
-    def __init__(self, request, sess=None):
+    def __init__(self, request, sess=False):
 
         if sess:
             self.session = request
         else:
             self.session = request.session
+
         user_session_todo = self.session.get(settings.USER_SESSION_TODO_ID)
 
         if not user_session_todo:
             user_session_todo = self.session[settings.USER_SESSION_TODO_ID] = {}
             self.todo_days = user_session_todo
             self.month = get_today()
+
         self.todo_days = user_session_todo
 
     def new_obj(self, day):
-
+        print(f'создаю новый объект со {day} , функция def new_obj(self, day):')
         new_day = self.todo_days[day] = {'actual': [],
                                          'close': [],
                                          'slug': day,
@@ -151,6 +152,18 @@ class UserSessionToDo:
         todo_actual_session = sorted(list_actual, key=itemgetter('slug'), reverse=True)[:3]
         data = {'list_actual': todo_actual_session, 'count_actual': self.get_actual_count}
         return data
+
+    def del_todo_api(self, day, status, todo):
+        self.todo_days[day][status].remove(todo)
+        self.save()
+
+    def patch_todo_api(self, day, status, todo):
+        statuses = ['actual', 'close']
+        statuses.remove(status)
+        print(statuses)
+        self.todo_days[day][statuses[0]].remove(todo)
+        self.todo_days[day][status].append(todo)
+        self.save()
 
     def save(self):
         self.session.modified = True

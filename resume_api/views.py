@@ -1,4 +1,8 @@
+from datetime import date
+
+from django.contrib.sessions.backends.cache import SessionStore
 from django.shortcuts import redirect
+from drf_yasg import openapi
 from django.utils.safestring import mark_safe
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
@@ -9,16 +13,23 @@ import json
 from resume.forms import AddTodo
 from resume.python_prog.calendar_session_todo import MyCalendar
 from resume.tasks import send_email_task
-from resume.cache import count_send_email, get_model_all, get_single_model_obj, get_filter_model, get_model_all_order
-from resume.models import AboutMe, MyEducation, Stack, Project
+from resume.cache import count_send_email, get_model_all, get_single_model_obj, get_filter_model, get_model_all_order, \
+    get_mtm_all
+from resume.models import AboutMe, MyEducation, Stack, Project, CardProject
 from resume.views import get_ip
 from user_app.user_session import UserSessionEmail, UserSessionToDo, get_today, get_date, navigate_month
 from .serializers import AboutMeSerializer, MyEducationSerializer, StackSerializer, FeedbackSerializer, \
-    EmailSendSerializer, ProductSerializer, AddTodoSerializer
+    EmailSendSerializer, ProductSerializer, AddTodoSerializer, TodoDeleteSessionSerializer, TodoPatchSessionSerializer, \
+    CardProjectSerializer
 
 
 @api_view(['GET'])
 def resume_api(request):
+    """
+    Get data index page Resume.
+    ---
+
+    """
     context = {}
     about_me = get_model_all(AboutMe)
     if about_me:
@@ -50,6 +61,13 @@ def feedback_api(request):
 @swagger_auto_schema(method='post', request_body=EmailSendSerializer)
 @api_view(['POST', 'GET'])
 def send_email_api(request):
+    """
+    Send email
+
+    GET - will receive stacks , how many emails can you send, and can you send email.
+    POST - send email.
+
+    """
     ip = get_ip(request)
     stacks = Stack.objects.all()
     user_s = UserSessionEmail(request)
@@ -86,34 +104,54 @@ def send_email_api(request):
 
 class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
-
+    @swagger_auto_schema(
+        operation_summary="Get projects",
+        operation_description="We receive projects using slug technology.",
+        manual_parameters=[
+            openapi.Parameter(
+                name="stack_slug",
+                in_=openapi.IN_PATH,
+                type=openapi.TYPE_STRING,
+                description=f"Slug of the stack, you can use this data: "
+                            f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
+                required=True,
+            )
+        ],
+    )
     def list(self, request, *args, **kwargs):
-        data = {'projects': ProductSerializer(get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug']),
-                                              many=True).data,
+        data = {'projects': self.get_serializer(get_filter_model(
+            Project,
+            'stacks__slug',
+            self.kwargs['stack_slug']), many=True).data,
+
                 'stacks': StackSerializer(get_model_all(Stack), many=True).data,
                 'stack': StackSerializer(get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])).data}
         return Response(data)
+
+
+def get_date_format(day):
+    year, month, day = (int(x) for x in day.split('-'))
+    return date(year, month, day).isoformat()
+
 
 @swagger_auto_schema(method='post', request_body=AddTodoSerializer)
 @api_view(['POST', 'GET'])
 def TodoSessionViewAPI(request, **kwargs):
     ust = UserSessionToDo(request)
     form_add_todo = AddTodoSerializer()
+    try:
+        get_date_format(kwargs['slug_day'])
+    except:
+        return Response({'success': False,
+                         'message': f'Format YYYY-MM-DD != {kwargs["slug_day"]}.'}, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "POST":
         request_data = request.data
-        post = request.POST.copy()
-
-        post['day_slug'] = request_data['day_slug']
-        post['todo'] = request_data['todo']
-        post['sess'] = request.session.session_key
-
-        form_add_todo = AddTodoSerializer(data=post)
+        form_add_todo = AddTodoSerializer(data=request_data, context={'ust': ust, 'day': kwargs['slug_day']})
 
         if form_add_todo.is_valid():
             ust = UserSessionToDo(request)
-            print(ust.todo_days)
-            ust.add_todo(post['todo'], post['day_slug'])
+            ust.add_todo(request_data['todo'], kwargs['slug_day'])
             return Response({'success': True,
                              'message': f'Successfully create {request_data}.'}, status=status.HTTP_201_CREATED)
         else:
@@ -141,30 +179,90 @@ def TodoSessionViewAPI(request, **kwargs):
     # return render(request, 'resume/todo_session.html', context)
 
 
-@api_view(['DELETE', 'PATCH'])
-def TodoDelReplaceSessionViewAPI(request, **kwargs):
+@swagger_auto_schema(method='DELETE', request_body=TodoDeleteSessionSerializer,
+                     manual_parameters=[
+                         openapi.Parameter(name='slug_day',
+                                           in_=openapi.IN_PATH,
+                                           type=openapi.TYPE_STRING,
+                                           description=f"Format YYYY-MM-DD"),
+                     ])
+@api_view(['DELETE'])
+def TodoDeleteSessionViewAPI(request, **kwargs):
     ust = UserSessionToDo(request)
-    post_data = request.data
+    data = TodoDeleteSessionSerializer()
     if request.method == "DELETE":
-        todo_del = post_data['del']
-        # ust.replace_del(kwargs['slug_day'], todo_del)
-        try:
-            ust.replace_del(post_data['day'], todo_del)
-        except:
-            return Response({'message': 'Incorrect data.'}, status=status.HTTP_404_NOT_FOUND)
+        post_data = request.data
 
-        return Response({'success': True,
-                         'message': f'Successfully delete {post_data}.'
-                         }, status=status.HTTP_204_NO_CONTENT)
+        delete_form = TodoDeleteSessionSerializer(data=post_data, context={'ust': ust, 'slug_day': kwargs['slug_day']})
+        if delete_form.is_valid():
+            try:
+                ust.del_todo_api(kwargs['slug_day'], post_data['status_todo'], post_data['todo'])
+            except:
+                return Response({'message': 'Incorrect data.'}, status=status.HTTP_404_NOT_FOUND)
+
+            return Response({'success': True,
+                             'message': f'Successfully delete {post_data}.'
+                             }, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(delete_form.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data, status.HTTP_200_OK)
 
 
-    elif request.method == "PATCH":
-        todo_replace = post_data['replace']
-        try:
-            ust.replace_del(post_data['day'], todo_replace, rep=True)
-        except:
-            return Response({'message': 'Incorrect data.'}, status=status.HTTP_404_NOT_FOUND)
+@swagger_auto_schema(method='PATCH', request_body=TodoPatchSessionSerializer,
+                     manual_parameters=[
+                         openapi.Parameter(name='slug_day',
+                                           in_=openapi.IN_PATH,
+                                           type=openapi.TYPE_STRING,
+                                           description=f"Format YYYY-MM-DD"),
+                     ])
+@api_view(['PATCH'])
+def TodoPatchSessionViewAPI(request, **kwargs):
+    ust = UserSessionToDo(request)
+    data = TodoPatchSessionSerializer()
 
-        return Response({'success': True,
-                         'message': f'Successfully delete {post_data}.'
-                         }, status=status.HTTP_200_OK)
+    if request.method == "PATCH":
+        post_data = request.data
+        patch_form = TodoPatchSessionSerializer(data=post_data, context={'ust': ust, 'day': kwargs['slug_day']})
+        if patch_form.is_valid():
+            try:
+                ust.patch_todo_api(kwargs['slug_day'], post_data['new_status_todo'], post_data['todo'])
+            except:
+                return Response({'message': 'Incorrect data.'}, status=status.HTTP_404_NOT_FOUND)
+
+            return Response({'success': True,
+                             'message': f'Successfully delete {post_data}.'
+                             }, status=status.HTTP_200_OK)
+        else:
+            return Response(patch_form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(data, status=status.HTTP_200_OK)
+
+
+class ProjectDetailAPIReadOnly(ReadOnlyModelViewSet):
+    serializer_class = CardProjectSerializer
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'stack_slug',
+                openapi.IN_PATH,
+                type=openapi.TYPE_STRING,
+                description=f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
+                required=True,
+            ),
+            openapi.Parameter(
+                'project_slug',
+                openapi.IN_PATH,
+                type=openapi.TYPE_STRING,
+                description=f"{list(get_model_all(Project).values_list('slug', flat=True))}",
+                required=True,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        data = {}
+        project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
+        data['project'] = ProductSerializer(project).data
+        data['cards'] = self.get_serializer(get_filter_model(CardProject, 'project', project), many=True).data
+        data['stacks'] = StackSerializer(get_mtm_all(Project, 'stacks', project), many=True).data
+        return Response(data, status=status.HTTP_200_OK)
