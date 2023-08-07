@@ -11,6 +11,8 @@ from .yasg import urlpatterns as yasg_patt
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/resume/', include('resume_api.urls', namespace='resume_api')),
+    path('api/user_app/', include('user_app_api.urls', namespace='user_app_api')),
+    path('api/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
     path('', include('resume.urls', namespace='resume_urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('user/', include('user_app.urls', namespace='user_urls')),

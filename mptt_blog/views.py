@@ -11,20 +11,12 @@ from django.urls import reverse
 from django.db.models import Q, OuterRef, Exists, Subquery
 from rules.contrib.views import PermissionRequiredMixin
 
-import random
+from .utils import random_posts
 
 like_text = 'Понравилась'
 UnLike_text = 'Поставить Like'
 fav_false_text = 'Нет в избранных'
 fav_true_text = 'В избранных'
-
-
-def random_posts(posts):
-    random_count = 8
-    if len(posts) < random_count:
-        random_count = len(posts)
-    return random.sample(list(posts), random_count)
-
 
 class CategoryListView(ListView):
     model = Category

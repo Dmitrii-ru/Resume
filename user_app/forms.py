@@ -30,6 +30,10 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields['password2']
+
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
         try:
@@ -48,9 +52,6 @@ class UserRegisterForm(UserCreationForm):
 
         return email
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        del self.fields['password2']
 
 
 class UserUpdateForm(forms.ModelForm):

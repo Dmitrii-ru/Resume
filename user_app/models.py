@@ -26,3 +26,6 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
+    def tokens(self):
+        print(self.user)
