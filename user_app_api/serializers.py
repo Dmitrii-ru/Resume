@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.exceptions import AuthenticationFailed
 User = get_user_model()
 
 
@@ -33,3 +33,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=20 ,min_length=3)
+    password = serializers.CharField(max_length=100, min_length=3)
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+

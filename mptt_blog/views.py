@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.views.generic.edit import FormMixin
 from mptt.querysets import TreeQuerySet
+from mptt.templatetags.mptt_tags import cache_tree_children
 
 from .models import Category, Post, CommentsPost
 from .forms import CategoryCreateForm, PostCreateForm, CategoryUpdateForm, PostUpdateForm, CommentsPostForm
@@ -18,7 +19,8 @@ UnLike_text = 'Поставить Like'
 fav_false_text = 'Нет в избранных'
 fav_true_text = 'В избранных'
 
-class CategoryListView(ListView):
+
+class RandomPostView(ListView):
     model = Category
     template_name = "mptt_blog/category/category_list.html"
 
@@ -37,6 +39,7 @@ class CategoryListView(ListView):
 
         else:
             post_qs = random_posts(post_qs.filter(is_privat=False))
+
 
         for p in post_qs:
             branch = p.category.get_ancestors(ascending=True, include_self=True)

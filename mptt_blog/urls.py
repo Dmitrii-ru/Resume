@@ -1,12 +1,12 @@
 from django.urls import path, include
 from . import views
-from .views import CategoryListView, CategoryMPTTView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView, \
+from .views import RandomPostView, CategoryMPTTView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView, \
     PostDetailView, PostUpdateView, PostDeleteView, PostCreateView, PostFavouritesShowAll 
 
 app_name = 'mptt_blog_urls'
 
 urlpatterns = [
-    path('', CategoryListView.as_view(), name='category-list'),
+    path('', RandomPostView.as_view(), name='category-list'),
     path('like', views.like, name='like'),
     path('fav', views.favourites, name='favourites'),
     path('like-comment', views.like_comment, name='like-comment'),
