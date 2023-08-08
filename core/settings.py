@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'resume_api',
     'user_app_api',
     'mptt_blog_api',
+    'verification_phone_api'
 ]
 
 INSTALLED_APPS += [
