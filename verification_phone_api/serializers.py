@@ -42,7 +42,7 @@ class PhoneNumberSerializer(serializers.Serializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ('phone_number', 'invite', 'self_invite', 'is_active')
 
 
 class InviteUser(serializers.Serializer):

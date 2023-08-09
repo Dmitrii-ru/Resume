@@ -75,6 +75,7 @@ def send_code_verification(request):
 def invite_code_verification(request):
     """
     Заносим в базу данных user и выдаем invite.
+
     Endpoint host/api/verification_phone/invite_code_verification
     Запрос:
         {
@@ -121,7 +122,8 @@ class ProfileUser(APIView):
         {
           "invite": "string"
         }
-    Проверим на существование invite.
+    Проверим на существование invite и активировал ли user invite.
+
     Активируем invite, is_active = true.
 
     Ответ:
@@ -159,7 +161,6 @@ class ProfileUser(APIView):
     """
     def get(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
-        print('ww')
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
 
