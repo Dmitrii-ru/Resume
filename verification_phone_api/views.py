@@ -1,13 +1,11 @@
 import string
-from django.db.models import Prefetch, Exists, OuterRef
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404 as api404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from core.settings import ALLOWED_HOSTS
-from .serializers import PhoneNumberSerializer, reg_phone_number, CustomUserSerializer, InviteUser
+from .serializers import PhoneNumberSerializer, CustomUserSerializer, InviteUser
 import time
 import random
 from rest_framework.response import Response
@@ -117,7 +115,7 @@ class ProfileUser(APIView):
 
     Endpoint host/api/verification_phone/profile/<phone_number>
     POST
-    В path вносим номер телефона.
+    В path вносим phone_number.
     Запрос:
         {
           "invite": "string"
