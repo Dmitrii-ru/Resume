@@ -67,8 +67,8 @@ class ProfileUser(APIView):
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.all().values_list('self_invite', flat=True)
 
-        data = {"message": "This is a GET request", 'all_invite': all_invite}
-        data["profile_user"] = CustomUserSerializer(user)
+        data = {"message": "This is a GET request", 'all_invite': all_invite,
+                "profile_user": CustomUserSerializer(user)}
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
