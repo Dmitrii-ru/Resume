@@ -11,8 +11,8 @@ import random
 from rest_framework.response import Response
 from .cache import get_or_create_number
 from .models import CustomUser
-
-
+from core.settings import ALLOWED_HOSTS
+host = "http://" + ALLOWED_HOSTS[1]
 def generator_invite():
     characters = string.digits + string.ascii_letters
     invite_code = ''.join(random.choice(characters) for _ in range(6))
