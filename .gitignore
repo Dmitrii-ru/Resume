@@ -6,7 +6,7 @@ media/img/
 media/user_images/
 # C extensions
 *.so
-
+media
 # Distribution / packaging
 .Python
 build/
