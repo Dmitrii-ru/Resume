@@ -64,7 +64,6 @@ class ProfileUser(APIView):
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
 
-        print(all_invite.__dict__)
         data = {"message": f"Profile user ",
                 "profile": CustomUserSerializer(user).data,
                 'duplicate_user_invite': all_invite
