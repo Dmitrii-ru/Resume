@@ -29,6 +29,8 @@
                     {% endif %}
                     {% if project.link_git %}
                         <a href="{{ project.link_git }}" class="btn btn-secondary mt-1">Перейти на GitHub</a>
+                    {% if project.api %}
+                        <a href="{{ project.api }}" class="btn btn-secondary mt-1">Перейти на API</a>
                     {% endif %}
                     <a href="{% url 'resume_urls:proj_detail' stack_slug project.slug %}" class="btn btn-secondary mt-1">Описание проекта</a>
                 </div>

@@ -85,6 +85,7 @@ class Project(models.Model):
     status = models.CharField('Статус', choices=CHOICE_STATUS, default="True", max_length=5)
     link_git = models.CharField('Ссылка на GitHub', max_length=100, null=True, blank=True)
     link_site = models.CharField('Ссылка на WebSite', max_length=100, null=True, blank=True)
+    api = models.CharField('API', max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
