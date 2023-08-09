@@ -52,7 +52,7 @@ def send_code_verification(request):
         return Response({
             'success': True,
             'message': f'Смс {get_or_create_number(phone_number, code)} на номер {phone_number}. Код: {code}.'
-        }, status=status.HTTP_201_CREATED)
+        }, status=status.HTTP_200_OK)
 
     return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -162,7 +162,7 @@ class ProfileUser(APIView):
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
 
-        data = {"message": f"Profile user ",
+        data = {
                 "profile": CustomUserSerializer(user).data,
                 'duplicate_user_invite': all_invite
                 }
