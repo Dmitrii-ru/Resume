@@ -1,5 +1,6 @@
 import string
 from django.db.models import Prefetch, Exists, OuterRef
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404 as api404
 from rest_framework import status
@@ -12,6 +13,7 @@ import random
 from rest_framework.response import Response
 from .cache import get_or_create_number
 from .models import CustomUser
+
 
 
 def generator_invite():
@@ -37,7 +39,18 @@ def send_code_verification(request):
     return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@swagger_auto_schema(method='post', request_body=PhoneNumberSerializer)
+@swagger_auto_schema(
+    method='post',
+
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00', example='+7(929)927-19-37'),
+            'code': openapi.Schema(type=openapi.TYPE_STRING, format='1111', example='6839')
+        },
+        required=['phone_number', 'code']
+    )
+)
 @api_view(['POST'])
 def invite_code_verification(request):
     form = PhoneNumberSerializer(data=request.data, include_code=True,
@@ -60,7 +73,7 @@ def invite_code_verification(request):
 class ProfileUser(APIView):
     def get(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
-
+        print('ww')
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
 
@@ -70,7 +83,10 @@ class ProfileUser(APIView):
                 }
 
         return Response(data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        request_body=InviteUser,
 
+    )
     def post(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
         user = api404(CustomUser, phone_number=phone_number)

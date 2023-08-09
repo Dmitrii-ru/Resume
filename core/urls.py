@@ -4,16 +4,25 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
+
+import core.yasg
 from user_app.views import CustomPasswordResetView
 from user_app.forms import EmailValidationPasswordResetView, CustomPasswordResetForm
-from .yasg import urlpatterns as yasg_patt
+
+
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/resume/', include('resume_api.urls', namespace='resume_api')),
     path('api/user_app/', include('user_app_api.urls', namespace='user_app_api')),
     path('api/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
-    path('api/verification_phone/', include('verification_phone_api.urls', namespace='verification_phone_api_api')),
+
+    path('api/verification_phone/', include('verification_phone_api.urls', namespace='verification_phone_api')),
+
     path('', include('resume.urls', namespace='resume_urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('user/', include('user_app.urls', namespace='user_urls')),
@@ -45,9 +54,9 @@ urlpatterns = [
          name='password_reset_complete'
          ),
 
-]
+]+core.yasg.urlpatterns
 
-urlpatterns += yasg_patt
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

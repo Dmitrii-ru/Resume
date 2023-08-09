@@ -3,7 +3,7 @@ from pathlib import Path
 import environ
 
 from datetime import timedelta
-from .yasg import urlpatterns as yasg_patt
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

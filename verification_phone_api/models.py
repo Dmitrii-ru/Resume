@@ -9,3 +9,5 @@ class CustomUser(models.Model):
     self_invite = models.CharField(max_length=6, null=True, blank=True)
     is_active = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.phone_number
