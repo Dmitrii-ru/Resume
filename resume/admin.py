@@ -57,7 +57,7 @@ class AdminProject(admin.ModelAdmin):
             'fields': ('stacks',)
         }),
         ('Ссылки', {
-            'fields': (('link_git', 'link_site'),)
+            'fields': (('link_git', 'link_site','api'),)
         }),
 
     )
