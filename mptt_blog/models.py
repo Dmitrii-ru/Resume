@@ -30,7 +30,6 @@ class Post(models.Model):
     favourites = models.ManyToManyField(User, related_name='favourite_posts', default=None, blank=True)
     likes = models.ManyToManyField(User, related_name='like_posts', default=None, blank=True)
     like_count = models.BigIntegerField(default='0')
-    # Удалить !!!is_fav
     is_fav = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
