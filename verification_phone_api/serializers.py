@@ -31,8 +31,11 @@ class PhoneNumberSerializer(serializers.Serializer):
 
     def validate_code(self, value):
         code = value
+        print(code)
         phone_number = self.initial_data.get('phone_number')
+        print(phone_number)
         cache_code = get_number(phone_number)
+        print(cache_code)
         if not cache_code:
             raise serializers.ValidationError('Invalid code')
         elif str(code) != str(cache_code):

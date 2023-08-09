@@ -13,7 +13,6 @@ from .cache import get_or_create_number
 from .models import CustomUser
 
 
-
 def generator_invite():
     characters = string.digits + string.ascii_letters
     invite_code = ''.join(random.choice(characters) for _ in range(6))
@@ -37,8 +36,7 @@ def send_code_verification(request):
 
     Ответ:
     {
-        "success": true,
-        "message": "Смс отправлено на номер +7(929)927-19-01. Код: 1769."
+        "code": 3429
     }
 
 
@@ -48,11 +46,9 @@ def send_code_verification(request):
         phone_number = form.validated_data['phone_number']
         time.sleep(random.uniform(1, 2))
         code = random.randint(1000, 9999)
-
-        return Response({
-            'success': True,
-            'message': f'Смс {get_or_create_number(phone_number, code)} на номер {phone_number}. Код: {code}.'
-        }, status=status.HTTP_200_OK)
+        get_or_create_number(phone_number, code)
+        data = {'code': code}
+        return Response(data, status=status.HTTP_200_OK)
 
     return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -63,7 +59,8 @@ def send_code_verification(request):
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00', example='+7(929)927-19-37'),
+            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00',
+                                           example='+7(929)927-19-37'),
             'code': openapi.Schema(type=openapi.TYPE_STRING, format='1111', example='6839')
         },
         required=['phone_number', 'code']
@@ -86,25 +83,20 @@ def invite_code_verification(request):
 
     Ответ:
         {
-          "success": true,
-          "message": "Пользователь +7(123)456-78-70 успешно создан, Ваш invite пароль: Oh1Jtr"
+            "invite": "sYKnvY"
         }
-
 
     """
     form = PhoneNumberSerializer(data=request.data, include_code=True,
                                  )
     if form.is_valid(raise_exception=True):
         phone_number = form.validated_data['phone_number']
-        custom_user = CustomUser.objects.create(
+        user = CustomUser.objects.create(
             phone_number=phone_number,
             self_invite=generator_invite()
         )
-        return Response({
-            'success': True,
-            'message': f'Пользователь {custom_user.phone_number} '
-                       f'успешно создан, Ваш invite пароль: {custom_user.self_invite}'
-        }, status=status.HTTP_201_CREATED)
+        data = {'invite': user.self_invite}
+        return Response(data, status=status.HTTP_201_CREATED)
 
     return Response(form.data, status=status.HTTP_200_OK)
 
@@ -157,17 +149,20 @@ class ProfileUser(APIView):
 
 
     """
+
     def get(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
         user = api404(CustomUser, phone_number=phone_number)
-        all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
+        all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(
+            phone_number=user.phone_number).values_list('phone_number', flat=True)
 
         data = {
-                "profile": CustomUserSerializer(user).data,
-                'duplicate_user_invite': all_invite
-                }
+            "profile": CustomUserSerializer(user).data,
+            'duplicate_user_invite': all_invite
+        }
 
         return Response(data, status=status.HTTP_200_OK)
+
     @swagger_auto_schema(
         request_body=InviteUser,
 
@@ -187,4 +182,4 @@ class ProfileUser(APIView):
             user.save()
 
         data = {"message": f"{user} успешно активировал invite"}
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
