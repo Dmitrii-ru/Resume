@@ -1,14 +1,12 @@
 import string
-
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Exists, OuterRef
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404 as api404
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from .serializers import PhoneNumberSerializer, reg_phone_number, CustomUserSerializer
+from .serializers import PhoneNumberSerializer, reg_phone_number, CustomUserSerializer, InviteUser
 import time
 import random
 from rest_framework.response import Response
@@ -62,15 +60,31 @@ def invite_code_verification(request):
 class ProfileUser(APIView):
     def get(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
-        if not reg_phone_number.match(phone_number):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        user = api404(CustomUser, phone_number=phone_number)
-        all_invite = CustomUser.objects.all().values_list('self_invite', flat=True)
 
-        data = {"message": "This is a GET request", 'all_invite': all_invite,
-                "profile_user": CustomUserSerializer(user)}
+        user = api404(CustomUser, phone_number=phone_number)
+        all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(phone_number=user.phone_number).values_list('phone_number', flat=True)
+
+        print(all_invite.__dict__)
+        data = {"message": f"Profile user ",
+                "profile": CustomUserSerializer(user).data,
+                'duplicate_user_invite': all_invite
+                }
+
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        data = {"message": "This is a POST request"}
+        phone_number = kwargs.get('phone_number')
+        user = api404(CustomUser, phone_number=phone_number)
+
+        if user.is_active:
+            data = {"message": "User already activate invite"}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+        form = InviteUser(data=request.data)
+        if form.is_valid(raise_exception=True):
+            user.invite = form.validated_data['invite']
+            user.is_active = True
+            user.save()
+
+        data = {"message": f"{user} successfully activate invite"}
         return Response(data, status=status.HTTP_201_CREATED)

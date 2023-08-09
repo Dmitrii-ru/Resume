@@ -43,3 +43,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
+
+
+class InviteUser(serializers.Serializer):
+    invite = serializers.CharField()
+
+    def validate(self, values):
+        all_invite = CustomUser.objects.all().values_list('self_invite', flat=True)
+        if values['invite'] not in all_invite:
+            raise serializers.ValidationError('Invalid invite')
+        return values
