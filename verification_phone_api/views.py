@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404 as api404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-
+from core.settings import ALLOWED_HOSTS
 from .serializers import PhoneNumberSerializer, reg_phone_number, CustomUserSerializer, InviteUser
 import time
 import random
@@ -22,9 +22,29 @@ def generator_invite():
     return invite_code
 
 
-@swagger_auto_schema(method='post', request_body=PhoneNumberSerializer)
+@swagger_auto_schema(method='post', request_body=PhoneNumberSerializer(default={'phone_number': '+7(123)456-78-90'}))
 @api_view(['POST'])
 def send_code_verification(request):
+    """
+    Получение кода для регистрации user по номеру телефона.
+
+    Endpoint host/api/verification_phone/send_code_verification
+    Запрос:
+    {
+        "phone_number": "+7(929)927-19-00"
+    }
+
+    Проверяем формат номера телефона, и наличие телефона в базе данных.
+    Кешируем номер телефона и его код.
+
+    Ответ:
+    {
+        "success": true,
+        "message": "Смс отправлено на номер +7(929)927-19-01. Код: 1769."
+    }
+
+
+    """
     form = PhoneNumberSerializer(data=request.data)
     if form.is_valid(raise_exception=True):
         phone_number = form.validated_data['phone_number']
@@ -53,6 +73,26 @@ def send_code_verification(request):
 )
 @api_view(['POST'])
 def invite_code_verification(request):
+    """
+    Заносим в базу данных user и выдаем invite.
+    Endpoint host/api/verification_phone/invite_code_verification
+    Запрос:
+        {
+          "phone_number": "+7(929)927-19-00",
+          "code": "6839"
+        }
+    Проверяем формат номера телефона, и наличие телефона в базе данных.
+    Берем из кеш номер телефон и проверяем соответствие кода.
+    Сохраняем в базе данных, присваиваем invite.
+
+    Ответ:
+        {
+          "success": true,
+          "message": "Пользователь +7(123)456-78-70 успешно создан, Ваш invite пароль: Oh1Jtr"
+        }
+
+
+    """
     form = PhoneNumberSerializer(data=request.data, include_code=True,
                                  )
     if form.is_valid(raise_exception=True):
@@ -64,13 +104,59 @@ def invite_code_verification(request):
         return Response({
             'success': True,
             'message': f'Пользователь {custom_user.phone_number} '
-                       f'успешно создан, Ваш инвайт пароль :{custom_user.self_invite}'
+                       f'успешно создан, Ваш invite пароль: {custom_user.self_invite}'
         }, status=status.HTTP_201_CREATED)
 
     return Response(form.data, status=status.HTTP_200_OK)
 
 
 class ProfileUser(APIView):
+    """
+    Работа с профилем
+
+    Endpoint host/api/verification_phone/profile/<phone_number>
+    POST
+    В path вносим номер телефона.
+    Запрос:
+        {
+          "invite": "string"
+        }
+    Проверим на существование invite.
+    Активируем invite, is_active = true.
+
+    Ответ:
+        {
+          "message": "+7(123)456-68-90 успешно активировал invitee"
+        }
+
+
+    GET
+    В path вносим номер телефона
+    Запрос:
+        {
+            Не каких данных не вносим
+        }
+    Проверим существование номера телефона в базе данных.
+    Берем информацию о user.
+    Фильтруем users кто применил invite user, за исключением user
+
+    Ответ:
+        {
+            "message": "Profile user ",
+            "profile": {
+                "id": 5,
+                "phone_number": "+7(929)927-19-00",
+                "invite": "Aw1bO6",
+                "self_invite": "Aw1bO6",
+                "is_active": true
+            },
+            "duplicate_user_invite": [
+                "+7(929)927-19-77"
+            ]
+        }
+
+
+    """
     def get(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
         print('ww')
@@ -101,5 +187,5 @@ class ProfileUser(APIView):
             user.is_active = True
             user.save()
 
-        data = {"message": f"{user} successfully activate invite"}
+        data = {"message": f"{user} успешно активировал invite"}
         return Response(data, status=status.HTTP_201_CREATED)
