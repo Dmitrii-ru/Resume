@@ -25,7 +25,7 @@ def send_code_verification(request):
     """
     Получение кода для регистрации user по номеру телефона.
 
-    Endpoint host/api/verification_phone/send_code_verification
+    Endpoint api/verification_phone/send_code_verification
     Запрос:
     {
         "phone_number": "+7(929)927-19-00"
@@ -71,7 +71,7 @@ def invite_code_verification(request):
     """
     Заносим в базу данных user и выдаем invite.
 
-    Endpoint host/api/verification_phone/invite_code_verification
+    Endpoint api/verification_phone/invite_code_verification
     Запрос:
         {
           "phone_number": "+7(929)927-19-00",
@@ -105,7 +105,7 @@ class ProfileUser(APIView):
     """
     Работа с профилем
 
-    Endpoint host/api/verification_phone/profile/<phone_number>
+    Endpoint api/verification_phone/profile/<phone_number>
     POST
     В path вносим phone_number.
     Запрос:

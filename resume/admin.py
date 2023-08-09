@@ -11,7 +11,7 @@ admin.site.register(EmailSend)
 @admin.register(UniqueIP)
 class AdminUniqueIP(admin.ModelAdmin):
 
-    ordering = ['-count_visit']
+    ordering = ['-date']
     list_display = ('ip_address', 'count_visit', 'date')
     list_per_page = 50
     def has_add_permission(self, request):
