@@ -63,12 +63,12 @@
     <section class="section_right">
     <h1 class="title"></h1>
         {{about_me.text|safe}}
-        <h1 class="title">Стек</h1>
+                <h1 class="title">Проекты</h1>
         <div class="d-flex flex-row">
             {% for project in projects %}
           <a href="{{project.get_absolute_url}}"><button  type="button" class="btn btn-success m-1">{{project}}</button></a>
             {%endfor%}
-
+        </div>
         <h1 class="title">Стек</h1>
         <div class="d-flex flex-row">
             {% for stack in stacks %}
