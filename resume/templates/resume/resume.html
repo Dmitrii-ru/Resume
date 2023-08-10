@@ -67,7 +67,11 @@
         {{about_me.text|safe}}
 
         <h1 class="title">Проекты</h1>
-
+        {% for p in projects %}
+          <a href="{% url 'resume_urls:project_detail' p.slug %}"><button  type="button" class="btn btn-success m-1">{{p.name}}</button></a>
+            {%endfor%}
+        <br>
+        <h1 class="title">Стек</h1>
         <div class="d-flex flex-row">
             {% for stack in stacks %}
           <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>

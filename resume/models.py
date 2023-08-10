@@ -106,6 +106,9 @@ class Project(models.Model):
                 image.save(self.image.path)
 
 
+
+
+
 class EmailSend(models.Model):
     email = models.CharField('Почта', max_length=50)
     name = models.CharField('Имя', max_length=50)

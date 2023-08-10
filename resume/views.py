@@ -27,6 +27,7 @@ def index(request):
         context['about_me'] = about_me[0]
     context['my_education'] = get_model_all_order(MyEducation, '-percent')
     context['stacks'] = get_model_all(Stack)
+    context['projects'] = get_model_all(Project)
     return render(request, 'resume/resume.html', context=context)
 
 
@@ -141,8 +142,13 @@ class ProjectDetailView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
-        projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
-        project = get_object_or_404(projects, slug=self.kwargs['project_slug'])
+
+        if self.kwargs.get('stack_slug'):
+            projects = get_filter_model(Project, 'stacks__slug', self.kwargs['stack_slug'])
+            project = get_object_or_404(projects, slug=self.kwargs['project_slug'])
+        else:
+            project = get_single_model_obj(Project, 'slug', self.kwargs['project_slug'])
+
         context['project'] = project
         context['cards'] = get_filter_model(CardProject, 'project', project)
         context['stacks'] = get_mtm_all(Project, 'stacks', project)
