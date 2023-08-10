@@ -171,7 +171,7 @@ class ProfileUser(APIView):
         request_body=InviteUser,
 
     )
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         phone_number = kwargs.get('phone_number')
         user = api404(CustomUser, phone_number=phone_number)
 
@@ -186,4 +186,4 @@ class ProfileUser(APIView):
             user.save()
 
         data = {"message": f"{user} успешно активировал invite"}
-        return Response(data, status=status.HTTP_204_NO_CONTENT)
+        return Response(data, status=status.HTTP_200_OK)
