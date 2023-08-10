@@ -12,14 +12,20 @@ from rest_framework.response import Response
 from .cache import get_or_create_number
 from .models import CustomUser
 from core.settings import ALLOWED_HOSTS
+
 host = "http://" + ALLOWED_HOSTS[1]
+
+
 def generator_invite():
     characters = string.digits + string.ascii_letters
     invite_code = ''.join(random.choice(characters) for _ in range(6))
     return invite_code
 
 
-@swagger_auto_schema(method='post', request_body=PhoneNumberSerializer(default={'phone_number': '+7(123)456-78-90'}))
+from django.urls import reverse
+
+
+@swagger_auto_schema(method='post', request_body=PhoneNumberSerializer(default={'phone_number': '+7(929)927-19-00'}))
 @api_view(['POST'])
 def send_code_verification(request):
     """
@@ -38,7 +44,6 @@ def send_code_verification(request):
     {
         "code": 3429
     }
-
 
     """
     form = PhoneNumberSerializer(data=request.data)
@@ -60,7 +65,7 @@ def send_code_verification(request):
         type=openapi.TYPE_OBJECT,
         properties={
             'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00',
-                                           example='+7(929)927-19-37'),
+                                           example='+7(929)927-19-00'),
             'code': openapi.Schema(type=openapi.TYPE_STRING, format='1111', example='6839')
         },
         required=['phone_number', 'code']
@@ -87,8 +92,7 @@ def invite_code_verification(request):
         }
 
     """
-    form = PhoneNumberSerializer(data=request.data, include_code=True,
-                                 )
+    form = PhoneNumberSerializer(data=request.data, include_code=True)
     if form.is_valid(raise_exception=True):
         phone_number = form.validated_data['phone_number']
         user = CustomUser.objects.create(
@@ -96,6 +100,8 @@ def invite_code_verification(request):
             self_invite=generator_invite()
         )
         data = {'invite': user.self_invite}
+        profile_url = reverse('verification_phone_api:profile', args=[user.phone_number])
+        data['profile_url'] = host + profile_url
         return Response(data, status=status.HTTP_201_CREATED)
 
     return Response(form.data, status=status.HTTP_200_OK)
@@ -146,8 +152,6 @@ class ProfileUser(APIView):
                 "+7(929)927-19-77"
             ]
         }
-
-
     """
 
     def get(self, request, *args, **kwargs):
