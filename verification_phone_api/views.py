@@ -112,7 +112,7 @@ class ProfileUser(APIView):
     Работа с профилем
 
     Endpoint api/verification_phone/profile/<phone_number>
-    POST
+    PUT
     В path вносим phone_number.
     Запрос:
         {
