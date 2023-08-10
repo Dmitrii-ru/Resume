@@ -65,6 +65,12 @@
         {{about_me.text|safe}}
         <h1 class="title">Стек</h1>
         <div class="d-flex flex-row">
+            {% for project in projects %}
+          <a href="{{project.get_absolute_url}}"><button  type="button" class="btn btn-success m-1">{{project}}</button></a>
+            {%endfor%}
+
+        <h1 class="title">Стек</h1>
+        <div class="d-flex flex-row">
             {% for stack in stacks %}
           <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>
             {%endfor%}

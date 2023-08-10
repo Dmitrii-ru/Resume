@@ -87,6 +87,9 @@ class Project(models.Model):
     link_site = models.CharField('Ссылка на WebSite', max_length=100, null=True, blank=True)
     api = models.CharField('API', max_length=100, null=True, blank=True)
 
+    def get_absolute_url(self):
+        return reverse('resume_urls:project_detail', kwargs={'project_slug': self.slug})
+
     def __str__(self):
         return f'{self.name}'
 
@@ -104,9 +107,6 @@ class Project(models.Model):
                 resize = (270, 270)
                 image.thumbnail(resize)
                 image.save(self.image.path)
-
-
-
 
 
 class EmailSend(models.Model):
