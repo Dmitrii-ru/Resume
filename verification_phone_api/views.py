@@ -46,21 +46,20 @@ def send_code_verification(request):
     }
 
     """
-    form = PhoneNumberSerializer(data=request.data)
-    if form.is_valid(raise_exception=True):
-        phone_number = form.validated_data['phone_number']
+    serializer = PhoneNumberSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        phone_number = serializer.validated_data['phone_number']
         time.sleep(random.uniform(1, 2))
         code = random.randint(1000, 9999)
         get_or_create_number(phone_number, code)
         data = {'code': code}
         return Response(data, status=status.HTTP_200_OK)
 
-    return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @swagger_auto_schema(
     method='post',
-
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
@@ -69,42 +68,58 @@ def send_code_verification(request):
             'code': openapi.Schema(type=openapi.TYPE_STRING, format='1111', example='6839')
         },
         required=['phone_number', 'code']
-    )
+    ),
+    responses={
+        status.HTTP_201_CREATED: openapi.Response(
+            description="Success",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'invite': openapi.Schema(type=openapi.TYPE_STRING, example='sYKnvY'),
+                    'user_profile_url': openapi.Schema(
+                        type=openapi.TYPE_STRING, example='https://host/api/verification_phone/profile/+7(929)927-19-00'
+                    )
+                }
+            )
+        ),
+        status.HTTP_400_BAD_REQUEST: openapi.Response(
+            description="Validation Error",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'object' : openapi.Schema(type=openapi.TYPE_STRING,example='phone_number'),
+                    'error': openapi.Schema(type=openapi.TYPE_STRING,example='Not unique number')
+                }
+            )
+        )
+    }
 )
 @api_view(['POST'])
 def invite_code_verification(request):
     """
     Заносим в базу данных user и выдаем invite.
 
-    Endpoint api/verification_phone/invite_code_verification
-    Запрос:
-        {
-          "phone_number": "+7(929)927-19-00",
-          "code": "6839"
-        }
-    Проверяем формат номера телефона, и наличие телефона в базе данных.
-    Берем из кеш номер телефон и проверяем соответствие кода.
+
+    Проверяем формат номера телефона и наличие телефона в базе данных.
+
+    Берем из кеш номер телефона и проверяем соответствие кода.
+
     Сохраняем в базе данных, присваиваем invite.
 
-    Ответ:
-        {
-            "invite": "sYKnvY"
-        }
 
     """
-    form = PhoneNumberSerializer(data=request.data, include_code=True)
-    if form.is_valid(raise_exception=True):
-        phone_number = form.validated_data['phone_number']
+    serializer = PhoneNumberSerializer(data=request.data, include_code=True)
+    if serializer.is_valid(raise_exception=True):
+        phone_number = serializer.validated_data['phone_number']
         user = CustomUser.objects.create(
             phone_number=phone_number,
             self_invite=generator_invite()
         )
         data = {'invite': user.self_invite}
         profile_url = reverse('verification_phone_api:profile', args=[user.phone_number])
-        data['profile_url'] = host + profile_url
+        data['user_profile_url'] = host + profile_url
         return Response(data, status=status.HTTP_201_CREATED)
 
-    return Response(form.data, status=status.HTTP_200_OK)
 
 
 class ProfileUser(APIView):
@@ -185,5 +200,5 @@ class ProfileUser(APIView):
             user.is_active = True
             user.save()
 
-        data = {"message": f"{user} успешно активировал invite"}
+        data = {"message": f"{user} successfully activated invite"}
         return Response(data, status=status.HTTP_200_OK)

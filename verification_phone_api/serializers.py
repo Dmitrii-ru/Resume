@@ -17,29 +17,25 @@ class PhoneNumberSerializer(serializers.Serializer):
         if not include_code:
             self.fields.pop('code')
 
-    # class Meta:
-    #     model = CustomUser
-    #     fields = ('phone_number', 'code')
-
     def validate_phone_number(self, value):
         phone_number = value
         if not reg_phone_number.match(phone_number):
-            raise serializers.ValidationError('Invalid number, example: +7(929)927-19-00')
+            raise serializers.ValidationError('Invalid number')
         elif CustomUser.objects.filter(phone_number=phone_number).exists():
             raise serializers.ValidationError('Not unique number')
+        elif not get_number(phone_number):
+            raise serializers.ValidationError('This number did not receive a code')
         return value
 
     def validate_code(self, value):
         code = value
-        print(code)
         phone_number = self.initial_data.get('phone_number')
-        print(phone_number)
         cache_code = get_number(phone_number)
-        print(cache_code)
+
         if not cache_code:
             raise serializers.ValidationError('Invalid code')
         elif str(code) != str(cache_code):
-            raise serializers.ValidationError(f'Get a new code')
+            raise serializers.ValidationError(f'Request a new code')
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
