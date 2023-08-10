@@ -42,12 +42,12 @@
             <center>
                 <h1 class="title">{{about_me.name}}</h1>
             </center>
-            <hr></hr>
+            <hr>
             <h5 class="sub-title">Контактная информация</h5>
             <ul>
                 <li><i class="fa fa-phone"></i> {{about_me.phone}} </li>
-                <li><i class="fa fa-envelope"></i> {{about_me.mail}}</li>
-                <li><i class="fa fa-map-marker"></i> {{about_me.city}}</li>
+                <li><i class="fa fa-envelope"></i> {{about_me.mail}} </li>
+                <li><i class="fa fa-map-marker"></i> {{about_me.city}} </li>
             </ul>
             <ul>
                 <h5 class="sub-title"></h5>
@@ -58,34 +58,23 @@
                      <a href="{% url 'resume_urls:send_email' %}" class="btn btn-primary">Отправить ссылку на резюме на почту</a>
                     <a href="{% url 'resume_urls:feedback' %}" class="btn btn-primary mt-2">Обратная связь</a>
             </ul>
-
         </section>
-
 
     <section class="section_right">
     <h1 class="title"></h1>
         {{about_me.text|safe}}
-
-        <h1 class="title">Проекты</h1>
-        {% for p in projects %}
-          <a href="{% url 'resume_urls:project_detail' p.slug %}"><button  type="button" class="btn btn-success m-1">{{p.name}}</button></a>
-            {%endfor%}
-        <br>
         <h1 class="title">Стек</h1>
         <div class="d-flex flex-row">
             {% for stack in stacks %}
           <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>
             {%endfor%}
-
         </div>
 
     <table>
         <h1 class="title">IT курсы</h1>
         {% for education in my_education %}
         <tr>
-
             <snan class="education" href="{{education.diploma}}">
-
                 <span class="me-3">
                     Платформа: {{education.school}}
                 </span>
@@ -98,12 +87,8 @@
                     {%else %}
                     Дата окончания: В процессе прохождения
                 </span>
-
-                </snan>
-
+            </snan>
                 {%endif%}
-
-
         </tr>
             <div class="progress_container">
                 <div class="progress_bar" style="width:{{education.percent}}%"></div>
