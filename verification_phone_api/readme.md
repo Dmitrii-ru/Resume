@@ -1,7 +1,7 @@
 
 
-#Получение кода для регистрации user по номеру телефона.
-#send_code_verification POST
+# Получение кода для регистрации user по номеру телефона.
+## send_code_verification POST
 
 ## REQUEST
 - Вносим phone_number в body
@@ -20,8 +20,8 @@
 - Возвращаем код
 
 
-#Заносим в базу данных user и выдаем invite.
-#invite_code_verification POST
+# Заносим в базу данных user и выдаем invite.
+## invite_code_verification POST
 
 ## REQUEST
 - Вносим в body phone_number и code
@@ -46,8 +46,8 @@
 
 
 
-#Внесение  invite
-#ProfileUser PUT
+# Внесение  invite
+## ProfileUser PUT
 
 ## REQUEST
 - Вносим path phone_number и invite в body.
@@ -67,8 +67,8 @@
 - "message": f"{user} successfully activated invite"
 
 
-#Внесение  invite
-#ProfileUser GET
+# Внесение  invite
+## ProfileUser GET
 
 ## REQUEST
 - Вносим path phone_number.
