@@ -22,7 +22,7 @@ def send_email_my(massage_num, to_send, name, subject):
 
             dict_massages = {
                 1: f'{name}, ссылка на мое резюме {host}',
-                2: f'{name}, жду от Вас положительно ответа,мое резюме {host}',
+                2: f'{name}, жду от Вас feedback, мое резюме {host}',
             }
 
             dict_subjects = {
