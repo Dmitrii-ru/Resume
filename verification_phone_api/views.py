@@ -60,9 +60,7 @@ def send_code_verification(request):
     """
     Получение кода для регистрации user по номеру телефона.
 
-
-    Вносим phone_number в body
-
+    - Вносим phone_number в body
 
 
     """
@@ -119,8 +117,9 @@ def invite_code_verification(request):
     """
     Заносим в базу данных user и выдаем invite.
 
+    - Вносим в body phone_number и code
 
-    Вносим в body phone_number и code
+
 
 
     """
@@ -181,7 +180,7 @@ class ProfileUser(APIView):
 
         Полученные данных профиля по номеру телефона
 
-        Вносим phone_number в path
+        - Вносим phone_number в path
 
         """
         phone_number = kwargs.get('phone_number')
@@ -217,7 +216,7 @@ class ProfileUser(APIView):
         """
         Внесение  invite
 
-        Вносим phone_number в path и invite в body
+        - Вносим phone_number в path и invite в body
 
         """
         phone_number = kwargs.get('phone_number')
