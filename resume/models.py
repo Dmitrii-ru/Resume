@@ -156,9 +156,8 @@ class EmailSettings(models.Model):
 
 
 class UniqueIP(models.Model):
-    ip_address = models.GenericIPAddressField(unique=True)
+    ip_address = models.GenericIPAddressField()
     date = models.DateField(auto_now_add=True)
-    count_visit = models.BigIntegerField(default=0)
     path_client = models.JSONField(default=dict)
     info_client = RichTextField(default='Нет информации')
 
@@ -167,15 +166,7 @@ class UniqueIP(models.Model):
         verbose_name_plural = f"Посетители "
 
     def __str__(self):
-        return f'{self.ip_address}  //  {self.date}  //  Визиты - {self.count_visit} '
-
-
-# def get_aggregate_uniqueIP():
-#     u = UniqueIP.objects.all().aggregate(Sum('count_visit'),Count('id') )
-#     return f"Активность на сейте-{u['count_visit__sum']}. Количество уникальных посетителей-{u['id__count']}."
-
-
-# UniqueIP._meta.verbose_name_plural = get_aggregate_uniqueIP()
+        return f'{self.ip_address}  //  {self.date}  //'
 
 
 class Feedback(models.Model):

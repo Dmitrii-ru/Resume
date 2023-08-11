@@ -12,7 +12,7 @@ admin.site.register(EmailSend)
 class AdminUniqueIP(admin.ModelAdmin):
 
     ordering = ['-date']
-    list_display = ('ip_address', 'count_visit', 'date')
+    list_display = ('ip_address',  'date')
     list_per_page = 50
     def has_add_permission(self, request):
         return False

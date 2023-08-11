@@ -30,3 +30,26 @@ def check_email_old_task():
 @shared_task
 def del_ip_all_task():
     del_ip_all()
+
+
+def create_visit_task():
+    import redis
+    import json
+    from .models import UniqueIP
+
+    db2 = redis.Redis(host='localhost', port=6379, db=2, decode_responses=True)
+    all_keys = db2.keys()
+    create_list = []
+    for key in all_keys:
+        val = json.loads(db2.get(key))
+        create_list.append(
+            UniqueIP(
+                ip_address=key,
+                path_client=val['path_client'],
+                info_client=val['info_client'],
+            )
+        )
+    UniqueIP.objects.bulk_create(
+        create_list
+    )
+    db2.flushdb()
