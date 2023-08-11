@@ -16,4 +16,4 @@
 
 - [POSTMAN collection](https://blue-equinox-632746.postman.co/workspace/5e83d863-b92b-4b5d-8914-ba9fd3b6b80b/collection/24125902-17f4592b-27c2-4be8-9130-6028c2d8b6fe?action=share&creator=24125902&source=collection_link)
 - [GitHub](https://github.com/Dmitrii-ru/Resume___1/tree/main/verification_phone_api)
-- [README](https://github.com/Dmitrii-ru/Resume___1/tree/main/verification_phone_api)
+- [README](https://github.com/Dmitrii-ru/Resume___1/blob/main/verification_phone_api/readme.md)
