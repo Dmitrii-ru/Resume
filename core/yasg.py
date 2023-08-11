@@ -70,7 +70,7 @@ schema_view_verification_phone = get_schema_view(
 
 urlpatterns = [
     path('api/verification_phone/docs/', schema_view_verification_phone.with_ui('redoc', cache_timeout=0), name='schema-redoc-verification_phone'),
-    path('api/verification_phone/docss/', schema_view_verification_phone.with_ui('swagger', cache_timeout=0), name='schema-redoc-verification_phone'),
+    path('api/verification_phone/docs-swagger/', schema_view_verification_phone.with_ui('swagger', cache_timeout=0), name='schema-redoc-verification_phone'),
     # path('api/user_app/docs/', schema_use_app_api.with_ui('swagger', cache_timeout=0), name='schema-swagger-use_app_api'),
     # path('api/mptt_blog/docs/', schema_mptt_blog_api.with_ui('swagger', cache_timeout=0), name='schema-swagger-mptt_blog_api'),
     # path('api/resume/docs/', schema_resume_api.with_ui('swagger', cache_timeout=0), name='schema-swagger-resume_api'),

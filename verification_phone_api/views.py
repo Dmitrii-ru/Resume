@@ -61,9 +61,7 @@ def send_code_verification(request):
     Получение кода для регистрации user по номеру телефона.
 
 
-    Проверяем формат номера телефона, и наличие телефона в базе данных.
-
-    Кешируем номер телефона и присваиваем код.
+    Вносим phone_number в body
 
 
 
@@ -122,11 +120,7 @@ def invite_code_verification(request):
     Заносим в базу данных user и выдаем invite.
 
 
-    Проверяем формат номера телефона и наличие телефона в базе данных.
-
-    Берем из кеш номер телефона и проверяем соответствие кода.
-
-    Сохраняем в базе данных, присваиваем invite.
+    Вносим в body phone_number и code
 
 
     """
@@ -144,34 +138,8 @@ def invite_code_verification(request):
 
 
 class ProfileUser(APIView):
-    """
-    Работа с профилем
-
-
-    PUT
-    В path вносим phone_number.
-
-    Проверим на существование invite и активировал ли user invite.
-
-    Активируем invite, is_active = true.
-
-
-
-    GET
-    В path вносим номер телефона
-    Запрос:
-        {
-            Не каких данных не вносим
-        }
-    Проверим существование номера телефона в базе данных.
-    Берем информацию о user.
-    Фильтруем users кто применил invite user, за исключением user
-
-
-    """
 
     @swagger_auto_schema(
-        description='description of param',
         responses={
             status.HTTP_200_OK: openapi.Response(
                 description="Success",
@@ -197,9 +165,25 @@ class ProfileUser(APIView):
                     }
                 )
             ),
+            status.HTTP_404_NOT_FOUND: openapi.Response(
+                description="Validation Error",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'detail': openapi.Schema(type=openapi.TYPE_STRING, ),
+                    }
+                )
+            )
         }
     )
     def get(self, request, *args, **kwargs):
+        """
+
+        Полученные данных профиля по номеру телефона
+
+        Вносим phone_number в path
+
+        """
         phone_number = kwargs.get('phone_number')
         user = api404(CustomUser, phone_number=phone_number)
         all_invite = CustomUser.objects.filter(invite=user.self_invite).exclude(
@@ -222,7 +206,7 @@ class ProfileUser(APIView):
                     properties={
                         'message': openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            example='+7(123)456-68-90 успешно активировал invitee'
+                            example='+7(123)456-68-90 успешно активировал invite'
                         ),
                     }
                 )
@@ -230,6 +214,12 @@ class ProfileUser(APIView):
         }
     )
     def put(self, request, *args, **kwargs):
+        """
+        Внесение  invite
+
+        Вносим phone_number в path и invite в body
+
+        """
         phone_number = kwargs.get('phone_number')
         user = api404(CustomUser, phone_number=phone_number)
 
