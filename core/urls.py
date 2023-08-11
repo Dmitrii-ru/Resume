@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
 import core.yasg
+
 from user_app.views import CustomPasswordResetView
 
 urlpatterns = [

@@ -5,6 +5,7 @@ from .views import *
 app_name = 'resume_urls'
 
 urlpatterns = [
+
     path('', views.index, name='index'),
     path('send_email/', views.send_email_view, name='send_email'),
     path('feedback/', views.feedback, name='feedback'),
@@ -14,5 +15,6 @@ urlpatterns = [
     path('todo_session/<slug_day>/remove/', views.TodoDelReplaceSessionView, name='todo_session_remove'),
     path('projects/<stack_slug>/', ProjectsView.as_view(), name='stack'),
     path('projects/<stack_slug>/<project_slug>/', ProjectDetailView.as_view(), name='proj_detail'),
-    path('project/<project_slug>/', ProjectDetailView.as_view(), name='project_detail')
+    path('project/<project_slug>/', ProjectDetailView.as_view(), name='project_detail'),
+
 ]

@@ -16,7 +16,11 @@
                 <h2 class="card-title">Название проекта: {{project.name}}</h2>
           {% endif %}
           <p class="card-text">О проекте: {{project.about}}</p>
+          {% if project.api %}
+              <a class="button_user " href="{{project.api}}">API</a>
+          {% endif %}
           <p class="card-text">Статус проекта: {{project.get_status_display}}</p>
+
           <p class="card-text decorat"> Технологии:
               {% for st in stacks %}
                   <a class="button_user " href="{{st.get_absolute_url}}">{{st}}</a>
