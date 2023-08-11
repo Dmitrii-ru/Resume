@@ -31,6 +31,7 @@ def setup_periodic_tasks(sender, **kwargs):
         name='del_ip_all'
     )
 
+
     sender.add_periodic_task(
         crontab(hour=0, minute=1),
         resume.tasks.create_visit_task.s(),

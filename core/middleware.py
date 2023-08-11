@@ -9,40 +9,6 @@ list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
 list_path = ['send_email', 'feedback', 'todo_session', 'projects', 'project', 'mptt_blog', 'quiz', 'api', 'index']
 
 
-# class UniqueIpMiddleware:
-#     def __init__(self, get_response):
-#         self.get_response = get_response
-#
-#     def __call__(self, request):
-#         num = 3
-#         if 'todo' in request.path:
-#             num = 2
-#
-#         tuple_req = tuple(request.__dict__.items())
-#         path = '/'.join(request.path.split('/')[:num])
-#         get_ip = self.get_client_ip(request)
-#         if get_ip not in list_exclude:
-#             ip = UniqueIP.objects.filter(ip_address=self.get_client_ip(request))
-#             if ip.exists():
-#                 obj = ip.first()
-#                 obj.count_visit += 1
-#                 if obj.info_client == UniqueIP._meta.get_field('info_client').default:
-#                     obj.info_client = tuple_req
-#
-#                 if path in obj.path_client:
-#                     obj.path_client[path] += 1
-#                 else:
-#                     obj.path_client.update({path: 1})
-#
-#             else:
-#                 obj = UniqueIP.objects.create(ip_address=get_ip,
-#                                               count_visit=1,
-#                                               path_client={path: 1},
-#                                               info_client=tuple_req)
-#
-#             obj.save()
-#         return self.get_response(request)
-
 class UniqueIpMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
