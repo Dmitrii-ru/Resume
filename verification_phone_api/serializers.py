@@ -23,8 +23,6 @@ class PhoneNumberSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid number')
         elif CustomUser.objects.filter(phone_number=phone_number).exists():
             raise serializers.ValidationError('Not unique number')
-        # elif not get_number(phone_number):
-        #     raise serializers.ValidationError('This number did not receive a code')
         return value
 
     def validate_code(self, value):
@@ -33,9 +31,10 @@ class PhoneNumberSerializer(serializers.Serializer):
         cache_code = get_number(phone_number)
 
         if not cache_code:
-            raise serializers.ValidationError('Invalid code')
+            raise serializers.ValidationError('Invalid code or this number did not receive a code')
         elif str(code) != str(cache_code):
             raise serializers.ValidationError(f'Request a new code')
+        return value
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

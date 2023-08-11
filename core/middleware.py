@@ -38,7 +38,6 @@ class UniqueIpMiddleware:
                                               info_client=tuple_req)
 
             obj.save()
-
         return self.get_response(request)
 
     def get_client_ip(self, request):
