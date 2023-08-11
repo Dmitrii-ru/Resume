@@ -1,5 +1,4 @@
 
-
 # Получение кода для регистрации user по номеру телефона.
 ## send_code_verification POST
 
@@ -19,6 +18,8 @@
 ## RESPONSES
 - Возвращаем код
 
+
+---
 
 # Заносим в базу данных user и выдаем invite.
 ## invite_code_verification POST
@@ -44,7 +45,7 @@
 - Ссылка на профиль
 - invite
 
-
+---
 
 # Внесение  invite
 ## ProfileUser PUT
@@ -66,7 +67,7 @@
 ## RESPONSES
 - "message": f"{user} successfully activated invite"
 
-
+---
 # Внесение  invite
 ## ProfileUser GET
 
