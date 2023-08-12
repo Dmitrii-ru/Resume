@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
+
 User = get_user_model()
 
 
@@ -14,15 +15,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email', 'password', 'password2')
 
-    def validate(self, data):
-        if data['password'] != data['password2']:
+    def validate(self, values):
+        if values['password'] != values['password2']:
             raise serializers.ValidationError('password != password2')
-        return data
+        return values
 
     def validate_email(self, value):
-        if not value:
-            return serializers.ValidationError("Write email")
-        elif User.objects.filter(email=value).exists():
+        if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("User with this email already exists")
         return value
 
@@ -36,9 +35,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=20 ,min_length=3)
+    username = serializers.CharField(max_length=20, min_length=3)
     password = serializers.CharField(max_length=100, min_length=3)
+
     class Meta:
         model = User
         fields = ('username', 'password')
-
