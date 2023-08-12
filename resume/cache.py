@@ -7,7 +7,8 @@ from django_redis import get_redis_connection
 def get_model_all(model):
     return cache.get_or_set(f'{model._meta.model_name}_all', model.objects.all(), 30)
 
-def get_model_all_order(model,order):
+
+def get_model_all_order(model, order):
     return cache.get_or_set(f'{model._meta.model_name}_all_order{order}', model.objects.all().order_by(order), 30)
 
 
@@ -65,3 +66,8 @@ def update_cache_ip(ip):
 
 def del_ip_all():
     cache.delete('ip_data')
+
+
+def count_visit():
+    db2 = redis.Redis(host='localhost', port=6379, db=2, decode_responses=True)
+    return db2.dbsize()

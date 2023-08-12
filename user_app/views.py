@@ -35,6 +35,7 @@ def register(request):
     return render(request, 'user_app/registration.html', {'form': form})
 
 
+
 @login_required
 def profile(request):
     usa = UserSessionApp(request)

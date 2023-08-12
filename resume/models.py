@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from .cache import count_visit
 from django.db import models
 from django.db.models import Sum, Count
 from django.urls import reverse
@@ -163,7 +163,7 @@ class UniqueIP(models.Model):
 
     class Meta:
         verbose_name = "Посетитель"
-        verbose_name_plural = f"Посетители "
+        verbose_name_plural = f"Посетители {count_visit()}"
 
     def __str__(self):
         return f'{self.ip_address}  //  {self.date}  //'

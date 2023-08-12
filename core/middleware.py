@@ -37,7 +37,6 @@ class UniqueIpMiddleware:
                     else:
                         path_client[_path] = 1
                     db2.set(get_ip, json.dumps(ip_cache))
-                    z()
         return self.get_response(request)
 
     def get_client_ip(self, request):

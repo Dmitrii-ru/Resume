@@ -34,6 +34,10 @@ schema_use_app_api = get_schema_view(
     permission_classes=(permissions.AllowAny,),
     patterns=[path('api/user_app/', include('user_app_api.urls'))]
 )
+
+
+
+
 #
 #
 # schema_mptt_blog_api = get_schema_view(
