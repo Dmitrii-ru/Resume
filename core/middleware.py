@@ -5,9 +5,9 @@ from resume.models import UniqueIP
 import redis
 import json
 
-# list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
+list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
 list_path = ['send_email', 'feedback', 'todo_session', 'projects', 'project', 'mptt_blog', 'quiz', 'api', 'index']
-list_exclude = []
+
 
 
 class UniqueIpMiddleware:
