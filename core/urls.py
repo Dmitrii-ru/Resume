@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
-import core.yasg
+import verification_phone_api.swagger.yasg
 
 from user_app.views import CustomPasswordResetView
 
@@ -12,7 +12,7 @@ urlpatterns = [
                   path('api/resume/', include('resume_api.urls', namespace='resume_api')),
                   path('api/user_app/', include('user_app_api.urls', namespace='user_app_api')),
                   path('api/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
-                  path('api/verification_phone/',
+                  path('v1/verification_phone/',
                        include('verification_phone_api.urls', namespace='verification_phone_api')),
                   path('', include('resume.urls', namespace='resume_urls')),
                   path('__debug__/', include('debug_toolbar.urls')),
@@ -43,7 +43,7 @@ urlpatterns = [
                        name='password_reset_complete'
                        ),
 
-              ] + core.yasg.urlpatterns
+              ] + verification_phone_api.swagger.yasg.urlpatterns
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

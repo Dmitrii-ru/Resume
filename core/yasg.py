@@ -71,11 +71,11 @@ schema_use_app_api = get_schema_view(
 
 
 urlpatterns = [
-    path('api/verification_phone/docs/', schema_view_verification_phone.with_ui(
-        'redoc', cache_timeout=0), name='schema-redoc-verification_phone'),
-
-    path('api/verification_phone/docs-swagger/', schema_view_verification_phone.with_ui(
-        'swagger', cache_timeout=0), name='schema-swagger-verification_phone'),
+    # path('api/verification_phone/docs/', schema_view_verification_phone.with_ui(
+    #     'redoc', cache_timeout=0), name='schema-redoc-verification_phone'),
+    #
+    # path('api/verification_phone/docs-swagger/', schema_view_verification_phone.with_ui(
+    #     'swagger', cache_timeout=0), name='schema-swagger-verification_phone'),
 
     path('api/user_app/docs/', schema_use_app_api.with_ui(
         'redoc', cache_timeout=0), name='schema-redoc-use_app_api'),

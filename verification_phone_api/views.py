@@ -13,7 +13,7 @@ from .cache import get_or_create_number
 from .models import CustomUser
 from core.settings import ALLOWED_HOSTS
 from django.urls import reverse
-
+from .swagger.swagger_descriptions import send_code_verification_schema,invite_code_verification_schema
 host = "http://" + ALLOWED_HOSTS[1]
 
 
@@ -23,38 +23,7 @@ def generator_invite():
     return invite_code
 
 
-@swagger_auto_schema(
-    method='post',
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00',
-                                           example='+7(929)927-19-00'),
-        },
-        required=['phone_number', ]
-    ),
-    responses={
-        status.HTTP_201_CREATED: openapi.Response(
-            description="Success",
-            schema=openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'code': openapi.Schema(type=openapi.TYPE_STRING, example='6666'),
-                }
-            )
-        ),
-        status.HTTP_400_BAD_REQUEST: openapi.Response(
-            description="Validation Error",
-            schema=openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'object': openapi.Schema(type=openapi.TYPE_STRING, example='phone_number'),
-                    'error': openapi.Schema(type=openapi.TYPE_STRING, example='Not unique number')
-                }
-            )
-        )
-    }
-)
+@swagger_auto_schema(**send_code_verification_schema())
 @api_view(['POST'])
 def send_code_verification(request):
     """
@@ -72,55 +41,16 @@ def send_code_verification(request):
         get_or_create_number(phone_number, code)
         data = {'code': code}
         return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-@swagger_auto_schema(
-    method='post',
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, format='+7(929)927-19-00',
-                                           example='+7(929)927-19-00'),
-            'code': openapi.Schema(type=openapi.TYPE_STRING, format='1111', example='6839')
-        },
-        required=['phone_number', 'code']
-    ),
-    responses={
-        status.HTTP_201_CREATED: openapi.Response(
-            description="Success",
-            schema=openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'invite': openapi.Schema(type=openapi.TYPE_STRING, example='sYKnvY'),
-                    'user_profile_url': openapi.Schema(
-                        type=openapi.TYPE_STRING, example='https://host/api/verification_phone/profile/+7(929)927-19-00'
-                    )
-                }
-            )
-        ),
-        status.HTTP_400_BAD_REQUEST: openapi.Response(
-            description="Validation Error",
-            schema=openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'object': openapi.Schema(type=openapi.TYPE_STRING, example='phone_number'),
-                    'error': openapi.Schema(type=openapi.TYPE_STRING, example='Not unique number')
-                }
-            )
-        )
-    }
-)
+@swagger_auto_schema(**invite_code_verification_schema())
 @api_view(['POST'])
 def invite_code_verification(request):
     """
     Заносим в базу данных user и выдаем invite.
 
     - Вносим в body phone_number и code
-
-
-
 
     """
     serializer = PhoneNumberSerializer(data=request.data, include_code=True)
