@@ -31,6 +31,7 @@ def check_email_old_task():
 def del_ip_all_task():
     del_ip_all()
 
+
 @shared_task
 def create_visit_task():
     import redis
@@ -54,4 +55,3 @@ def create_visit_task():
         )
 
         db2.flushdb()
-

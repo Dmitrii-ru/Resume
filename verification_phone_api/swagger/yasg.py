@@ -39,10 +39,10 @@ schema_view_verification_phone = get_schema_view(
 
 
 urlpatterns = [
-    path('v1/verification_phone/docs/', schema_view_verification_phone.with_ui(
+    path('api/verification_phone/docs/', schema_view_verification_phone.with_ui(
         'redoc', cache_timeout=0), name='schema-redoc-verification_phone'),
 
-    path('v1/verification_phone/docs-swagger/', schema_view_verification_phone.with_ui(
+    path('api/verification_phone/docs-swagger/', schema_view_verification_phone.with_ui(
         'swagger', cache_timeout=0), name='schema-swagger-verification_phone'),
 ]
 

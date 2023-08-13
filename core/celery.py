@@ -40,4 +40,4 @@ def setup_periodic_tasks(sender, **kwargs):
         8.0,
         resume.tasks.create_visit_task.s(),
         name='create_visit_time'
-    ),
+    )
