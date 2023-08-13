@@ -53,5 +53,5 @@ def create_visit_task():
         UniqueIP.objects.bulk_create(
             create_list
         )
-
         db2.flushdb()
+    print('ww')

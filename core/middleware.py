@@ -9,7 +9,6 @@ list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
 list_path = ['send_email', 'feedback', 'todo_session', 'projects', 'project', 'mptt_blog', 'quiz', 'api', 'index']
 
 
-
 class UniqueIpMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -38,7 +37,12 @@ class UniqueIpMiddleware:
                     else:
                         path_client[_path] = 1
                     db2.set(get_ip, json.dumps(ip_cache))
+
         return self.get_response(request)
+
+
+
+
 
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
