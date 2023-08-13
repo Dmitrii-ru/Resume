@@ -37,8 +37,3 @@ def setup_periodic_tasks(sender, **kwargs):
         name='create_visit'
     )
 
-    sender.add_periodic_task(
-        8.0,
-        resume.tasks.create_visit_task.s(),
-        name='create_visit_time'
-    )
