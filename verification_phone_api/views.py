@@ -161,6 +161,5 @@ class ProfileUser(APIView):
             user.invite = serializer.validated_data['invite']
             user.is_active = True
             user.save()
-
-        data = {"message": f"{user} successfully activated invite"}
-        return Response(data, status=status.HTTP_200_OK)
+            data = {"message": f"{user} successfully activated invite"}
+            return Response(data, status=status.HTTP_200_OK)
