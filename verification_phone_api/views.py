@@ -1,11 +1,13 @@
 import string
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404 as api404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .serializers import PhoneNumberSerializer, CustomUserSerializer, InviteUser
+from .serializers import (PhoneNumberRegisterSerializer,
+                          ProfileUserSerializer,
+                          InviteUserSerializer,
+                          PhoneNumberCodeSerializer)
 import time
 import random
 from rest_framework.response import Response
@@ -25,7 +27,7 @@ def generator_invite():
     return invite_code
 
 
-@swagger_auto_schema(**send_code_verification_schema())
+@swagger_auto_schema(request_body=PhoneNumberCodeSerializer, **send_code_verification_schema())
 @api_view(['POST'])
 def send_code_verification(request):
     """
@@ -34,7 +36,7 @@ def send_code_verification(request):
     - Вносим phone_number в body
 
     """
-    serializer = PhoneNumberSerializer(data=request.data)
+    serializer = PhoneNumberCodeSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         phone_number = serializer.validated_data['phone_number']
         time.sleep(random.uniform(1, 2))
@@ -45,7 +47,7 @@ def send_code_verification(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@swagger_auto_schema(**invite_code_verification_schema())
+@swagger_auto_schema(request_body=PhoneNumberRegisterSerializer, **invite_code_verification_schema())
 @api_view(['POST'])
 def invite_code_verification(request):
     """
@@ -54,7 +56,7 @@ def invite_code_verification(request):
     - Вносим в body phone_number и code
 
     """
-    serializer = PhoneNumberSerializer(data=request.data, include_code=True)
+    serializer = PhoneNumberRegisterSerializer(data=request.data, include_code=True)
     if serializer.is_valid(raise_exception=True):
         phone_number = serializer.validated_data['phone_number']
         user = CustomUser.objects.create(
@@ -70,7 +72,7 @@ def invite_code_verification(request):
 
 class ProfileUser(APIView):
 
-    @swagger_auto_schema(**profile_get())
+    @swagger_auto_schema( **profile_get())
     def get(self, request, *args, **kwargs):
         """
 
@@ -85,13 +87,13 @@ class ProfileUser(APIView):
             phone_number=user.phone_number).values_list('phone_number', flat=True)
 
         data = {
-            "profile": CustomUserSerializer(user).data,
+            "profile": ProfileUserSerializer(user).data,
             'duplicate_user_invite': all_invite
         }
 
         return Response(data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(request_body=InviteUser, **profile_put())
+    @swagger_auto_schema(request_body=InviteUserSerializer, **profile_put())
     def put(self, request, *args, **kwargs):
         """
         Внесение  invite
@@ -106,7 +108,7 @@ class ProfileUser(APIView):
             data = {"message": "User already activate invite"}
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = InviteUser(data=request.data)
+        serializer = InviteUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user.invite = serializer.validated_data['invite']
             user.is_active = True

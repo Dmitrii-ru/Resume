@@ -7,15 +7,36 @@ from verification_phone_api.models import CustomUser
 reg_phone_number = re.compile(r'^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$')
 
 
-class PhoneNumberSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(min_length=16, required=True)
-    code = serializers.CharField(min_length=4, max_length=4, required=True)
+class PhoneNumberCodeSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(
+        min_length=16,
+        required=True,
+        help_text='Phone number format: "+7(XXX)XXX-XX-XX", example = "+7(929)927-19-00"'
+    )
 
-    def __init__(self, *args, **kwargs):
-        include_code = kwargs.pop('include_code', False)
-        super().__init__(*args, **kwargs)
-        if not include_code:
-            self.fields.pop('code')
+    def validate_phone_number(self, value):
+        phone_number = value
+        if not reg_phone_number.match(phone_number):
+            raise serializers.ValidationError('Invalid number')
+        elif CustomUser.objects.filter(phone_number=phone_number).exists():
+            raise serializers.ValidationError('Not unique number')
+        return value
+
+
+class PhoneNumberRegisterSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(
+        min_length=16,
+        required=True,
+        help_text='Phone number format: "+7(XXX)XXX-XX-XX", example = "+7(929)927-19-00"'
+    )
+
+    code = serializers.CharField(
+        min_length=4,
+        max_length=4,
+        required=True,
+        help_text='Phone code: "XXXX", example = "1233'
+
+    )
 
     def validate_phone_number(self, value):
         phone_number = value
@@ -37,14 +58,22 @@ class PhoneNumberSerializer(serializers.Serializer):
         return value
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class ProfileUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('phone_number', 'invite', 'self_invite', 'is_active')
 
 
-class InviteUser(serializers.Serializer):
-    invite = serializers.CharField()
+class InviteUserSerializer(serializers.Serializer):
+    invite = serializers.CharField(
+        min_length=6,
+        max_length=6,
+        help_text='"XXXXXX", example = "T5R7uO"'
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = 'invite'
 
     def validate(self, values):
         all_invite = CustomUser.objects.all().values_list('self_invite', flat=True)
