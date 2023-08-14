@@ -1,8 +1,8 @@
 from drf_yasg import openapi
 from rest_framework import status
 from core.settings import ALLOWED_HOSTS
-host = "http://" + ALLOWED_HOSTS[1]
 
+host = "http://" + ALLOWED_HOSTS[1]
 
 
 def send_code_verification_schema():
@@ -82,8 +82,18 @@ def invite_code_verification_schema():
     }
 
 
+phone_number_parameter = openapi.Parameter(
+    name='phone_number',
+    in_=openapi.IN_PATH,
+    type=openapi.TYPE_STRING,
+    example='+7(929)927-19-00',
+    description='Phone number in the format +7(XXX)XXX-XX-XX'
+)
+
+
 def profile_get():
     return {
+        'manual_parameters': [phone_number_parameter, ],
         'responses': {
             status.HTTP_200_OK: openapi.Response(
                 description="Success",
@@ -135,12 +145,12 @@ def profile_get():
                 )
             )
         }
-
     }
 
 
 def profile_put():
     return {
+        'manual_parameters': [phone_number_parameter, ],
         'responses': {
             status.HTTP_201_CREATED: openapi.Response(
                 description="Success",
