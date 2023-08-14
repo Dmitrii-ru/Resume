@@ -64,7 +64,7 @@ def invite_code_verification(request):
         profile_url = reverse('verification_phone_api:profile', args=[user.phone_number])
         data['user_profile_url'] = host + profile_url
         return Response(data, status=status.HTTP_201_CREATED)
-
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileUser(APIView):
 
@@ -125,6 +125,9 @@ class ProfileUser(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
+
+
+
     @swagger_auto_schema(
         request_body=InviteUser,
         responses={
@@ -163,3 +166,4 @@ class ProfileUser(APIView):
             user.save()
             data = {"message": f"{user} successfully activated invite"}
             return Response(data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
