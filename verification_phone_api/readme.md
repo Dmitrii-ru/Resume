@@ -1,6 +1,6 @@
 
 # Получение кода для регистрации user по номеру телефона.
-## send_code_verification POST
+## POST api/verification_phone/send_code
 
 ## REQUEST
 - Вносим phone_number в body
@@ -22,7 +22,7 @@
 ---
 
 # Заносим в базу данных user и выдаем invite.
-## invite_code_verification POST
+## POST api/verification_phone/invite_code
 
 ## REQUEST
 - Вносим в body phone_number и code
@@ -48,10 +48,10 @@
 ---
 
 # Внесение  invite
-## ProfileUser PUT
+## PUT profile/<phone_number>
 
 ## REQUEST
-- Вносим path phone_number и invite в body.
+- body {'invite': 'HDie22'}.
 
 ### Validate
 
@@ -69,7 +69,7 @@
 
 ---
 # Внесение  invite
-## ProfileUser GET
+## GET profile/<phone_number>
 
 ## REQUEST
 - Вносим path phone_number.

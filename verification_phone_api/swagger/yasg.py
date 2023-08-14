@@ -6,20 +6,6 @@ from django.urls import path, include
 with open('verification_phone_api/q.txt', 'r') as file:
     description_text = file.read()
 
-# schema_view_verification_phone = get_schema_view(
-#     openapi.Info(
-#         title="Verification Phone API",
-#         default_version='v1',
-#         description=description_text,
-#         terms_of_service="description_text",
-#         contact=openapi.Contact(email=""),
-#         license=openapi.License(name="BSD License"),
-#     ),
-#     public=True,
-#     permission_classes=(permissions.AllowAny,),
-#     patterns=[path('api/verification_phone/', include('verification_phone_api.urls'))]
-# )
-
 schema_view_verification_phone = get_schema_view(
     openapi.Info(
 

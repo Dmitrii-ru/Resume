@@ -12,7 +12,7 @@ urlpatterns = [
                   path('api/resume/', include('resume_api.urls', namespace='resume_api')),
                   path('api/user_app/', include('user_app_api.urls', namespace='user_app_api')),
                   path('api/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
-                  path('v1/verification_phone/',
+                  path('api/verification_phone/',
                        include('verification_phone_api.urls', namespace='verification_phone_api')),
                   path('', include('resume.urls', namespace='resume_urls')),
                   path('__debug__/', include('debug_toolbar.urls')),
