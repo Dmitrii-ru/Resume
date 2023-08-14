@@ -3,7 +3,7 @@
 ## POST api/verification_phone/send_code
 
 ## REQUEST
-- Вносим phone_number в body
+- body { 'phone_number' : '+7(999)999-99-99' }
 
 ### Validate
 #### validate_phone_number
@@ -25,7 +25,9 @@
 ## POST api/verification_phone/invite_code
 
 ## REQUEST
-- Вносим в body phone_number и code
+- api/verification_phone/invite_code
+- body { 'phone_number' : '+7(999)999-99-99' , 'code' : '7777' }
+
 
 ### Validate
 #### validate_phone_number
@@ -48,10 +50,11 @@
 ---
 
 # Внесение  invite
-## PUT profile/<phone_number>
+## PUT api/verification_phone/profile/<phone_number>
 
 ## REQUEST
-- body {'invite': 'HDie22'}.
+- api/verification_phone/profile/+7(999)999-99-99
+- body { 'invite' : 'HDie22' }.
 
 ### Validate
 
@@ -69,10 +72,10 @@
 
 ---
 # Внесение  invite
-## GET profile/<phone_number>
+## GET api/verification_phone/profile/<phone_number>
 
 ## REQUEST
-- Вносим path phone_number.
+- api/verification_phone/profile/+7(999)999-99-99
 
 
 ### Function
