@@ -13,7 +13,9 @@ from .cache import get_or_create_number
 from .models import CustomUser
 from core.settings import ALLOWED_HOSTS
 from django.urls import reverse
-from .swagger.swagger_descriptions import send_code_verification_schema,invite_code_verification_schema
+from .swagger.swagger_descriptions import send_code_verification_schema, invite_code_verification_schema, profile_get, \
+    profile_put
+
 host = "http://" + ALLOWED_HOSTS[1]
 
 
@@ -30,7 +32,6 @@ def send_code_verification(request):
     Получение кода для регистрации user по номеру телефона.
 
     - Вносим phone_number в body
-
 
     """
     serializer = PhoneNumberSerializer(data=request.data)
@@ -66,45 +67,10 @@ def invite_code_verification(request):
         return Response(data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProfileUser(APIView):
 
-    @swagger_auto_schema(
-        responses={
-            status.HTTP_200_OK: openapi.Response(
-                description="Success",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'profile': openapi.Schema(
-                            type=openapi.TYPE_OBJECT,
-                            example={
-                                "phone_number": "+7(929)924-19-00",
-                                "invite": "mrITZ7",
-                                "self_invite": "mrITZ7",
-                                "is_active": "true"
-                            }
-                        ),
-                        'duplicate_user_invite': openapi.Schema(
-                            type=openapi.TYPE_ARRAY,
-                            items=openapi.Schema(  # Вот здесь добавили атрибут items
-                                type=openapi.TYPE_STRING,
-                                example="+7(929)924-19-01"
-                            )
-                        )
-                    }
-                )
-            ),
-            status.HTTP_404_NOT_FOUND: openapi.Response(
-                description="Validation Error",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'detail': openapi.Schema(type=openapi.TYPE_STRING, ),
-                    }
-                )
-            )
-        }
-    )
+    @swagger_auto_schema(**profile_get())
     def get(self, request, *args, **kwargs):
         """
 
@@ -125,26 +91,7 @@ class ProfileUser(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
-
-
-
-    @swagger_auto_schema(
-        request_body=InviteUser,
-        responses={
-            status.HTTP_201_CREATED: openapi.Response(
-                description="Success",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'message': openapi.Schema(
-                            type=openapi.TYPE_STRING,
-                            example='+7(123)456-68-90 успешно активировал invite'
-                        ),
-                    }
-                )
-            ),
-        }
-    )
+    @swagger_auto_schema(request_body=InviteUser, **profile_put())
     def put(self, request, *args, **kwargs):
         """
         Внесение  invite

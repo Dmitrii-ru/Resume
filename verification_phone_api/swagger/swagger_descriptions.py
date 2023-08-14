@@ -75,3 +75,66 @@ def invite_code_verification_schema():
             )
         }
     }
+
+
+def profile_get():
+    return {
+        'responses': {
+            status.HTTP_200_OK: openapi.Response(
+                description="Success",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'profile': openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            example={
+                                "phone_number": "+7(929)924-19-00",
+                                "invite": "mrITZ7",
+                                "self_invite": "mrITZ7",
+                                "is_active": "true"
+                            }
+                        ),
+                        'duplicate_user_invite': openapi.Schema(
+                            type=openapi.TYPE_ARRAY,
+                            items=openapi.Schema(
+                                type=openapi.TYPE_STRING,
+                                example=('+7(929)924-19-01', '+7(929)924-19-02')
+                            )
+                        )
+                    }
+                )
+            ),
+            status.HTTP_404_NOT_FOUND: openapi.Response(
+                description="Validation Error",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'detail': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='Page not found'
+                        ),
+                    }
+                )
+            )
+        }
+
+    }
+
+
+def profile_put():
+    return {
+        'responses':{
+            status.HTTP_201_CREATED: openapi.Response(
+                description="Success",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='+7(123)456-68-90 успешно активировал invite'
+                        ),
+                    }
+                )
+            ),
+        }
+    }
