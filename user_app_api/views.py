@@ -2,10 +2,10 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, User
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, User, RefreshTokenSerializer
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from .swagger.swagger_descriptions import schema_login
+from .swagger.swagger_descriptions import schema_login, schema_refresh_token, schema_user_register
 from rest_framework import serializers, status
 from rest_framework.generics import get_object_or_404 as api404
 
@@ -24,29 +24,10 @@ class UserRegisterAPIView(CreateAPIView):
     - Отдаем username, email, access_token, refresh_token
 
     """
-    serializer_class = UserRegistrationSerializer
 
-    @swagger_auto_schema(
-        responses={
-            status.HTTP_201_CREATED: openapi.Response(
-                description="Success",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'user': openapi.Schema(type=openapi.TYPE_STRING,
-                                               example={"username": "Vasya",
-                                                        "email": "usewr@example.com",
-                                                        'access_token': '777',
-                                                        'refresh_token': '999'
-                                                        }),
-
-                    }
-                )
-            )
-        }
-    )
+    @swagger_auto_schema(request_body=UserRegistrationSerializer, **schema_user_register())
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
@@ -84,15 +65,17 @@ class LoginAPIView(APIView):
 
 
 class RefreshTokenView(APIView):
+    @swagger_auto_schema(request_body=RefreshTokenSerializer, **schema_refresh_token())
     def post(self, request):
-        refresh_token = request.data.get('refresh_token')
-        if not refresh_token:
-            return Response({'error': 'refresh_token is required'}, status=400)
+        serializer = RefreshTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            refresh_token = serializer.validated_data['refresh_token']
+            try:
+                refresh = RefreshToken(refresh_token)
+                access_token = str(refresh.access_token)
+            except Exception as e:
+                return Response({'error': f'Bad refresh_token ({e})'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            refresh = RefreshToken(refresh_token)
-            access_token = str(refresh.access_token)
-        except Exception as e:
-            return Response({'error': f'Bad refresh_token ({e})'}, status=400)
-
-        return Response({'access_token': access_token})
+            return Response({'access_token': access_token}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

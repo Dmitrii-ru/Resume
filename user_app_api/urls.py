@@ -14,7 +14,7 @@ urlpatterns = [
 
 schema_use_app_api = get_schema_view(
     openapi.Info(
-        title="Verification Phone API",
+        title="Verification user API",
         default_version='v1',
         description="",
         terms_of_service="",
