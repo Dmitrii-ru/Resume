@@ -1,4 +1,3 @@
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,14 +13,6 @@ class UserRegisterAPIView(CreateAPIView):
     """
     Регистрация пользователя
 
-    # Request
-    - Проверяем уникальность email
-    - password == password2
-    - Создаем user , хэшируем пароль
-
-    # Response
-    - Генерируем refresh_token и access_token
-    - Отдаем username, email, access_token, refresh_token
 
     """
 

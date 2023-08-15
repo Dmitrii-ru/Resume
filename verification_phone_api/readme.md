@@ -1,84 +1,77 @@
+# User Registration by Phone Number
 
-# Getting a code for registering a user by phone number.
-## POST api/verification_phone/send_code
+## Request: POST /api/verification_phone/send_code
 
-## REQUEST
+### Validation
 
+- Check phone number format.
+- Check phone number uniqueness.
 
-### Validate
-#### validate_phone_number
-- Checking the format phone_number.
-- Check for uniqueness of phone number.
+### Functions
 
-### Function
 - Simulate code send delay.
-- Code generation.
-- Code caching. 
+- Generate code.
+- Cache code.
 
-## RESPONSES
-- Return code
+### Response
 
-
----
-
-# Create user into the database and issue invite.
-## POST api/verification_phone/invite_code
-
-## REQUEST
-
-### Validate
-#### validate_phone_number
-- Checking the format phone number.
-- Check for uniqueness of phone number.
-
-#### validate_code
-- Checking the cache for the presence of a phone number and validata code
-
-### Function
-- Create user
-- Invite generation
-- Generation link user profile
-
-## RESPONSES
-- Link to profile
-- invite
+- Confirmation code
 
 ---
 
-# Invite activation
-## PUT api/verification_phone/profile/<phone_number>
+# User Creation and Invitation Issuance
 
-## REQUEST
-- api/verification_phone/profile/+7(999)999-99-99
+## Request: POST /api/verification_phone/invite_code
 
+### Validation
 
-### Validate
+- Check phone number format.
+- Check phone number uniqueness.
+- Check code presence in cache.
 
-#### validate
-- Check for the existence of invite.
+### Functions
 
-### Function
-- Check for existence profile.
-- Check invite activation.
-- Invite activation.
+- Create user.
+- Generate invitation.
+- Generate link to user profile.
 
+### Response
 
-## RESPONSES
-- "message": f"{user} successfully activated invite"
+- Link to user profile
+- Invitation
 
 ---
-# Внесение  invite
-## GET api/verification_phone/profile/<phone_number>
 
-## REQUEST
+# Invitation Activation
 
+## Request: PUT /api/verification_phone/profile/<phone_number>
 
+### Validation
 
-### Function
-- Check for existence profile.
-- Get a list of users who activated the invite of the current user
+- Check invitation existence.
 
-## RESPONSES
+### Functions
+
+- Check profile existence.
+- Check invitation activation.
+- Activate invitation.
+
+### Response
+
+- User successfully activated invite
+
+---
+
+# List Invitations
+
+## Request: GET /api/verification_phone/profile/<phone_number>
+
+### Functions
+
+- Check profile existence.
+- Get a list of users who activated the invite of the current user.
+
+### Response
+
 - Profile
-- List invite
-
+- List of invitations
