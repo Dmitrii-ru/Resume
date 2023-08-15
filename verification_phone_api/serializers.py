@@ -23,7 +23,7 @@ class PhoneNumberCodeSerializer(serializers.Serializer):
         return value
 
 
-class PhoneNumberRegisterSerializer(serializers.Serializer):
+class UserRegisterSerializer(serializers.Serializer):
     phone_number = serializers.CharField(
         min_length=16,
         required=True,

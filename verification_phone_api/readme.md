@@ -1,71 +1,67 @@
 
-# Получение кода для регистрации user по номеру телефона.
+# Getting a code for registering a user by phone number.
 ## POST api/verification_phone/send_code
 
 ## REQUEST
-- body { 'phone_number' : '+7(999)999-99-99' }
+
 
 ### Validate
 #### validate_phone_number
-- Проверка формата введенного phone_number.
-- Проверка на уникальность phone_number в базе данных.
+- Checking the format phone_number.
+- Check for uniqueness of phone number.
 
 ### Function
-- Имитация задержки отправки кода
-- Генерация кода
-- Кеширование кода {phone_number: code}
+- Simulate code send delay.
+- Code generation.
+- Code caching. 
 
 ## RESPONSES
-- Возвращаем код
+- Return code
 
 
 ---
 
-# Заносим в базу данных user и выдаем invite.
+# Create user into the database and issue invite.
 ## POST api/verification_phone/invite_code
 
 ## REQUEST
-- api/verification_phone/invite_code
-- body { 'phone_number' : '+7(999)999-99-99' , 'code' : '7777' }
-
 
 ### Validate
 #### validate_phone_number
-- Проверка формата введенного phone_number.
-- Проверка на уникальность phone_number в базе данных.
+- Checking the format phone number.
+- Check for uniqueness of phone number.
 
 #### validate_code
-- проверка Кеш на наличие code для этого phone_number.
-- проверка совпадения полученного code и core в кеш.
+- Checking the cache for the presence of a phone number and validata code
 
 ### Function
-- Создание профиля user
-- Генерация invite
-- Генерация ссылки на профиль user
+- Create user
+- Invite generation
+- Generation link user profile
 
 ## RESPONSES
-- Ссылка на профиль
+- Link to profile
 - invite
 
 ---
 
-# Внесение  invite
+# Invite activation
 ## PUT api/verification_phone/profile/<phone_number>
 
 ## REQUEST
 - api/verification_phone/profile/+7(999)999-99-99
-- body { 'invite' : 'HDie22' }.
+
 
 ### Validate
 
 #### validate
-- проверка на существование invite.
+- Check for the existence of invite.
 
 ### Function
-- Проверка на существование профиля.
-- Проверка на активацию invite is_active = False.
-- Активируем invite
-- is_active = True
+- Check for existence profile.
+- Check invite activation.
+- Invite activation.
+
 
 ## RESPONSES
 - "message": f"{user} successfully activated invite"
@@ -75,14 +71,14 @@
 ## GET api/verification_phone/profile/<phone_number>
 
 ## REQUEST
-- api/verification_phone/profile/+7(999)999-99-99
+
 
 
 ### Function
-- Проверка на существование профиля.
-- Готовим список user которые активировали invite текущего user
+- Check for existence profile.
+- Get a list of users who activated the invite of the current user
 
 ## RESPONSES
-- Информация о профиле
-- Список дубликатов user invite
+- Profile
+- List invite
 

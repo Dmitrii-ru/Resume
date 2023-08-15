@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404 as api404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .serializers import (PhoneNumberRegisterSerializer,
+from .serializers import (UserRegisterSerializer,
                           ProfileUserSerializer,
                           InviteUserSerializer,
                           PhoneNumberCodeSerializer)
@@ -47,7 +47,7 @@ def send_code_verification(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@swagger_auto_schema(request_body=PhoneNumberRegisterSerializer, **invite_code_verification_schema())
+@swagger_auto_schema(request_body=UserRegisterSerializer, **invite_code_verification_schema())
 @api_view(['POST'])
 def invite_code_verification(request):
     """
@@ -56,7 +56,7 @@ def invite_code_verification(request):
     - Вносим в body phone_number и code
 
     """
-    serializer = PhoneNumberRegisterSerializer(data=request.data)
+    serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         phone_number = serializer.validated_data['phone_number']
         user = CustomUser.objects.create(
@@ -72,7 +72,7 @@ def invite_code_verification(request):
 
 class ProfileUser(APIView):
 
-    @swagger_auto_schema( **profile_get())
+    @swagger_auto_schema(**profile_get())
     def get(self, request, *args, **kwargs):
         """
 

@@ -27,7 +27,7 @@ class UserRegisterAPIView(CreateAPIView):
 
     @swagger_auto_schema(request_body=UserRegistrationSerializer, **schema_user_register())
     def post(self, request, *args, **kwargs):
-        serializer = UserLoginSerializer(data=request.data)
+        serializer = UserRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
