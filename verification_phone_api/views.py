@@ -56,7 +56,7 @@ def invite_code_verification(request):
     - Вносим в body phone_number и code
 
     """
-    serializer = PhoneNumberRegisterSerializer(data=request.data, include_code=True)
+    serializer = PhoneNumberRegisterSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         phone_number = serializer.validated_data['phone_number']
         user = CustomUser.objects.create(
