@@ -5,8 +5,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, User
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-
+from .swagger.swagger_descriptions import schema_login
 from rest_framework import serializers, status
+from rest_framework.generics import get_object_or_404 as api404
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -61,49 +62,25 @@ class UserRegisterAPIView(CreateAPIView):
 
 class LoginAPIView(APIView):
 
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'username',
-                openapi.IN_PATH,
-                type=openapi.TYPE_STRING,
-                description=f"username",
-                required=True,
-            ),
-            openapi.Parameter(
-                'password',
-                openapi.IN_PATH,
-                type=openapi.TYPE_STRING,
-                description=f"password",
-                required=True,
-            ),
-        ]
-    )
+    @swagger_auto_schema(request_body=UserLoginSerializer, **schema_login())
     def post(self, request):
-        try:
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
             username = request.data['username']
             password = request.data['password']
-            user = User.objects.filter(username=username).first()
-
-            if not user:
-                raise serializers.ValidationError('User not found')
-
-            elif not user.check_password(password):
+            user = api404(User, username=username)
+            if not user.check_password(password):
                 raise serializers.ValidationError('Invalid password')
-
             elif not user.is_active:
                 raise serializers.ValidationError('User not active')
 
-            serializer = UserLoginSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                refresh = RefreshToken.for_user(user)
-                return Response({
-                    'user': user.username,
-                    'access_token': str(refresh.access_token),
-                    'refresh_token': str(refresh),
-                })
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            refresh = RefreshToken.for_user(user)
+            data = {
+                'user': user.username,
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh),
+            }
+            return Response(data, status=status.HTTP_200_OK)
 
 
 class RefreshTokenView(APIView):
