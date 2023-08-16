@@ -1,9 +1,6 @@
 from datetime import date
-
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
-from django.contrib.sessions.backends.cache import SessionStore
-from django.shortcuts import redirect
 from drf_yasg import openapi
 from django.utils.safestring import mark_safe
 from drf_yasg.utils import swagger_auto_schema
@@ -12,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ReadOnlyModelViewSet
 import json
-from resume.forms import AddTodo
 from resume.python_prog.calendar_session_todo import MyCalendar
 from resume.tasks import send_email_task
 from resume.cache import count_send_email, get_model_all, get_single_model_obj, get_filter_model, get_model_all_order, \

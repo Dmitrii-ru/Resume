@@ -1,13 +1,13 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import permissions
 from .views import resume_api, feedback_api, send_email_api, ProjectsAPIReadOnly, TodoSessionViewAPI, \
     TodoDeleteSessionViewAPI, TodoPatchSessionViewAPI, ProjectDetailAPIReadOnly
-from rest_framework.routers import DefaultRouter
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 app_name = 'resume_api'
 
-router: DefaultRouter = DefaultRouter()
 
-# router.register('index', resume_api, basename='api_resume_index')
 
 urlpatterns = [
     path('', resume_api, name='api_resume_index'),
@@ -19,4 +19,30 @@ urlpatterns = [
     path('todo_session/<slug_day>', TodoSessionViewAPI, name='api_todo_session_day'),
     path('todo_session/<slug_day>/delete', TodoDeleteSessionViewAPI, name='todo_session_delete'),
     path('todo_session/<slug_day>/patch', TodoPatchSessionViewAPI, name='todo_session_patch'),
+]
+
+
+
+schema_use_app_api = get_schema_view(
+    openapi.Info(
+        title="Resume API",
+        default_version='v1',
+        description="",
+        contact=openapi.Contact(email="nochev1@mail.ru"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+    patterns=[path('v1/resume_api/', include('resume_api.urls'))]
+)
+
+urlpatterns += [
+
+    path('docs/',
+         schema_use_app_api.with_ui(
+             'redoc', cache_timeout=0), name='schema-redoc-resume_api'
+         ),
+    path('docs-swagger/',
+         schema_use_app_api.with_ui(
+             'swagger', cache_timeout=0), name='schema-swagger-resume_api'
+         ),
 ]

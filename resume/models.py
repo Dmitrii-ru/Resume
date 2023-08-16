@@ -40,7 +40,7 @@ class MyEducation(models.Model):
 
 
 class AboutMe(models.Model):
-    text = RichTextField('О себе', max_length=3000)
+    text = RichTextField('О себе', max_length=4000)
     phone = models.CharField('Телефон', max_length=30)
     city = models.CharField('Город', max_length=30)
     mail = models.CharField('Почта', max_length=30)
