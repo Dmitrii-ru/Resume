@@ -159,7 +159,7 @@ def profile_put():
                     properties={
                         'message': openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            example='+7(123)456-68-90 успешно активировал invite'
+                            example='+7(123)456-68-90 successfully activated invite'
                         ),
                     }
                 )

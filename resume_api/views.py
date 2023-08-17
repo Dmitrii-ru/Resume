@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from resume.cache import get_model_all, get_single_model_obj, get_filter_model, get_model_all_order, \
     get_mtm_all
@@ -14,7 +15,7 @@ from user_app.user_session import UserSessionToDo
 from .serializers import AboutMeSerializer, MyEducationSerializer, StackSerializer, FeedbackSerializer, \
     ProductSerializer, AddTodoSerializer, TodoDeleteSessionSerializer, TodoPatchSessionSerializer, \
     CardProjectSerializer
-from .swagger.swagger_descriptions import schema_index, schema_feedback
+from .swagger.swagger_descriptions import *
 
 
 @swagger_auto_schema(method='get', **schema_index())
@@ -64,50 +65,66 @@ def get_date_format(day):
     return date(year, month, day).isoformat()
 
 
-def get_or_create_day(ust, day_d):
-    day = ust.todo_days.get(day_d)
-    if not day:
-        day = ust.new_obj(day_d)
-    return day
+class TodoViewApi(APIView):
+    @swagger_auto_schema( **schema_todo_get())
+    def get(self, request, **kwargs):
+        """
+        Getting todo_ day
 
+        Enter day in params
 
-@swagger_auto_schema(method='post', request_body=AddTodoSerializer)
-@api_view(['POST', 'GET'])
-def todo_session_view_api(request, **kwargs):
-    """
-    Get or create todo_.
+        """
 
-    Create a new feedback object by providing the text in the request body.
+        ust = UserSessionToDo(self.request)
+        slug_day = self.kwargs.get('slug_day')
+        try:
+            get_date_format(slug_day)
+        except ValueError:
+            return Response(
+                {
+                    'success': False,
+                    'error': f'Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
 
-    ---
+        data = {'day': ust.get_obj(slug_day)}
+        return Response(data, status.HTTP_200_OK)
 
-    """
+    @swagger_auto_schema(request_body=AddTodoSerializer, **schema_todo_post())
+    def post(self, request, **kwargs):
+        """
 
-    ust = UserSessionToDo(request)
+        Create new todo_
 
-    try:
-        get_date_format(kwargs['slug_day'])
-    except ValueError:
-        return Response(
-            {
-                'success': False,
-                'error': f'Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
-            }, status=status.HTTP_400_BAD_REQUEST
-        )
+        Enter day in params and todo_ in body
 
-    if request.method == "POST":
+        """
+
+        ust = UserSessionToDo(self.request)
+        slug_day = self.kwargs.get('slug_day')
+
+        try:
+            get_date_format(slug_day)
+        except ValueError:
+            return Response(
+                {
+                    'success': False,
+                    'error': f'Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
+
         request_data = request.data
-        day = ust.todo_days.get(kwargs['slug_day'])
-        serializer = AddTodoSerializer(data=request_data)
+        day = ust.todo_days.get(slug_day)
 
+        serializer = AddTodoSerializer(data=request_data)
         if day:
             serializer = AddTodoSerializer(data=request_data, context={'day': day})
         else:
-            ust.new_obj(kwargs['slug_day'])
+            ust.new_obj(slug_day)
 
         if serializer.is_valid():
             ust = UserSessionToDo(request)
-            ust.add_todo(serializer.validated_data['todo'], kwargs['slug_day'])
+            ust.add_todo(serializer.validated_data['todo'], slug_day)
             return Response(
                 {
                     'success': True,
@@ -117,8 +134,13 @@ def todo_session_view_api(request, **kwargs):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    data = {'day': ust.get_obj(kwargs['slug_day'])}
-    return Response(data, status.HTTP_200_OK)
+
+
+
+
+
+
+
 
 
 @swagger_auto_schema(method='DELETE', request_body=TodoDeleteSessionSerializer,

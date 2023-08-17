@@ -31,9 +31,10 @@ def generator_invite():
 @api_view(['POST'])
 def send_code_verification(request):
     """
-    Получение кода для регистрации user по номеру телефона.
 
-    - Вносим phone_number в body
+    Getting a code for registering
+
+    Enter phone number in body
 
     """
     serializer = PhoneNumberCodeSerializer(data=request.data)
@@ -51,9 +52,9 @@ def send_code_verification(request):
 @api_view(['POST'])
 def invite_code_verification(request):
     """
-    Заносим в базу данных user и выдаем invite.
+    Create user , get invite
 
-    - Вносим в body phone_number и code
+    Enter phone number and code in body
 
     """
     serializer = UserRegisterSerializer(data=request.data)
@@ -75,10 +76,9 @@ class ProfileUser(APIView):
     @swagger_auto_schema(**profile_get())
     def get(self, request, *args, **kwargs):
         """
+        User profile
 
-        Полученные данных профиля по номеру телефона
-
-        - Вносим phone_number в path
+        Enter phone number in param
 
         """
         phone_number = kwargs.get('phone_number')
@@ -96,9 +96,10 @@ class ProfileUser(APIView):
     @swagger_auto_schema(request_body=InviteUserSerializer, **profile_put())
     def put(self, request, *args, **kwargs):
         """
-        Внесение  invite
+        Activate invite
 
-        - Вносим phone_number в path и invite в body
+        Enter phone number in param and invite in body
+
 
         """
         phone_number = kwargs.get('phone_number')

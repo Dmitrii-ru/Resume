@@ -77,6 +77,21 @@ def schema_index():
     }
 
 
+q = {status.HTTP_400_BAD_REQUEST: openapi.Response(
+    description="Bad Request",
+    schema=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'error': openapi.Schema(
+                type=openapi.TYPE_STRING,
+                example='Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
+            ),
+
+        }
+    )
+)}
+
+
 def schema_feedback():
     return {
         "responses": {
@@ -105,6 +120,69 @@ def schema_feedback():
 
                     }
                 )
+            )
+        }
+    }
+
+
+def schema_todo_post():
+    return {
+        "responses": {
+            status.HTTP_201_CREATED: openapi.Response(
+                description="Success",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='Todo successfully created'
+                        ),
+
+                    }
+                )
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description="Bad Request",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
+                        ),
+
+                    }
+                )
+            )
+        }
+    }
+
+
+def schema_todo_get():
+    return {
+        "responses": {
+            status.HTTP_200_OK: openapi.Response(
+                description="Success",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'day': openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'actual': openapi.Schema(
+                                    type=openapi.TYPE_ARRAY,
+                                    items=openapi.Schema(type=openapi.TYPE_STRING)
+                                ),
+                                'close': openapi.Schema(
+                                    type=openapi.TYPE_ARRAY,
+                                    items=openapi.Schema(type=openapi.TYPE_STRING)
+                                ),
+                                'slug': openapi.Schema(type=openapi.TYPE_STRING),
+                                'name': openapi.Schema(type=openapi.TYPE_STRING),
+                            },
+                        ),
+                    },
+                ),
             )
         }
     }
