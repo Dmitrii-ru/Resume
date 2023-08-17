@@ -75,7 +75,7 @@ def get_or_create_day(ust, day_d):
 @api_view(['POST', 'GET'])
 def todo_session_view_api(request, **kwargs):
     """
-    Get or create todo.
+    Get or create todo_.
 
     Create a new feedback object by providing the text in the request body.
 
