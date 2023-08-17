@@ -42,16 +42,13 @@ class CardProjectSerializer(serializers.ModelSerializer):
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    text = serializers.CharField(
+        min_length=10,
+    )
+
     class Meta:
         model = Feedback
         fields = ('text',)
-
-    def validate_text(self, value):
-        if not value:
-            raise serializers.ValidationError('Write text')
-        if len(value) < 10:
-            raise serializers.ValidationError('You are very modest, at least 10 characters')
-        return value
 
 
 class EmailSendSerializer(serializers.ModelSerializer):
@@ -72,7 +69,6 @@ class EmailSendSerializer(serializers.ModelSerializer):
 
 def get_or_create_day(ust, day_d):
     day = ust.todo_days.get(day_d)
-    print()
     if not day:
         day = ust.new_obj(day_d)
     return day
@@ -84,26 +80,20 @@ def get_date_format(day):
 
 
 class AddTodoSerializer(serializers.Serializer):
-    todo = serializers.CharField(max_length=20)
+    todo = serializers.CharField(
+        max_length=20,
+        min_length=2,
+    )
 
-    def validate(self, values):
-        todo = values['todo']
-        print(self.context.get('day'))
-        day = get_or_create_day(self.context.get('ust'), self.context.get('day'))
-
-        try:
-            if todo in day['actual'] or todo in day['close']:
-                raise serializers.ValidationError(f"Already is tasks fot today")
-        except:
-            raise serializers.ValidationError(f"Not unique object {todo} id {day['slug']}")
-
-        if len(todo) < 2:
-            raise serializers.ValidationError('The "todo" field must have a length greater than 2.')
-
-        elif len(todo) > 20:
-            raise serializers.ValidationError('The "togo" no more than 20 characters')
-
-        return values
+    def validate_todo(self, value):
+        todo = value
+        day = self.context.get('day')
+        if day:
+            if todo in day['actual']:
+                raise serializers.ValidationError(f"The todo already exists in actual")
+            elif todo in day['close']:
+                raise serializers.ValidationError(f"The todo already exists in close")
+        return value
 
 
 class TodoDeleteSessionSerializer(serializers.Serializer):

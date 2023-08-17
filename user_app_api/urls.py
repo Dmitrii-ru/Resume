@@ -12,13 +12,20 @@ urlpatterns = [
     path('refresh', RefreshTokenView.as_view(), name='refresh_api'),
 ]
 
+with open('user_app_api/swagger/description_text.txt', 'r') as file:
+    description_text = file.read()
+
 schema_use_app_api = get_schema_view(
     openapi.Info(
+
         title="Verification user API",
         default_version='v1',
-        description="",
+
+        description=description_text,
         contact=openapi.Contact(email="nochev1@mail.ru"),
+
     ),
+
     public=True,
     permission_classes=(permissions.AllowAny,),
     patterns=[path('v1/user_app/', include('user_app_api.urls'))]

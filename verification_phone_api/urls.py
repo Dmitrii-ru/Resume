@@ -12,7 +12,7 @@ urlpatterns = [
     path('profile/<phone_number>', ProfileUser.as_view(), name='profile')
 ]
 
-with open('verification_phone_api/swagger/q.txt', 'r') as file:
+with open('verification_phone_api/swagger/description_text.txt', 'r') as file:
     description_text = file.read()
 
 schema_view_verification_phone = get_schema_view(
@@ -21,6 +21,7 @@ schema_view_verification_phone = get_schema_view(
         title="Verification Phone API",
         default_version='v1',
         description=description_text,
+        contact=openapi.Contact(email="nochev1@mail.ru"),
 
 
     ),
