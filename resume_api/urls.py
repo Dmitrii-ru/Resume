@@ -1,25 +1,22 @@
 from django.urls import path, include
 from rest_framework import permissions
-from .views import resume_api, feedback_api, ProjectsAPIReadOnly,\
-    TodoDeleteSessionViewAPI, TodoPatchSessionViewAPI, ProjectDetailAPIReadOnly, TodoViewApi
+from .views import resume_api, feedback_api, ProjectsAPIReadOnly, \
+    todo_delete_api, todo_status_put_api, ProjectDetailAPIReadOnly, TodoViewApi
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 app_name = 'resume_api'
 
-
-
 urlpatterns = [
-    path('', resume_api, name='api_resume_index'),
-    path('feedback', feedback_api, name='api_resume_feedback'),
-    path('products/<stack_slug>', ProjectsAPIReadOnly.as_view({'get': 'list'}), name='api_products_list'),
-    path('projects/<stack_slug>/<project_slug>/', ProjectDetailAPIReadOnly.as_view({'get': 'list'}), name='api_product_detail'),
-    path('todo_session/<slug_day>', TodoViewApi.as_view(), name='api_todo_session_day'),
-    path('todo_session/<slug_day>/delete', TodoDeleteSessionViewAPI, name='todo_session_delete'),
-    path('todo_session/<slug_day>/patch', TodoPatchSessionViewAPI, name='todo_session_patch'),
+    path('', resume_api, name='index'),
+    path('feedback', feedback_api, name='feedback'),
+    path('products/<stack_slug>', ProjectsAPIReadOnly.as_view({'get': 'list'}), name='products_list'),
+    path('projects/<stack_slug>/<project_slug>/', ProjectDetailAPIReadOnly.as_view({'get': 'list'}),
+         name='product_detail'),
+    path('todo/<slug_day>', TodoViewApi.as_view(), name='todo_get_post'),
+    path('todo/<slug_day>/delete', todo_delete_api, name='todo_delete'),
+    path('todo/<slug_day>/status', todo_delete_api, name='todo_status'),
 ]
-
-
 
 schema_use_resume_api = get_schema_view(
     openapi.Info(

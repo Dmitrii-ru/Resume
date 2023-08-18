@@ -77,21 +77,6 @@ def schema_index():
     }
 
 
-q = {status.HTTP_400_BAD_REQUEST: openapi.Response(
-    description="Bad Request",
-    schema=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'error': openapi.Schema(
-                type=openapi.TYPE_STRING,
-                example='Invalid date format. Please provide a valid date in YYYY-MM-DD format.'
-            ),
-
-        }
-    )
-)}
-
-
 def schema_feedback():
     return {
         "responses": {
@@ -127,6 +112,14 @@ def schema_feedback():
 
 def schema_todo_post():
     return {
+        "manual_parameters": [
+            openapi.Parameter(name='slug_day',
+                              in_=openapi.IN_PATH,
+                              type=openapi.TYPE_STRING,
+                              description=f"Format YYYY-MM-DD",
+                              example='2020-05-02'
+                              ),
+        ],
         "responses": {
             status.HTTP_201_CREATED: openapi.Response(
                 description="Success",
@@ -160,6 +153,14 @@ def schema_todo_post():
 
 def schema_todo_get():
     return {
+        "manual_parameters": [
+            openapi.Parameter(name='slug_day',
+                              in_=openapi.IN_PATH,
+                              type=openapi.TYPE_STRING,
+                              description=f"Format YYYY-MM-DD",
+                              example='2020-05-02'
+                              ),
+        ],
         "responses": {
             status.HTTP_200_OK: openapi.Response(
                 description="Success",
@@ -183,6 +184,60 @@ def schema_todo_get():
                         ),
                     },
                 ),
+            )
+        }
+    }
+
+
+def schema_todo_delete():
+    return {
+        "manual_parameters": [
+            openapi.Parameter(name='slug_day',
+                              in_=openapi.IN_PATH,
+                              type=openapi.TYPE_STRING,
+                              description=f"Format YYYY-MM-DD",
+                              example='2020-05-02'
+                              ),
+        ],
+        "responses": {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description="Success",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example="Successfully delete buy 'ice-cream' on actual"
+                        ),
+
+                    }
+                )
+            ),
+            status.HTTP_404_NOT_FOUND: openapi.Response(
+                description="Date not found.",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='Page not found.'
+                        ),
+
+                    }
+                )
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description="Bad Request",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            example='The todo does not exists'
+                        ),
+
+                    }
+                )
             )
         }
     }

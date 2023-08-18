@@ -19,16 +19,13 @@
     padding: 10px;
     border: 2px solid #69da6d83;
     border-radius: 2px;
+
 }
 
 .centered2 {
     width: 1000px;
     margin-top: auto;
-
     padding: 10px;
-
-
-
 }
 
 .decorat a {
@@ -63,6 +60,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+
 }
 header {
     padding: 10px;
@@ -77,6 +75,8 @@ footer {
     padding: 10px;
     text-align: center;
 }
+
+
 .fb_title{
     width: 100%;
     text-align: center;

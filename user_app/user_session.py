@@ -160,11 +160,10 @@ class UserSessionToDo:
     def patch_todo_api(self, day, status, todo):
         statuses = ['actual', 'close']
         statuses.remove(status)
-        print(statuses)
-        self.todo_days[day][statuses[0]].remove(todo)
-        self.todo_days[day][status].append(todo)
+        self.todo_days[day][statuses[0]].append(todo)
+        self.todo_days[day][status].remove(todo)
         self.save()
-
+        return statuses[0]
     def save(self):
         self.session.modified = True
 

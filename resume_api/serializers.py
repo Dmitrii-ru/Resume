@@ -96,30 +96,20 @@ class AddTodoSerializer(serializers.Serializer):
         return value
 
 
-class TodoDeleteSessionSerializer(serializers.Serializer):
-    todo = serializers.CharField(max_length=20)
-    status_todo = serializers.CharField(max_length=10)
+class TodoDeleteSerializer(serializers.Serializer):
+    todo = serializers.CharField(
+        min_length=2,
+        max_length=20
+    )
 
-    def validate(self, values):
-        todo = values['todo']
-        status_todo = values['status_todo']
-        selector = ['actual', 'close']
-        ust = self.context.get('ust')
-        slug_day = self.context.get('slug_day')
-        try:
-            get_date_format(slug_day)
-        except:
-            raise serializers.ValidationError(f'Format {slug_day} !=  YYYY-MM-DD ')
+    def validate_todo(self, value):
+        todo = value
+        day = self.context.get('day')
+        if todo not in day['close'] and todo not in day['actual']:
+            raise serializers.ValidationError(f"The todo does not exists")
+        return value
 
-        if not ust.todo_days.get(slug_day):
-            raise serializers.ValidationError(f'There are no tasks {slug_day}')
 
-        elif status_todo not in selector:
-            raise serializers.ValidationError(f'Select status {selector}')
-
-        elif todo not in ust.todo_days[slug_day][status_todo]:
-            raise serializers.ValidationError(f'No such task {todo} in {status_todo} ({slug_day})')
-        return values
 
 
 class TodoPatchSessionSerializer(serializers.Serializer):
