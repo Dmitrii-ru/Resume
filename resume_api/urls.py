@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import permissions
 from .views import resume_api, feedback_api, ProjectsAPIReadOnly, \
-    todo_delete_api, todo_status_put_api, ProjectDetailAPIReadOnly, TodoViewApi
+     todo_status_put_api, ProjectDetailAPIReadOnly, TodoViewApi
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -14,8 +14,8 @@ urlpatterns = [
     path('projects/<stack_slug>/<project_slug>/', ProjectDetailAPIReadOnly.as_view({'get': 'list'}),
          name='product_detail'),
     path('todo/<slug_day>', TodoViewApi.as_view(), name='todo_get_post'),
-    path('todo/<slug_day>/delete', todo_delete_api, name='todo_delete'),
-    path('todo/<slug_day>/status', todo_delete_api, name='todo_status'),
+    path('todo/<slug_day>/delete', todo_status_put_api, name='todo_delete'),
+    path('todo/<slug_day>/status', todo_status_put_api, name='todo_status'),
 ]
 
 schema_use_resume_api = get_schema_view(

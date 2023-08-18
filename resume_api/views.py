@@ -13,7 +13,7 @@ from resume.cache import get_model_all, get_single_model_obj, get_filter_model, 
 from resume.models import AboutMe, MyEducation, Stack, Project, CardProject
 from user_app.user_session import UserSessionToDo
 from .serializers import AboutMeSerializer, MyEducationSerializer, StackSerializer, FeedbackSerializer, \
-    ProductSerializer, AddTodoSerializer, TodoPatchSessionSerializer, \
+    ProductSerializer, AddTodoSerializer,  \
     CardProjectSerializer, TodoDeleteSerializer
 from .swagger.swagger_descriptions import *
 
@@ -133,9 +133,9 @@ class TodoViewApi(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@swagger_auto_schema(method='DELETE', request_body=TodoDeleteSerializer, **schema_todo_delete())
+@swagger_auto_schema(method='DELETE', request_body=TodoDeleteSerializer, **schema_todo_delete_put())
 @api_view(['DELETE', 'PUT'])
-def todo_delete_api(request, **kwargs):
+def todo_status_put_api(request, **kwargs):
     """
     Delete to-do or change status to-do
 
@@ -198,34 +198,7 @@ def todo_delete_api(request, **kwargs):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@swagger_auto_schema(method='PUT', request_body=TodoPatchSessionSerializer,
-                     manual_parameters=[
-                         openapi.Parameter(name='slug_day',
-                                           in_=openapi.IN_PATH,
-                                           type=openapi.TYPE_STRING,
-                                           description=f"Format YYYY-MM-DD"),
-                     ])
-@api_view(['PUT'])
-def todo_status_put_api(request, **kwargs):
-    ust = UserSessionToDo(request)
-    data = TodoPatchSessionSerializer()
 
-    if request.method == "PATCH":
-        post_data = request.data
-        patch_form = TodoPatchSessionSerializer(data=post_data, context={'ust': ust, 'day': kwargs['slug_day']})
-        if patch_form.is_valid():
-            try:
-                ust.patch_todo_api(kwargs['slug_day'], post_data['new_status_todo'], post_data['todo'])
-            except:
-                return Response({'message': 'Incorrect data.'}, status=status.HTTP_404_NOT_FOUND)
-
-            return Response({'success': True,
-                             'message': f'Successfully delete {post_data}.'
-                             }, status=status.HTTP_200_OK)
-        else:
-            return Response(patch_form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(data, status=status.HTTP_200_OK)
 
 
 class ProjectsAPIReadOnly(ReadOnlyModelViewSet):

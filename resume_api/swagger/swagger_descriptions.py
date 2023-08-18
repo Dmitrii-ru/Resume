@@ -189,7 +189,7 @@ def schema_todo_get():
     }
 
 
-def schema_todo_delete():
+def schema_todo_delete_put():
     return {
         "manual_parameters": [
             openapi.Parameter(name='slug_day',
