@@ -52,7 +52,7 @@ def send_code_verification(request):
 @api_view(['POST'])
 def invite_code_verification(request):
     """
-    Create user , get invite
+    Create user, get invite
 
     Enter phone number and code in body
 
