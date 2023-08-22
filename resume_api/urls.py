@@ -17,12 +17,14 @@ urlpatterns = [
     path('todo/<slug_day>/delete', todo_status_put_api, name='todo_delete'),
     path('todo/<slug_day>/status', todo_status_put_api, name='todo_status'),
 ]
+with open('resume_api/swagger/description_text.txt', 'r') as file:
+    description_text = file.read()
 
 schema_use_resume_api = get_schema_view(
     openapi.Info(
         title="Resume API",
         default_version='v1',
-        description="",
+        description=description_text,
         contact=openapi.Contact(email="nochev1@mail.ru"),
     ),
     public=True,
