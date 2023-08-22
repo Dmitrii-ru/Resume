@@ -33,6 +33,11 @@ class UserRegisterAPIView(CreateAPIView):
 
 
 class LoginAPIView(APIView):
+    """
+    Аутентификация пользователя
+
+
+    """
 
     @swagger_auto_schema(request_body=UserLoginSerializer, **schema_login())
     def post(self, request):
@@ -56,6 +61,13 @@ class LoginAPIView(APIView):
 
 
 class RefreshTokenView(APIView):
+    """
+    Обновление токенов
+
+
+    """
+
+
     @swagger_auto_schema(request_body=RefreshTokenSerializer, **schema_refresh_token())
     def post(self, request):
         serializer = RefreshTokenSerializer(data=request.data)
