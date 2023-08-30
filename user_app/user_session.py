@@ -222,6 +222,7 @@ class UserSessionAther:
 
     def person_password(self, slug):
         self.user_session[slug] = True
+        self.save()
 
     def save(self):
         self.session.modified = True

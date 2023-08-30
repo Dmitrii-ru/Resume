@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Person
+from .models import Person, ImagesProductsShop
 from ather.forms import VisitCongratulation
 from user_app.user_session import UserSessionAther
 from django.urls import reverse
@@ -8,7 +8,6 @@ from django.urls import reverse
 # Create your views here.
 
 def congratulation(request, **kwargs):
-    print('congratulation')
     slug = kwargs['slug_person']
     person = get_object_or_404(Person, slug=slug)
     session_ather = UserSessionAther(request)
@@ -16,8 +15,12 @@ def congratulation(request, **kwargs):
         print('ss')
         return redirect('ather_urls:congratulation_password', slug)
         # return redirect('ather_urls:congratulation_password', kwargs[slug])
-
-    return render(request, 'ather/congratulation.html')
+    images = ImagesProductsShop.objects.filter(person=person)
+    context = {
+        'person': person,
+        'images' : images
+    }
+    return render(request, 'ather/congratulation.html', context=context)
 
 
 def congratulation_password(request, **kwargs):

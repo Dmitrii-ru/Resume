@@ -29,7 +29,8 @@ class Person(models.Model):
         return f'{self.name} Создан: {time_time_now(self.date)} '
 
     def save(self, *args, **kwargs):
-        self.slug = f'{self.slug}date{time_time_now(self.date)}'
+        if not self.pk:
+            self.slug = f'{self.slug}date{timezone.localtime(self.date).strftime("%Y%m%d%H%M%S")}'
         super().save(*args, **kwargs)
 
 

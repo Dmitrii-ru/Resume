@@ -1,9 +1,13 @@
 from django.contrib import admin
-from .models import Person
+from .models import Person, ImagesProductsShop
 
 
-class AdminPerson(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+class PersonImageAdmin(admin.TabularInline):
+    model = ImagesProductsShop
+    extra = 1
 
 
-admin.site.register(Person, AdminPerson)
+class PersonAdmin (admin.ModelAdmin):
+    inlines = [PersonImageAdmin]
+
+admin.site.register(Person,PersonAdmin)
