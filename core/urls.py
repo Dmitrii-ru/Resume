@@ -14,9 +14,10 @@ urlpatterns = [
     path('user/', include('user_app.urls', namespace='user_urls')),
     path('mptt_blog/', include('mptt_blog.urls', namespace='mptt_blog_urls')),
     path('quiz/', include('quiz.urls', namespace='quiz_urls')),
+    path('ather/', include('ather.urls', namespace='ather_urls')),
 ]
 
-###API###
+###API_APPS###
 
 urlpatterns += [
     path('v1/resume/', include('resume_api.urls', namespace='resume_api')),

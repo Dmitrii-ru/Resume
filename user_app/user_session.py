@@ -164,6 +164,7 @@ class UserSessionToDo:
         self.todo_days[day][status].remove(todo)
         self.save()
         return statuses[0]
+
     def save(self):
         self.session.modified = True
 
@@ -195,3 +196,18 @@ class UserSessionApp:
 
     def save(self):
         self.session.modified = True
+
+
+"""-----|UserSessionAther|-----"""
+
+
+class UserSessionAther:
+
+    def __init__(self, request):
+        self.session = request.session
+        user_session = self.session.get(settings.USER_SESSION_ATHER)
+        if not user_session:
+            user_session = self.session[settings.USER_SESSION_ATHER] = {}
+            self.user_session = user_session
+        else:
+            self.user_session = user_session

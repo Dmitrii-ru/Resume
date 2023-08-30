@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'resume_api',
     'user_app_api',
     'mptt_blog_api',
-    'verification_phone_api'
+    'verification_phone_api',
+    'ather',
 ]
 
 INSTALLED_APPS += [
@@ -46,7 +47,6 @@ INSTALLED_APPS += [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-
 ]
 
 REST_FRAMEWORK = {
@@ -62,7 +62,6 @@ INTERNAL_IPS = [
 AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
-
 )
 
 MIDDLEWARE = [
@@ -81,6 +80,7 @@ ROOT_URLCONF = 'core.urls'
 USER_SESSION = 'user_session'
 USER_SESSION_EMAIL_ID = 'user_session_email'
 USER_SESSION_TODO_ID = 'user_session_todo'
+USER_SESSION_ATHER = 'user_session_ather'
 
 TEMPLATES = [
     {

@@ -30,7 +30,10 @@ class RandomPostView(ListView):
         if self.request.user.is_authenticated:
             # Получаем id постов которые публичные или юзер автор
             r_posts = random_posts(
-                Post.objects.filter(Q(is_privat=False) | Q(author=self.request.user)).values_list('id', flat=True))
+                Post.objects.filter(
+                    Q(is_privat=False) | Q(author=self.request.user)
+                ).values_list('id', flat=True)
+            )
 
             post_qs = post_qs.filter(pk__in=r_posts).annotate(
                 is_favour=Exists(Post.objects.filter(pk=OuterRef('pk'), favourites=self.request.user)),
@@ -40,9 +43,11 @@ class RandomPostView(ListView):
         else:
             post_qs = random_posts(post_qs.filter(is_privat=False))
 
-
         for p in post_qs:
-            branch = p.category.get_ancestors(ascending=True, include_self=True)
+            branch = p.category.get_ancestors(
+                ascending=True,
+                include_self=True
+            )
             p.links = [[p.title, p.url] for p in branch.reverse()]
 
         context['posts'] = post_qs
@@ -78,12 +83,12 @@ class CategoryMPTTView(ListView):
 
             post_ids = {x.id: i for i, x in enumerate(context['page_obj'].object_list)}
 
-            for post_id in self.request.user.favourite_posts.filter(id__in=list(post_ids.keys())).values_list('id',
-                                                                                                              flat=True):
+            for post_id in self.request.user.favourite_posts.filter(
+                    id__in=list(post_ids.keys())).values_list('id', flat=True):
                 context['page_obj'].object_list[post_ids[post_id]].is_favour = True
 
-            for post_id in self.request.user.like_posts.filter(id__in=list(post_ids.keys())).values_list('id',
-                                                                                                         flat=True):
+            for post_id in self.request.user.like_posts.filter(
+                    id__in=list(post_ids.keys())).values_list('id',flat=True):
                 context['page_obj'].object_list[post_ids[post_id]].is_like = True
 
         return context
@@ -94,7 +99,8 @@ class CategoryMPTTView(ListView):
 
         if self.request.user.is_authenticated:
             post_qs = post_qs.filter(
-                Q(is_privat=False) | Q(author=self.request.user))
+                Q(is_privat=False) | Q(author=self.request.user)
+            )
 
         else:
             post_qs = post_qs.filter(is_privat=False)
@@ -177,8 +183,11 @@ class PostDetailView(PermissionRequiredMixin, DetailView, FormMixin):
 
         if request.user.is_authenticated:
             if form.is_valid():
-                CommentsPost(text=form.cleaned_data.get('text'), author=self.request.user,
-                             post=self.get_object()).save()
+                CommentsPost(
+                    text=form.cleaned_data.get('text'),
+                    author=self.request.user,
+                    post=self.get_object()
+                ).save()
 
                 return redirect(request.META.get('HTTP_REFERER'))
             return self.form_invalid(form)
