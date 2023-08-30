@@ -5,8 +5,11 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from pytils.translit import slugify
 
+
 def time_time_now(date):
     return timezone.localtime(date).strftime("%Y-%m-%d %H:%M:%S")
+
+
 class Person(models.Model):
     name = models.CharField('Персона', max_length=40, blank=False)
     slug = models.SlugField('slug', default='', blank=False)

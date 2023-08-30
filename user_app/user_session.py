@@ -211,3 +211,17 @@ class UserSessionAther:
             self.user_session = user_session
         else:
             self.user_session = user_session
+
+
+    def check_person_password(self, slug):
+        if not self.user_session.get(slug):
+
+            return False
+        else:
+            return True
+
+    def person_password(self, slug):
+        self.user_session[slug] = True
+
+    def save(self):
+        self.session.modified = True
