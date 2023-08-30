@@ -12,13 +12,11 @@ def congratulation(request, **kwargs):
     person = get_object_or_404(Person, slug=slug)
     session_ather = UserSessionAther(request)
     if not session_ather.check_person_password(slug):
-        print('ss')
         return redirect('ather_urls:congratulation_password', slug)
-        # return redirect('ather_urls:congratulation_password', kwargs[slug])
     images = ImagesProductsShop.objects.filter(person=person)
     context = {
         'person': person,
-        'images' : images
+        'images': images
     }
     return render(request, 'ather/congratulation.html', context=context)
 
