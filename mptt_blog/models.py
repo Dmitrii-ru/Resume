@@ -21,9 +21,14 @@ def category_author_default_post(*args, **kwargs):
 
 
 class Post(models.Model):
+
     title = models.CharField(max_length=100, verbose_name='Название')
-    category = TreeForeignKey('Category', on_delete=models.CASCADE, related_name='posts', verbose_name='Категория',
-                              blank=True)
+    category = TreeForeignKey(
+        'Category', on_delete=models.CASCADE,
+        related_name='posts',
+        verbose_name='Категория',
+        blank=True
+    )
     content = RichTextField()
     author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE, blank=False, null=False, default=1)
     is_privat = models.BooleanField('Вижу только я', default=False)
@@ -71,11 +76,18 @@ def build_url(children_url, old_url, obj_url):
 
 class Category(MPTTModel):
     title = models.CharField(max_length=50, verbose_name='Название')
-    parent = TreeForeignKey('self', on_delete=models.CASCADE,
-                            null=True, blank=True, related_name='children',
-                            db_index=True, verbose_name='Родительская категория')
-    author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE, null=True,
-                               default=category_author_default)
+    parent = TreeForeignKey(
+        'self', on_delete=models.CASCADE,
+        null=True, blank=True, related_name='children',
+        db_index=True, verbose_name='Родительская категория'
+    )
+
+    author = models.ForeignKey(
+        User, verbose_name='Автор',
+        on_delete=models.CASCADE, null=True,
+        default=category_author_default
+    )
+
     url = models.TextField()
 
     def save(self, *args, **kwargs):
@@ -114,8 +126,13 @@ class Category(MPTTModel):
 
 
 class CommentsPost(models.Model):
-    author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE, null=True,
-                               default=category_author_default)
+    author = models.ForeignKey(
+        User,
+        verbose_name='Автор',
+        on_delete=models.CASCADE,
+        null=True,
+        default=category_author_default
+    )
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Статья', related_name='comments')
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from mptt_blog.models import Post, User, Category
-
+from .models import CategoryBlog
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,7 +21,6 @@ class PostSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
     is_favour = serializers.BooleanField(read_only=True)
     is_like = serializers.BooleanField(read_only=True)
-    bread_crumbs = serializers.CharField()
     favourites = serializers.CharField()
     likes = serializers.CharField()
 
@@ -34,3 +33,32 @@ class CategoryPostsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
+
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
+    """
+    Validata title
+
+    Every parent has unique children.
+    """
+
+    title = serializers.CharField(max_length=50, min_length=3)
+
+    class Meta:
+        model = Category
+        fields = ('title',)
+
+    def validate_title(self, value):
+        title = value
+        parent = self.context['parent']
+        if parent:
+            list_title = list(parent.get_children().values_list('title', flat=True))
+        else:
+            list_title = list(CategoryBlog.objects.filter(level=0).values_list('title', flat=True))
+        if self.instance:
+            list_title.remove(self.instance.title)
+        list_title = list(map(str.lower, list_title))
+        if title.lower() in list_title:
+            raise serializers.ValidationError('Not a unique field')
+        return value
+

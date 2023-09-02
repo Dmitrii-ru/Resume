@@ -14,6 +14,7 @@ def get_model_all_order(model, order):
 
 def get_single_model_obj(model, field, value):
     cache_key = cache.get_or_set(f'{model._meta.model_name}_get_{field}', {}, 30)
+
     if cache_key.get(value) is None:
         kwargs = {field: value}
         new_obj = get_object_or_404(model, **kwargs)

@@ -4,7 +4,6 @@ import environ
 
 from datetime import timedelta
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
@@ -13,7 +12,6 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG') == 'True'
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -111,7 +109,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -207,12 +204,9 @@ LOGGING = {
     },
 }
 
-
-
-
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=2),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=3214234),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
