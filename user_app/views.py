@@ -13,7 +13,6 @@ from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
 
 
-
 def create_previous_path(req_meta_path, req_path, usa):
     if req_path not in req_meta_path:
         usa.profile_previous_path(req_meta_path)
@@ -33,7 +32,6 @@ def register(request):
     else:
         form = UserRegisterForm
     return render(request, 'user_app/registration.html', {'form': form})
-
 
 
 @login_required

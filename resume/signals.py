@@ -5,6 +5,7 @@ from .cache import delete_cache
 from django.core.exceptions import AppRegistryNotReady
 from django.apps import apps
 
+
 @receiver(post_delete, sender=MyEducation)
 def education_post_delete(sender, instance, **kwargs):
     delete_cache(sender._meta.model_name)
@@ -28,4 +29,3 @@ def education_post_delete(sender, instance, **kwargs):
 @receiver(post_delete, sender=CardProject)
 def education_post_delete(sender, instance, **kwargs):
     delete_cache(sender._meta.model_name)
-

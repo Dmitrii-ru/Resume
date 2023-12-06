@@ -10,31 +10,28 @@ admin.site.register(EmailSend)
 
 @admin.register(UniqueIP)
 class AdminUniqueIP(admin.ModelAdmin):
-
     ordering = ['-date']
-    list_display = ('ip_address',  'date')
+    list_display = ('ip_address', 'date')
     list_per_page = 50
+
     def has_add_permission(self, request):
         return False
 
     def has_change_permission(self, request, obj=None):
         return False
-
 
 
 @admin.register(Feedback)
 class AdminFeedback(admin.ModelAdmin):
-
     ordering = ['-date']
-    list_display = ('date' , 'text')
+    list_display = ('date', 'text')
     list_per_page = 50
+
     def has_add_permission(self, request):
         return False
 
     def has_change_permission(self, request, obj=None):
         return False
-
-
 
 
 @admin.register(Stack)
@@ -57,7 +54,7 @@ class AdminProject(admin.ModelAdmin):
             'fields': ('stacks',)
         }),
         ('Ссылки', {
-            'fields': (('link_git', 'link_site','api'),)
+            'fields': (('link_git', 'link_site', 'api'),)
         }),
 
     )

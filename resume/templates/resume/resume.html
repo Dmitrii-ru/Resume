@@ -61,6 +61,7 @@
         </section>
 
     <section class="section_right">
+
     <h1 class="title"></h1>
         {{about_me.text|safe}}
         <h1 class="title">Проекты</h1>
@@ -75,9 +76,9 @@
           <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>
             {%endfor%}
         </div>
-
+        {{about_me.text|safe}}
     <table>
-        <h1 class="title">IT курсы</h1>
+
         {% for education in my_education %}
         <tr>
             <snan class="education" href="{{education.diploma}}">
