@@ -8,7 +8,6 @@ media/user_images/
 *.so
 media
 # Distribution / packaging
-ather
 .Python
 build/
 develop-eggs/
