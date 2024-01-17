@@ -1,0 +1,42 @@
+{% extends "mptt_blog/base.html" %}
+{% load static %}
+
+
+{% block title %} Список категорий {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mptt_blog/css/mptt_blog.css' %}">
+
+<div class="main_form_create">
+
+    <div class="form-create">
+    <title>Создать категорию c {{obj.title}}</title>
+        <div class="m-3 form" >
+
+
+            <h1>{{title}}
+                <a class="button_form_a link" href="{% url 'mptt_blog_urls:category_mptt' object.url %}">{{object.title}}</a>
+            </h1>
+
+        <form method="post" class="">
+
+            {%csrf_token%}
+            {{form.media}}
+            {{form.as_p}}
+
+            {{form.title.errors}}
+
+            <input type="hidden" name="parent" value="{{category.parent.pk}}" />
+
+            <button class="button_form" type="submit"> {{btn}} </button>
+        </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

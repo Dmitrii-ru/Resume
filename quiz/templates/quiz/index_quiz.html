@@ -1,0 +1,37 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center d-flex flex-wrap">
+
+    {% for q in quizs %}
+        <div class="m-3 cont_folder">
+
+            <div class="m-3 folder">
+                <div>
+                    <div class="head_folder">
+                    </div>
+                    <div class="head_folder_peper">
+                    </div>
+                </div>
+
+                <div class="folder_bottom "></div>
+                <span class="quiz_folder_name"><h2>{{q.title}}</h2></span>
+                <div class="link_folder">
+                    <p class="m-0"><a href="{% url 'quiz_urls:quiz_detail_easy' q.pk %}" > Простой вариант </a></p>
+                    <p><a href="{% url 'quiz_urls:quiz_detail_hand' q.pk %}" > Сложный вариант </a></p>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    {%endfor%}
+
+</div>
+
+
+{%endblock%}

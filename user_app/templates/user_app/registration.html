@@ -1,0 +1,22 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block context %}
+
+<h3 class="text-center" >Регистрация пользователя </h3>
+<h3 class="text-center" >Ваш аккаунт будет удален через 30мин, сайт создан в демонстрационных целях!!!</h3>
+<div class="reg">
+  <div class="media  pt-1">
+      <div class="form_reg ">
+    <form method="post" class="form_reg">
+        {%csrf_token%}
+        {{form.as_p}}
+        <button class="btn btn-outline-secondary" type="submit"> Регистрация </button>
+        <a href="{%url 'user_urls:user'%}"><h6>Уже зарегистрированы? </h6></a>
+    </form>
+      </div>
+    </div>
+</div>
+
+
+
+{% endblock context %}

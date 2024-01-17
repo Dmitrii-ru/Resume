@@ -1,0 +1,13 @@
+# Задачи
+
+# Сайт резюме и to-do в session
+- Получение информации о соискателе
+- Получение информации о проектах
+- Отправка feedback
+- CRUD to-do
+
+# Полезные ссылки
+
+- [POSTMAN collection](https://blue-equinox-632746.postman.co/workspace/Team-Workspace~5e83d863-b92b-4b5d-8914-ba9fd3b6b80b/collection/24125902-46b6dd04-9556-458e-bd98-f19294af0aae?action=share&creator=24125902)
+- [GitHub](https://github.com/Dmitrii-ru/Resume___1/tree/main/resume_api)
+- [README](https://github.com/Dmitrii-ru/Resume___1/blob/main/resume_api/readme.md)

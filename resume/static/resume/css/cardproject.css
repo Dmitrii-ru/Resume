@@ -1,0 +1,27 @@
+
+.det_prod {
+    border: 2px solid #b67c7c;
+    color: black;
+}
+
+.list_prod {
+    border: 1px solid #6c757d;
+}
+
+.img_card{
+  height: 50%;
+  margin-top: 10px; ;
+  min-height: 270px;
+  max-height: 270px;
+}
+
+.box {
+  transition: box-shadow .1s;
+}
+.box:hover {
+  box-shadow: 0 0 11px #b1e2a6;
+
+}
+
+
+

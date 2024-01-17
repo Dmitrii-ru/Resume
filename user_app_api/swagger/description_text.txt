@@ -1,0 +1,13 @@
+# Задача
+
+Аутентификация пользователя :
+
+- Регистрация пользователя на сайте.
+- Получение token.
+- Обновление token.
+
+# Полезные ссылки
+
+- [POSTMAN collection](https://blue-equinox-632746.postman.co/workspace/Team-Workspace~5e83d863-b92b-4b5d-8914-ba9fd3b6b80b/collection/24125902-9b4638a9-df83-474c-8a65-9f7c045fe41a?action=share&creator=24125902)
+- [GitHub](https://github.com/Dmitrii-ru/Resume___1/tree/main/user_app_api)
+- [README](https://github.com/Dmitrii-ru/Resume___1/blob/main/user_app_api/readme.md)

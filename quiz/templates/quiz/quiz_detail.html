@@ -1,0 +1,55 @@
+{%extends 'quiz/base.html' %}
+
+
+
+{%block content%}
+<div class="container text-center">
+
+
+<form action="" class="d-flex justify-content-center" method="post" name="question">
+            {% csrf_token %}
+    <div class="card " style="width:70%;">
+
+
+       {% if messages %}
+          <div class="card-header error_mess " style=" background:#FD7B7C;">
+              <ul class="messages m-0 p-0 text-center">
+                  {% for message in messages %}
+                  <li {% if message.tags %} class="alert {{ message.tags }} p-1"{% endif %}>
+                      {{ message }}
+                  </li>
+                  {% endfor %}
+              </ul>
+          </div>
+       {% endif %}
+
+
+      <div class="card-header">
+          <span> Тема теста: {{quiz.title}}</span>
+          <p class="m-0">Количество вопросов: {{len_quiz}}</p>
+          <p class="m-0">Текущий номер вопроса: {{number_question}}</p>
+      </div>
+      <div class="card-header">
+                {{question.title}}
+      </div>
+      <ul class="list-group list-group-flush">
+          {% for answer in answers %}
+                    {% if answer.user_answer %}
+                       <li class="list-group-item"> <input type="checkbox" id="{{answer.pk}}" name="answer" value="{{answer.pk}}" checked>
+                           <label class="m-2" for="{{answer.pk}}">{{answer.title}}</label>
+                       </li>
+                    {%else%}
+                        <li class="list-group-item">  <input type="checkbox"  id="{{answer.pk}}" name="answer" value="{{answer.pk}}" >
+                            <label class="m-2" for="{{answer.pk}}">{{answer.title}}</label>
+                        </li>
+                    {%endif%}
+          {%endfor%}
+
+      </ul>
+    </div>
+              <input class="btn btn-primary check-btn" type="submit" value="Ответить" id="check" onclick="displayRadioValue();"/>
+</form>
+
+
+</div>
+{%endblock%}
