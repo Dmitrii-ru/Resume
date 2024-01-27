@@ -30,7 +30,7 @@ class Post(models.Model):
         blank=True
     )
     content = RichTextField()
-    author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE, blank=False, null=False, default=1)
+    author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE, blank=False, null=True, default=1)
     is_privat = models.BooleanField('Вижу только я', default=False)
     favourites = models.ManyToManyField(User, related_name='favourite_posts', default=None, blank=True)
     likes = models.ManyToManyField(User, related_name='like_posts', default=None, blank=True)

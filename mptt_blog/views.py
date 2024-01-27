@@ -88,7 +88,7 @@ class CategoryMPTTView(ListView):
                 context['page_obj'].object_list[post_ids[post_id]].is_favour = True
 
             for post_id in self.request.user.like_posts.filter(
-                    id__in=list(post_ids.keys())).values_list('id',flat=True):
+                    id__in=list(post_ids.keys())).values_list('id', flat=True):
                 context['page_obj'].object_list[post_ids[post_id]].is_like = True
 
         return context

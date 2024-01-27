@@ -11,14 +11,20 @@
       <div class="col-md-12 text-center">
         <div class="card-body" >
           {% if  project.link_site%}
+
                 <a  class="button_user " href="{{project.link_site}}"><h2>Перейти на {{project.name}}</h2></a>
+
+
           {% else %}
                 <h2 class="card-title">Название проекта: {{project.name}}</h2>
           {% endif %}
+
           <p class="card-text">О проекте: {{project.about}}</p>
-          {% if project.api %}
-              <a class="button_user " href="{{project.api}}">Документация API</a>
+          {% if project.api_docs_url %}
+              <a class="button_user " href="{{project.api_docs_url}}">Документация API</a>
+              <a class="button_user " href="{{project.api_swag_url}}">Swagger API</a>
           {% endif %}
+
           <p class="card-text">Статус проекта: {{project.get_status_display}}</p>
 
           <p class="card-text decorat"> Технологии:

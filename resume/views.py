@@ -93,8 +93,6 @@ def TodoSessionView(request, **kwargs):
     ust = UserSessionToDo(request)
     form_add_todo = AddTodo()
     if request.method == "POST":
-        print(request.POST)
-        print(request.session.session_key)
         post = request.POST.copy()
         post['day_slug'] = request.POST['add']
         post['sess'] = request.session.session_key

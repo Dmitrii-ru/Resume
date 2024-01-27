@@ -6,8 +6,10 @@ from resume.models import EmailSettings
 
 
 def send_email_my(massage_num, to_send, name, subject):
-    is_active_email = EmailSettings.objects.filter(is_active='True').first()
-    if is_active_email:
+    is_active_email = EmailSettings.objects.filter(is_active=True)
+
+    if is_active_email.exists():
+        is_active_email = is_active_email.first()
         sender = is_active_email.name_email
         password = is_active_email.password_email
         email_host = is_active_email.host_email

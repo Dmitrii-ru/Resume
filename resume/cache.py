@@ -3,17 +3,21 @@ import redis
 from django.shortcuts import get_object_or_404
 from django_redis import get_redis_connection
 
+from core.settings import REDIS_HOST as redis_host
+
+TIME_CACHE = 1
 
 def get_model_all(model):
-    return cache.get_or_set(f'{model._meta.model_name}_all', model.objects.all(), 30)
+
+    return cache.get_or_set(f'{model._meta.model_name}_all', model.objects.all(), TIME_CACHE)
 
 
 def get_model_all_order(model, order):
-    return cache.get_or_set(f'{model._meta.model_name}_all_order{order}', model.objects.all().order_by(order), 30)
+    return cache.get_or_set(f'{model._meta.model_name}_all_order{order}', model.objects.all().order_by(order), TIME_CACHE)
 
 
 def get_single_model_obj(model, field, value):
-    cache_key = cache.get_or_set(f'{model._meta.model_name}_get_{field}', {}, 30)
+    cache_key = cache.get_or_set(f'{model._meta.model_name}_get_{field}', {}, TIME_CACHE)
 
     if cache_key.get(value) is None:
         kwargs = {field: value}
@@ -24,7 +28,7 @@ def get_single_model_obj(model, field, value):
 
 
 def get_filter_model(model, field, value):
-    cache_key = cache.get_or_set(f'{model._meta.model_name}_filter_{field}', {}, 30)
+    cache_key = cache.get_or_set(f'{model._meta.model_name}_filter_{field}', {}, TIME_CACHE)
     if cache_key.get(value) is None:
         kwargs = {field: value}
         new_obj = model.objects.filter(**kwargs)
@@ -34,7 +38,7 @@ def get_filter_model(model, field, value):
 
 
 def get_mtm_all(model, field, value):
-    cache_key = cache.get_or_set(f'{model._meta.model_name}_mtm_{field}', {}, 30)
+    cache_key = cache.get_or_set(f'{model._meta.model_name}_mtm_{field}', {}, TIME_CACHE)
     if cache_key.get(value.id) is None:
         new_obj = getattr(value, f'{field}').all()
         cache_key[value.id] = new_obj
@@ -43,7 +47,7 @@ def get_mtm_all(model, field, value):
 
 
 def delete_cache(model):
-    redis_client = redis.Redis(host='localhost', port=6379, db=1, charset="utf-8", decode_responses=True)
+    redis_client = redis.Redis(host=redis_host, port=6379, db=1, charset="utf-8", decode_responses=True)
     keys = redis_client.keys('*')
     for key in keys:
         if model in key:
@@ -70,5 +74,5 @@ def del_ip_all():
 
 
 def count_visit():
-    db2 = redis.Redis(host='localhost', port=6379, db=2, decode_responses=True)
+    db2 = redis.Redis(host=redis_host, port=6379, db=2, decode_responses=True)
     return db2.dbsize()

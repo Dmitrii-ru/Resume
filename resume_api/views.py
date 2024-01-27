@@ -13,7 +13,7 @@ from resume.cache import get_model_all, get_single_model_obj, get_filter_model, 
 from resume.models import AboutMe, MyEducation, Stack, Project, CardProject
 from user_app.user_session import UserSessionToDo
 from .serializers import AboutMeSerializer, MyEducationSerializer, StackSerializer, FeedbackSerializer, \
-    ProductSerializer, AddTodoSerializer,  \
+    ProductSerializer, AddTodoSerializer, \
     CardProjectSerializer, TodoDeleteSerializer
 from .swagger.swagger_descriptions import *
 
@@ -198,9 +198,6 @@ def todo_status_put_api(request, **kwargs):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
 class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
 
@@ -212,8 +209,7 @@ class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
                 name="stack_slug",
                 in_=openapi.IN_PATH,
                 type=openapi.TYPE_STRING,
-                description=f"Slug of the stack, you can use this data: "
-                            f"{list(get_model_all(Stack).values_list('slug', flat=True))}",
+                description=f"Slug of the stack",
                 required=True,
             )
         ],
@@ -222,10 +218,8 @@ class ProjectsAPIReadOnly(ReadOnlyModelViewSet):
         data = {'projects': self.get_serializer(get_filter_model(
             Project,
             'stacks__slug',
-            self.kwargs['stack_slug']), many=True).data,
+            self.kwargs['stack_slug']), many=True).data}
 
-                'stacks': StackSerializer(get_model_all(Stack), many=True).data,
-                'stack': StackSerializer(get_single_model_obj(Stack, 'slug', self.kwargs['stack_slug'])).data}
         return Response(data)
 
 
@@ -238,14 +232,14 @@ class ProjectDetailAPIReadOnly(ReadOnlyModelViewSet):
                 'stack_slug',
                 openapi.IN_PATH,
                 type=openapi.TYPE_STRING,
-                description=f"Selector {list(get_model_all(Stack).values_list('slug', flat=True))}",
+                description=f"Selector ",
                 required=True,
             ),
             openapi.Parameter(
                 'project_slug',
                 openapi.IN_PATH,
                 type=openapi.TYPE_STRING,
-                description=f"Selector {list(get_model_all(Project).values_list('slug', flat=True))}",
+                description=f"Selector",
                 required=True,
             ),
         ]
@@ -261,5 +255,5 @@ class ProjectDetailAPIReadOnly(ReadOnlyModelViewSet):
                                 f'not found in technology with slug "{self.kwargs["stack_slug"]}"', status=404)
         data['project'] = ProductSerializer(project).data
         data['cards'] = self.get_serializer(get_filter_model(CardProject, 'project', project), many=True).data
-        data['stacks'] = StackSerializer(get_mtm_all(Project, 'stacks', project), many=True).data
+
         return Response(data, status=status.HTTP_200_OK)

@@ -10,7 +10,7 @@ app_name = 'resume_api'
 urlpatterns = [
     path('', resume_api, name='index'),
     path('feedback', feedback_api, name='feedback'),
-    path('products/<stack_slug>', ProjectsAPIReadOnly.as_view({'get': 'list'}), name='products_list'),
+    path('projects/<stack_slug>', ProjectsAPIReadOnly.as_view({'get': 'list'}), name='products_list'),
     path('projects/<stack_slug>/<project_slug>/', ProjectDetailAPIReadOnly.as_view({'get': 'list'}),
          name='product_detail'),
     path('todo/<slug_day>', TodoViewApi.as_view(), name='todo_get_post'),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('todo/<slug_day>/status', todo_status_put_api, name='todo_status'),
 ]
 with open('resume_api/swagger/description_text.txt', 'r') as file:
+
     description_text = file.read()
 
 schema_use_resume_api = get_schema_view(
@@ -29,7 +30,7 @@ schema_use_resume_api = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    patterns=[path('v1/resume/', include('resume_api.urls'))]
+    patterns=[path('api/resume/', include('resume_api.urls'))]
 )
 
 urlpatterns += [

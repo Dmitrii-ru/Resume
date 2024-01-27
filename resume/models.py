@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from core.settings import USE_HTTPS, ALLOWED_HOSTS
 from .cache import count_visit
 from django.db import models
 from django.db.models import Sum, Count
@@ -15,8 +17,8 @@ CHOICE_STATUS = [
 ]
 
 CHOICE_EMAIL = [
-    ('True', 'Использовать почту'),
-    ('False', 'Не использовать почту')
+    (True, 'Использовать почту'),
+    (False, 'Не использовать почту')
 ]
 
 
@@ -40,7 +42,7 @@ class MyEducation(models.Model):
 
 
 class AboutMe(models.Model):
-    text = RichTextField('О себе', max_length=4000)
+    text = RichTextField('О себе', max_length=4000, blank=True, null=True)
     phone = models.CharField('Телефон', max_length=30)
     city = models.CharField('Город', max_length=30)
     mail = models.CharField('Почта', max_length=30)
@@ -56,10 +58,13 @@ class AboutMe(models.Model):
         super().save(*args, **kwargs)
         delete_cache(self._meta.model_name)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Stack(models.Model):
-    name = models.CharField('Название технологии', max_length=20)
-    slug = models.SlugField('Слаг', null=False, db_index=True)
+    name = models.CharField('Название технологии', max_length=20, unique=True)
+    slug = models.SlugField('Слаг', null=False, db_index=True, unique=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -77,9 +82,9 @@ class Stack(models.Model):
 
 
 class Project(models.Model):
-    slug = models.SlugField('Слаг', null=False, db_index=True, blank=True)
+    slug = models.SlugField('Слаг', null=False, blank=True, unique=True)
     stacks = models.ManyToManyField(Stack, verbose_name='Технологии проекта', related_name='project_stacks')
-    name = models.CharField('Название проекта', max_length=50)
+    name = models.CharField('Название проекта', max_length=50, unique=True)
     about = models.CharField('О проекте', max_length=200)
     image = models.ImageField('Ава проекта', upload_to='img', null=True, blank=True, default='default_project.png')
     status = models.CharField('Статус', choices=CHOICE_STATUS, default="True", max_length=5)
@@ -89,6 +94,24 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse('resume_urls:project_detail', kwargs={'project_slug': self.slug})
+
+    @staticmethod
+    def get_protocol_base_url():
+        protocol = 'https' if USE_HTTPS else 'http'
+        base_url = ALLOWED_HOSTS[0]
+        return protocol, base_url
+
+    def api_docs_url(self):
+        if self.api:
+            protocol, base_url = self.get_protocol_base_url()
+            return f"{protocol}://{base_url}:8000/{self.api}"
+        return None
+
+    def api_swag_url(self):
+        if self.api:
+            protocol, base_url = self.get_protocol_base_url()
+            return f"{protocol}://{base_url}:8000/{str(self.api).replace('docs','docs-swagger')}"
+        return None
 
     def __str__(self):
         return f'{self.name}'
@@ -140,7 +163,7 @@ class EmailSettings(models.Model):
     name_email = models.CharField('Имя почты, пример: testemailru014@gmail.com', max_length=100)
     password_email = models.CharField('Пароль, пример: 1234dssads12', max_length=100)
     port_email = models.IntegerField('Порт, пример: 587')
-    is_active = models.CharField('Статус почты', choices=CHOICE_EMAIL, default="False", max_length=5)
+    is_active = models.BooleanField('Статус почты', choices=CHOICE_EMAIL, default=False, max_length=5)
 
     class Meta:
         verbose_name = "Почта"
@@ -148,8 +171,8 @@ class EmailSettings(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.is_active == 'True':
-            EmailSettings.objects.exclude(id=self.pk).update(is_active='False')
+        if self.is_active == True:
+            EmailSettings.objects.exclude(id=self.pk).update(is_active=False)
 
     def __str__(self):
         return f'{self.host_email} - {self.name_email} - {self.port_email} - {self.is_active}'

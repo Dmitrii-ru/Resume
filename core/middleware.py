@@ -5,7 +5,7 @@ from resume.models import UniqueIP
 import redis
 import json
 
-list_exclude = ['188.233.76.49', '188.233.76.100', ALLOWED_HOSTS[1]]
+list_exclude = [ALLOWED_HOSTS[1],]
 list_path = ['send_email', 'feedback', 'todo_session', 'projects', 'project', 'mptt_blog', 'quiz', 'api', 'index']
 
 
@@ -39,10 +39,6 @@ class UniqueIpMiddleware:
                     db2.set(get_ip, json.dumps(ip_cache))
 
         return self.get_response(request)
-
-
-
-
 
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

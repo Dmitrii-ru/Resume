@@ -38,7 +38,7 @@
 </head>
 <body>
     <div class="css_container">
-        <section class="section_left">
+        <section class="section_left" >
             <center>
                 <h1 class="title">{{about_me.name}}</h1>
             </center>
@@ -63,20 +63,29 @@
     <section class="section_right">
 
     <h1 class="title"></h1>
-        {{about_me.text|safe}}
+
+        {% if projects %}
         <h1 class="title">Проекты</h1>
         <div class="d-flex flex-wrap">
             {% for project in projects %}
           <a href="{{project.get_absolute_url}}"><button  type="button" class="btn btn-success m-1">{{project}}</button></a>
             {%endfor%}
         </div>
-        <h1 class="title">Стек</h1>
+
+        {%endif%}
+
+        {% if stacks %}
+        <h1 class="title">Стек технологий</h1>
         <div class="d-flex flex-wrap">
             {% for stack in stacks %}
           <a href="{{stack.get_absolute_url}}"><button  type="button" class="btn btn-primary m-1">{{stack}}</button></a>
             {%endfor%}
         </div>
+
+        {%endif%}
+
         {{about_me.text|safe}}
+
     <table>
 
         {% for education in my_education %}

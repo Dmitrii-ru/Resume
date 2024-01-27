@@ -1,6 +1,4 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-# from .views import RandomPostAPIView,CategoryPostAPIView
+from django.urls import path
 from .views import *
 app_name = 'mptt_blog_api'
 
@@ -13,5 +11,4 @@ urlpatterns = [
 
     path('categories/<int:id>/delete', CategoryUpDelViewAPI.as_view(), name='category-delete'),
     path('categories/<int:id>/update', CategoryUpDelViewAPI.as_view(), name='category-update'),
-
 ]
