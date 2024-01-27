@@ -23,7 +23,7 @@
 				<a href="{{parent.get_absolute_url}}">{{parent.title}}</a>
 			{%endfor%}
 		</div>
-	</div>
+	 </div>
   </div>
 
 
@@ -38,7 +38,7 @@
     				{%endfor%}
 				</div>
 			{% else  %}
-				<h5> Пока тут нет тем
+				<h5>
 					{%if user.is_authenticated%}
 						<a href="{% url 'mptt_blog_urls:category_create' category.url %}" > <h6>Добавить</h6></a>
 					{% endif %}

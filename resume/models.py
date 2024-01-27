@@ -113,6 +113,13 @@ class Project(models.Model):
             return f"{protocol}://{base_url}:8000/{str(self.api).replace('docs','docs-swagger')}"
         return None
 
+    def web_site_url(self):
+        if self.link_site:
+            protocol, base_url = self.get_protocol_base_url()
+            return f"{protocol}://{base_url}:8000/{self.link_site}"
+        return None
+
+
     def __str__(self):
         return f'{self.name}'
 

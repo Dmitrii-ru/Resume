@@ -25,7 +25,7 @@
                 </div>
                 <div class="card_links text-center">
                     {% if project.link_site %}
-                        <a href="{{ project.link_site }}" class="btn btn-secondary mt-1">Перейти на {{ project.name }}</a>
+                        <a href="{{ project.web_site_url }}" class="btn btn-secondary mt-1">Перейти на {{ project.name }}</a>
                     {% endif %}
                     {% if project.link_git %}
                         <a href="{{ project.link_git }}" class="btn btn-secondary mt-1">Перейти на GitHub</a>

@@ -96,7 +96,7 @@ class AddTodoSerializer(serializers.Serializer):
         return value
 
 
-class TodoDeleteSerializer(serializers.Serializer):
+class TodoDeletePutSerializer(serializers.Serializer):
     todo = serializers.CharField(
         min_length=2,
         max_length=20

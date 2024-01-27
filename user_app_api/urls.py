@@ -28,7 +28,7 @@ schema_use_app_api = get_schema_view(
 
     public=True,
     permission_classes=(permissions.AllowAny,),
-    patterns=[path('v1/user_app/', include('user_app_api.urls'))]
+    patterns=[path('api/v1/user_app/', include('user_app_api.urls'))]
 )
 
 urlpatterns += [

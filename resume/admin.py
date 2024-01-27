@@ -8,17 +8,17 @@ admin.site.register(AboutMe)
 admin.site.register(EmailSend)
 
 
-@admin.register(UniqueIP)
-class AdminUniqueIP(admin.ModelAdmin):
-    ordering = ['-date']
-    list_display = ('ip_address', 'date')
-    list_per_page = 50
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
+# @admin.register(UniqueIP)
+# class AdminUniqueIP(admin.ModelAdmin):
+#     ordering = ['-date']
+#     list_display = ('ip_address', 'date')
+#     list_per_page = 50
+#
+#     def has_add_permission(self, request):
+#         return False
+#
+#     def has_change_permission(self, request, obj=None):
+#         return False
 
 
 @admin.register(Feedback)
@@ -41,7 +41,7 @@ class AdminSteck(admin.ModelAdmin):
 
 class CardProjectInline(admin.StackedInline):
     model = CardProject
-    extra = 3
+    extra = 0
 
 
 class AdminProject(admin.ModelAdmin):

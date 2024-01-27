@@ -362,6 +362,7 @@ li {
   max-width: 600px;
   min-width: 280px;
 
+
 }
 
 .branch_div{
@@ -412,7 +413,7 @@ font-size: 12px;
 
 
 .font_title_text{
-    padding: 2px 2px ;
+    padding: 4px 4px ;
     font-family: 'Montserrat', sans-serif;
   }
 

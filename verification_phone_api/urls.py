@@ -27,7 +27,7 @@ schema_view_verification_phone = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    patterns=[path('api/verification_phone/', include('verification_phone_api.urls'))]
+    patterns=[path('api/v1/verification_phone/', include('verification_phone_api.urls'))]
 )
 
 urlpatterns += [
