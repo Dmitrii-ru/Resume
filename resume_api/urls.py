@@ -30,7 +30,7 @@ schema_use_resume_api = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    patterns=[path('api/v1/resume/', include('resume_api.urls'))]
+    patterns=[path('api/resume/', include('resume_api.urls'))]
 )
 
 urlpatterns += [

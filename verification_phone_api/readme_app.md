@@ -21,7 +21,7 @@
 
 # User Creation and [Invitation]() Issuance
 
-## Request: POST /api/verification_phone/invite_code
+## Request: POST /api/verification_phone/<invite_code>
 
 ### Validation
 

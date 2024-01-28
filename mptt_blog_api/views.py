@@ -64,7 +64,7 @@ class CategoriesAPIView(ReadOnlyModelViewSet):
     lookup_field = 'id'
 
     def get_queryset(self):
-        return CategoryBlog.objects.filter(level=0)
+        return CategoryBlog.objects.all()
 
     def list(self, request, *args, **kwargs):
         if 'id' in self.kwargs:

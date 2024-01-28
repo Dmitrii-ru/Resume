@@ -18,10 +18,10 @@ urlpatterns = [
 ###API_APPS###
 
 urlpatterns += [
-    path('api/v1/resume/', include('resume_api.urls', namespace='resume_api')),
-    path('api/v1/user_app/', include('user_app_api.urls', namespace='user_app_api')),
-    path('api/v1/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
-    path('api/v1/verification_phone/', include('verification_phone_api.urls', namespace='verification_phone_api')),
+    path('api/resume/', include('resume_api.urls', namespace='resume_api')),
+    path('api/user_app/', include('user_app_api.urls', namespace='user_app_api')),
+    path('api/mptt_blog/', include('mptt_blog_api.urls', namespace='mptt_blog_api')),
+    path('api/verification_phone/', include('verification_phone_api.urls', namespace='verification_phone_api')),
 ]
 
 ###USER_AUTH###

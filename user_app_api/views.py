@@ -58,6 +58,7 @@ class LoginAPIView(APIView):
                 'refresh_token': str(refresh),
             }
             return Response(data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RefreshTokenView(APIView):
@@ -66,7 +67,6 @@ class RefreshTokenView(APIView):
 
 
     """
-
 
     @swagger_auto_schema(request_body=RefreshTokenSerializer, **schema_refresh_token())
     def post(self, request):
