@@ -11,11 +11,11 @@ class Command(BaseDumpDB):
         try:
             with open(path, 'w') as file:
                 call_command('dumpdata', stdout=file)
-            message = 'Резервная копия каталога успешно сохранена'
+            message = 'Резервная копия успешно сохранена'
             self.stdout.write(self.style.SUCCESS(message))
 
         except Exception as e:
-            message = f'Не возможно создать резервную копию каталога сайта:: {str(e)}'
+            message = f'Не возможно создать резервную копию:: {str(e)}'
             self.stderr.write(self.style.ERROR(message))
 
     def handle(self, *args, **options):
