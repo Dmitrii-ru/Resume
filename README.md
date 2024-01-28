@@ -10,7 +10,8 @@
 ## Запуск проекта
 - git clone https://github.com/Dmitrii-ru/resume
 - Убедитесь что в env docker_start=True
--  docker-compose up --build 
+- docker-compose up --build 
+- superuser = admin, password = admin 
 
 ## Приложение Резюме
 ### Предоставление информации о соискателе и его проектах, todo (дела на день).
