@@ -5,6 +5,7 @@ do
     echo "Waiting for server volume..."
 done
 
+mkdir -p static
 
 until python manage.py makemigrations
 do
