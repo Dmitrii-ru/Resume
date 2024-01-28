@@ -6,6 +6,11 @@
 ## Реализованные решения:
 - Асинхронные фоновые задачи, авторизация пользователя, кастомизация административной панели,
 ручное кэширование, API, работа с session, оптимизация запросов. 
+- 
+## Запуск проекта
+- git clone https://github.com/Dmitrii-ru/resume
+- Убедитесь что в env docker_start=True
+-  docker-compose up --build 
 
 ## Приложение Резюме
 ### Предоставление информации о соискателе и его проектах, todo (дела на день).
@@ -100,7 +105,3 @@
 - Redoc:  *api/verification_phone/docs/*
 - Swagger: *api/verification_phone/docs-swagger/*
 
-## Запуск проекта
-- git clone https://github.com/Dmitrii-ru/resume
-- Убедитесь что в env docker_start=True
-- docker up --build 
