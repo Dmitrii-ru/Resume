@@ -1,6 +1,11 @@
 # Проект: Резюме
 
 # Приложения:
+## Технологии: 
+- Python, Django, Postgres, Ajax, Bootstrap, CSS, Celery, Redis, Docker, REST framework, POSTMAN.
+## Реализованные решения:
+- Асинхронные фоновые задачи, авторизация пользователя, кастомизация административной панели,
+ручное кэширование, API, работа с session, оптимизация запросов. 
 
 ## Приложение Резюме
 ### Предоставление информации о соискателе и его проектах, todo (дела на день).
@@ -94,3 +99,8 @@
 - Readme: *verification_phone_api/readme_app.md*
 - Redoc:  *api/verification_phone/docs/*
 - Swagger: *api/verification_phone/docs-swagger/*
+
+## Запуск проекта
+- git clone https://github.com/Dmitrii-ru/resume
+- Убедитесь что в env docker_start=True
+- docker up --build 
